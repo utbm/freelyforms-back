@@ -9,6 +9,4 @@ mvn install
 mvn 
 Front and back listen on http://localhost:8080
 
-
-
 Master is automaticaly deploy on https://freelyforms.herokuapp.com/
