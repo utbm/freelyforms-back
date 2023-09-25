@@ -1,0 +1,190 @@
+{
+  "forms": {
+    "users": {
+      "fields": [
+        {
+          "type": "input",
+          "inputType": "text",
+          "label": "Username",
+          "model": "username",
+          "required": true
+        },
+        {
+          "type": "selectEx",
+          "label": "User type",
+          "model": "type",
+          "multiSelect": true,
+          "required": true,
+          "noneSelectedText": "Choose one ore more type",
+          "values": [
+            "Administrator",
+            "Donator",
+            "Add-on Maker",
+            "Mods Contributor",
+            "Contributor",
+            "Dungeons Contributor",
+            "Developer",
+            "Translator"
+          ],
+          "min": 2,
+          "validator": "array"
+        }
+      ],
+      "byDefault": {
+        "username": "",
+        "type": ["Contributor"]
+      }
+    },
+    "contributions": {
+      "fields": [
+        {
+          "type": "select",
+          "label": "Res",
+          "model": "res",
+          "required": true,
+          "values": ["c32", "c64"],
+          "min": 1
+        },
+        {
+          "type": "DatePicker",
+          "label": "Contribution date",
+          "placeholder": "Date of the contribution submission",
+          "model": "date",
+          "required": true,
+          "format": "timestamp"
+        },
+        {
+          "type": "input",
+          "inputType": "number",
+          "label": "Texture ID",
+          "model": "TextureID",
+          "required": true,
+          "validator": "integer"
+        },
+        {
+          "type": "AutocompleteAsync",
+          "label": "Contributors",
+          "model": "contributors",
+          "placeholder": "Contributors who made the texture",
+          "required": true,
+          "multiple": true,
+          "values": [
+            "230151512451",
+            "230151512452",
+            "230151512453",
+            "230151512454",
+            "230151512455",
+            "230151512456",
+            "230151512457"
+          ],
+          "min": 1,
+          "validator": "array"
+        }
+      ],
+      "byDefault": {
+        "res": "",
+        "date": "today",
+        "TextureID": "",
+        "contributors": []
+      }
+    }
+  },
+  "entities": {
+    "users": {
+      "name": "users",
+      "displayName": "Users",
+    
+      "properties": {
+        "id": {
+          "displayName": "Discord ID",
+          "type": "string",
+          "rules": [{
+            "id": "length",
+            "type": "length",
+            "options": {
+              "min": 1
+            }
+          }]
+        },
+        "username": {
+          "displayName": "Discord username",
+          "type": "string",
+          "rules": [{
+            "id": "length",
+            "type": "length",
+            "options": {
+              "min": 1
+            }
+          }]
+        },
+        "type": {
+          "displayName": "User type",
+          "type": "array",
+          "rules": [{
+            "id": "correct_types",
+            "type": "values",
+            "options": {
+              "child": "string",
+              "values": ["Administrator", "Donator", "Add-on Maker", "Mods Contributor", "Contributor", "Dungeons Contributor", "Developer", "Translator"]
+            }
+          }]
+        }
+      }
+    },
+    "contributions": {
+      "name": "contributions",
+      "displayName": "User contributions",
+    
+      "properties": {
+        "id": {
+          "displayName": "ID",
+          "type": "string",
+          "rules": [{
+            "id": "length",
+            "type": "length",
+            "options": {
+              "min": 1
+            }
+          }]
+        },
+        "date": {
+          "displayName": "Date",
+          "type": "date",
+          "format":"timestamp",
+          "rules": [{
+            "id": "pastDate",
+            "type": "date",
+            "options": {
+              "prior": "today"
+            }
+          }]
+        },
+        "TextureID": {
+          "displayName": "Texture ID",
+          "type": "number",
+          "rules": []
+        },
+        "contributors": {
+          "displayName": "List of contributors",
+          "type": "array",
+          "rules": [{
+            "id": "correct_types",
+            "type": "values",
+            "options": {
+              "child": "string",
+              "values": [
+                "230151512451",
+                "230151512452",
+                "230151512453",
+                "230151512454",
+                "230151512455",
+                "230151512456",
+                "230151512457"
+              ]
+            }
+          }]
+        }
+      }
+    }
+  }
+}

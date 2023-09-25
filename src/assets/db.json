@@ -1,0 +1,25 @@
+{
+  "Form": [
+    {
+      "username": "tutu",
+      "email": "toto@gmail.com",
+      "color": "Green",
+      "animal": "cat",
+      "id": 1
+    },
+    {
+      "username": "tata",
+      "email": "tata@gmail.com",
+      "color": "Blue",
+      "animal": "dog",
+      "id": 2
+    },
+    {
+      "username": "titi",
+      "email": "titi@gmail.com",
+      "color": "Red",
+      "animal": "hamster",
+      "id": 3
+    }
+  ]
+}
