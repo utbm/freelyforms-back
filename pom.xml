@@ -18,7 +18,7 @@
         <node.version>v18.7.0</node.version>
         <npm.version>8.15.0</npm.version>
         <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
-        <frontend-src-dir>${project.basedir}/freelyforms-front</frontend-src-dir>
+        <frontend-src-dir>${project.basedir}/src/main/js</frontend-src-dir>
     </properties>
     <dependencies>
         <dependency>
@@ -73,6 +73,7 @@
     </dependencies>
 
     <build>
+        <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -141,7 +142,7 @@
                         <configuration>
                             <target>
                                 <copy todir="${project.build.directory}/classes/public">
-                                    <fileset dir="${project.basedir}/freelyforms-front/build"/>
+                                    <fileset dir="${project.basedir}/src/main/js/build"/>
                                 </copy>
                             </target>
                         </configuration>
