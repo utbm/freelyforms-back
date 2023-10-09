@@ -10,7 +10,7 @@ consultez le code (format Javadoc) ou la documentation générée automatiquemen
 
 ## Installation - Prod
 
-- Requis pour l'installation : Java 17, Spring Boot 2.7, Apache Maven 3.8, Node v18 et npm v8
+- Requis pour l'installation : Java 17, Spring Boot 2.7, Apache Maven 3.8, Node v18 et pnpm v8
 
 Installation du package :
 
@@ -31,10 +31,10 @@ _Consultez le fichier pom.xml pour la description des plugins utilisés pour eff
 
 ## Exécution - Dev
 
-Il est possible de faire tourner un serveur front (dossier /src/main/js/ -> `npm run start`) en parallèle à un serveur back fonctionnel.
+Il est possible de faire tourner un serveur front (dossier /src/main/js/ -> `pnpm run dev`) en parallèle à un serveur back fonctionnel.
 Il faut alors s'assurer de lancer aussi le serveur back
 
-Le serveur front de développement (qui lui, pourra changer dynamiquement suivant le contenu des fichiers) sera consultable par `localhost:3000` et devrait pouvoir consulter l'API normalement (à tester ! potentiellement à paramétrer pour que le front aille chercher sur le port correspondant au serveur back que ce soit en dev ou en prod !)
+Le serveur front de développement (qui lui, pourra changer dynamiquement suivant le contenu des fichiers) sera consultable par `localhost:5173` et devrait pouvoir consulter l'API normalement (à tester ! potentiellement à paramétrer pour que le front aille chercher sur le port correspondant au serveur back que ce soit en dev ou en prod !)
 
 ## Base de données
 
