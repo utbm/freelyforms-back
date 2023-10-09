@@ -64,11 +64,10 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/com.github.eirslett/frontend-maven-plugin -->
         <dependency>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
-            <version>1.12.1</version>
+            <version>1.14.0</version>
         </dependency>
     </dependencies>
 
@@ -100,28 +99,28 @@
                     <!-- Ce plugin installe node et npm à des versions valides et à jour pour permettre un package groupé avec applications frontend et backend
                     -->
                     <execution>
-                        <id>install node and npm</id>
+                        <id>install node and pnpm</id>
                         <goals>
-                            <goal>install-node-and-npm</goal>
+                            <goal>install-node-and-pnpm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v18.7.0</nodeVersion>
-                            <npmVersion>8.15.0</npmVersion>
+                            <nodeVersion>v18.16.0</nodeVersion>
+                            <pnpmVersion>8.9.0</pnpmVersion>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm install</id>
+                        <id>pnpm install</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>pnpm</goal>
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm run build</id>
+                        <id>pnpm run build</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>pnpm</goal>
                         </goals>
                         <configuration>
                             <arguments>run build</arguments>
@@ -142,7 +141,7 @@
                         <configuration>
                             <target>
                                 <copy todir="${project.build.directory}/classes/public">
-                                    <fileset dir="${project.basedir}/src/main/js/build"/>
+                                    <fileset dir="${project.basedir}/src/main/js/dist"/>
                                 </copy>
                             </target>
                         </configuration>
