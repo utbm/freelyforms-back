@@ -10,13 +10,13 @@
     </parent>
     <groupId>fr.utbm.da50</groupId>
     <artifactId>freelyforms</artifactId>
-    <version>dev-0.1.0</version>
+    <version>1.0.0</version>
     <name>freelyforms</name>
     <description>freelyforms</description>
     <properties>
         <java.version>17</java.version>
         <node.version>v18.18.0</node.version>
-        <pnpm.version>9.8.1</pnpm.version>
+        <pnpm.version>8.9.0</pnpm.version>
         <frontend-maven-plugin.version>1.14.0</frontend-maven-plugin.version>
         <frontend-src-dir>${project.basedir}/src/main/js</frontend-src-dir>
     </properties>
@@ -33,14 +33,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-reactivestreams</artifactId>
             <version>4.7.0</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -62,8 +59,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-
         <dependency>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
@@ -86,7 +81,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
