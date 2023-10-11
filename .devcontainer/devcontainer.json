@@ -31,7 +31,28 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"mongodb.mongodb-vscode"
+				"mongodb.mongodb-vscode",
+				"vscjava.vscode-java-debug",
+				"redhat.java",
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-maven",
+				"vscjava.vscode-java-dependency",
+				"vscjava.vscode-java-test",
+				"dbaeumer.vscode-eslint",
+				"shengchen.vscode-checkstyle",
+				"tintinweb.vscode-decompiler",
+				"alphabotsec.vscode-eclipse-keybindings",
+				"mhutchie.git-graph",
+				"GitHub.codespaces",
+				"vscjava.vscode-lombok",
+				"DavidAnson.vscode-markdownlint",
+				"christian-kohler.npm-intellisense",
+				"SonarSource.sonarlint-vscode",
+				"vscjava.vscode-spring-boot-dashboard",
+				"vmware.vscode-boot-dev-pack",
+				"vscjava.vscode-spring-initializr",
+				"redhat.vscode-xml",
+				"redhat.vscode-yaml"
 			]
 		}
 	}
