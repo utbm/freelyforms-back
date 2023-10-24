@@ -9,14 +9,39 @@
 
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
-			"version": "none",
-			"installMaven": "true",
-			"installGradle": "true"
+			"installMaven": true,
+			"version": "17",
+			"jdkDistro": "ms",
+			"gradleVersion": "latest",
+			"mavenVersion": "latest",
+			"antVersion": "latest"
 		},
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers-contrib/features/npm-package:1": {},
-		"ghcr.io/jayree/devcontainer-features/npm-registry:1": {},
-		"ghcr.io/devcontainers-contrib/features/tmux-apt-get:1": {}
+		"ghcr.io/devcontainers/features/node:1": {
+			"nodeGypDependencies": true,
+			"version": "18",
+			"nvmVersion": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/npm-package:1": {
+			"package": "typescript",
+			"version": "latest"
+		},
+		"ghcr.io/jayree/devcontainer-features/npm-registry:1": {
+			"registry": "@SCOPE:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${localEnv:GITHUB_TOKEN}"
+		},
+		"ghcr.io/devcontainers-contrib/features/tmux-apt-get:1": {},
+		"ghcr.io/devcontainers-contrib/features/maven-sdkman:2": {
+			"version": "latest",
+			"jdkVersion": "17",
+			"jdkDistro": "ms"
+		},
+		"ghcr.io/devcontainers-contrib/features/node-asdf:0": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/springboot-sdkman:2": {
+			"version": "latest",
+			"jdkVersion": "17",
+			"jdkDistro": "ms"
+		}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
