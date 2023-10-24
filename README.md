@@ -1,4 +1,4 @@
-## Documentation minimale oooo
+## Documentation minimale
 
 - BACK_API_ROUTES.md - routes disponibles sur l'API
 - HELP.md - documents d'aide pour Spring Boot
