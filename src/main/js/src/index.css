@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
@@ -23,4 +29,10 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.btn.btn-primary {
+  background: linear-gradient(90deg, #5197F7 0%, #8A7ED5 100%);
+  border-color: transparent;
+  color: #fff;
 }

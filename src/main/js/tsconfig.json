@@ -22,6 +22,6 @@
 		"noImplicitAny": true,
 		"strictNullChecks": true
 	},
-	"include": ["src"],
+	"include": ["src", "postcss.config.cjs"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
