@@ -1,5 +1,5 @@
 export default function Home() {
   return (
-    <div>Home sweet home</div>
+    <div className="btn btn-primary">Home sweet home</div>
   );
 }
