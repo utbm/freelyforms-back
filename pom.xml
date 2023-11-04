@@ -14,6 +14,7 @@
     <name>freelyforms</name>
     <description>freelyforms</description>
     <properties>
+        <spring-boot.version>2.7.4</spring-boot.version>
         <java.version>17</java.version>
         <node.version>v18.18.0</node.version>
         <pnpm.version>8.9.0</pnpm.version>
@@ -21,6 +22,11 @@
         <frontend-src-dir>${project.basedir}/src/main/js</frontend-src-dir>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

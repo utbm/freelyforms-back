@@ -8,6 +8,11 @@ Les classes et interfaces Java sont documentées ;
 consultez le code (format Javadoc) ou la documentation générée automatiquement
 (dossier doc).
 
+## Swagger documentation
+
+URL: http://localhost:8080/v2/api-docs
+import it in postman or any other tools to test the API
+
 ## Installation - Prod
 
 - Requis pour l'installation : Java 17, Spring Boot 2.7, Apache Maven 3.8, Node v18 et pnpm v8
