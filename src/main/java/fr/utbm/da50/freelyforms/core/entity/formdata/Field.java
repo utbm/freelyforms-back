@@ -1,5 +1,6 @@
 package fr.utbm.da50.freelyforms.core.entity.formdata;
 
+import lombok.*;
 import org.springframework.data.annotation.PersistenceCreator;
 
 
@@ -13,6 +14,11 @@ import org.springframework.data.annotation.PersistenceCreator;
  *
  * @author Pourriture
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Field
 {
 
@@ -20,11 +26,15 @@ public class Field
     /**
      * Name of the field, unique within a Group object and mirroring a field name in the related Prefab.Group object
      */
-    private String name;
+    @Builder.Default
+    @NonNull
+    private String name = "";
     /**
      * Value of the field, entered by a user
      */
-    private String value;
+    @Builder.Default
+    @NonNull
+    private String value = "";
 
 
     /**
@@ -32,28 +42,6 @@ public class Field
      */
     public String inspect() {
         return name + " " + value;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @PersistenceCreator
-    public Field(String name, String value) {
-        this.name = name;
-        this.value = value;
     }
 
 }

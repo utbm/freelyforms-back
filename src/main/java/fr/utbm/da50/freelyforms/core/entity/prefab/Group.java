@@ -1,8 +1,12 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab;
+import lombok.*;
+import lombok.experimental.NonFinal;
+import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -10,49 +14,64 @@ import java.util.Set;
  *
  * @author Pourriture
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Jacksonized
 public class Group {
 
     /** Name of the group. Should be unique within a prefab.
      */
-    private String name;
+    @Builder.Default
+            @NonNull
+    String name = "DefaultGroupName" + new Random().nextInt();
+
     /** Group display label on the frontend
      * */
-    private String label;
+    @Builder.Default
+            @NonNull
+    String label = "DefaultGroupLabel";
 
     /** Mouse-over text over the group
      * */
-    private String caption;
+    @Builder.Default
+            @NonNull
+    String caption = "caption";
 
     /** A group holds one or more form fields and ensures they will be grouped together.
      * Field names are identifying within the group and therefore unique within the fields.
      * */
-    ArrayList<Field> fields;
+    @Builder.Default
+            @NonNull
+    ArrayList<Field> fields = new ArrayList<>();
 
 
 
 
-    @PersistenceCreator
-    public Group(String name, String label, String caption, ArrayList<Field> fields) {
-        this.name = name;
-        this.label = label;
-        this.caption = caption;
-        this.fields = fields;
-    }
+//    @PersistenceCreator
+//    public Group(String name, String label, String caption, ArrayList<Field> fields) {
+//        this.name = name;
+//        this.label = label;
+//        this.caption = caption;
+//        this.fields = fields;
+//    }
 
     // (test constructor value)
-    static int count = 0;
+//    static int count = 0;
     // Test constructor
-    public Group() {
-        this.name = "DefaultGroupName" + count;
-        this.label="DefaultGroupLabel";
-        this.caption = "caption";
-        this.fields = new ArrayList<>();
-        count++;
-
-        this.fields.add(new Field());
-        this.fields.add(new Field());
-        this.fields.add(new Field());
-    }
+//    public Group() {
+//        this.name = "DefaultGroupName" + count;
+//        this.label="DefaultGroupLabel";
+//        this.caption = "caption";
+//        this.fields = new ArrayList<>();
+//        count++;
+//
+//        this.fields.add(new Field());
+//        this.fields.add(new Field());
+//        this.fields.add(new Field());
+//    }
 
     /**
      * @return a string representing the prefab
@@ -71,10 +90,7 @@ public class Group {
      * @return true if the groiup is valid, false if it is not
      */
     public boolean verifyGroupValidity() {
-        boolean check = true;
-
-        if (name == null || label == null || caption == null)
-            check = false;
+        boolean check = name != null && label != null && caption != null;
 
         Set<String> fieldNames = new HashSet<>();
         for (Field f : fields) {
@@ -91,28 +107,28 @@ public class Group {
         return check;
     }
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getLabel() {
-        return label;
-    }
-    public void setLabel(String label) {
-        this.label = label;
-    }
-    public String getCaption() {
-        return caption;
-    }
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-    public ArrayList<Field> getFields() {
-        return fields;
-    }
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//    public String getLabel() {
+//        return label;
+//    }
+//    public void setLabel(String label) {
+//        this.label = label;
+//    }
+//    public String getCaption() {
+//        return caption;
+//    }
+//    public void setCaption(String caption) {
+//        this.caption = caption;
+//    }
+//    public ArrayList<Field> getFields() {
+//        return fields;
+//    }
+//    public void setFields(ArrayList<Field> fields) {
+//        this.fields = fields;
+//    }
 }

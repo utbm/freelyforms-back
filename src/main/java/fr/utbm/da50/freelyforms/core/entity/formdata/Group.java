@@ -1,5 +1,7 @@
 package fr.utbm.da50.freelyforms.core.entity.formdata;
 
+import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -15,22 +17,26 @@ import java.util.ArrayList;
  *
  * @author Pourriture
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Jacksonized
 public class Group {
     /**
      * Name of the group, unique within a FormData object and mirroring a group name in the related Prefab object
      */
-    private String name;
+    @Builder.Default
+    @NonNull
+    private String name = "";
 
     /**
      * Fields of the group, mirroring group fields in the related Prefab object
      */
-    private ArrayList<Field> fields;
-
-    @PersistenceCreator
-    public Group(String name, ArrayList<Field> fields) {
-        this.name = name;
-        this.fields = fields;
-    }
+    @Builder.Default
+    @NonNull
+    private ArrayList<Field> fields = new ArrayList<>();
 
     /**
      * @return a stringified representation of the group
@@ -41,22 +47,6 @@ public class Group {
             ret.append("\n\t").append(f.inspect());
         }
         return ret.toString();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
     }
 
 

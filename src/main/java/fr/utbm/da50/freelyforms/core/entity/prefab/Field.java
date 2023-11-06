@@ -1,6 +1,9 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab;
 
-import org.springframework.data.annotation.PersistenceCreator;
+import lombok.*;
+import lombok.extern.jackson.Jacksonized;
+
+import java.util.Random;
 
 /**
  * The Field class represents the graphical fields present on the form.
@@ -11,45 +14,38 @@ import org.springframework.data.annotation.PersistenceCreator;
  *
  * @author Pourriture
  */
+@Builder
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@Jacksonized
 public class Field {
 
     /** Name of the field. Should be unique within a group.
      */
-    private String name;
+    @Builder.Default
+            @NonNull
+    String name = "fieldName" + new Random().nextInt();
+
     /** Field display label on the frontend
      * */
-    private String label;
+    @Builder.Default
+    @NonNull
+    String label = "fieldLabel";
 
     /** Hint text within the field
      * */
-    private String caption;
+    @Builder.Default
+    @NonNull
+    String caption = "fieldCaption";
 
     /**
      * Rules are used by the field to verify that data entered inside a field are valid
      */
-    Rule rules;
+    @Builder.Default
+    @NonNull
+    Rule rules = Rule.builder().build();
 
-
-
-    @PersistenceCreator
-    public Field(String name, String label, String caption, Rule rules) {
-        this.name = name;
-        this.label = label;
-        this.caption = caption;
-        this.rules = rules;
-    }
-
-    // count value for the test constructor
-    static int count = 0;
-
-    // Test constructor
-    Field() {
-        this.name="fieldName" + count;
-        this.label = "fieldLabel";
-        this.caption = "fieldCaption";
-        this.rules = new Rule();
-        count++;
-    }
 
 
     /**
@@ -85,35 +81,4 @@ public class Field {
         return this.rules.checkDataRules(data);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
-    public Rule getRules() {
-        return rules;
-    }
-
-    public void setRules(Rule rules) {
-        this.rules = rules;
-    }
 }

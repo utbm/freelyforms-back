@@ -1,6 +1,9 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.rule.TypeRule;
+import lombok.*;
+import lombok.experimental.NonFinal;
+import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -14,6 +17,12 @@ import java.util.List;
  *
  * @author Pourriture
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Jacksonized
+@NonFinal
 public class Rule {
     /**
      * Enumeration representing the possible data types
@@ -33,107 +42,44 @@ public class Rule {
      *
      */
     @Field
-    private boolean optional;
+    @Builder.Default
+    @NonFinal
+    private boolean optional = false;
     /**
      * Which groups and fields (in the group or group.field format) this rule excludes from being filled in if its field has a value
      */
     @Field
-    private ArrayList<String> excludes;
+    @Builder.Default
+    @NonFinal
+    private ArrayList<String> excludes = new ArrayList<>();
     /**
      * Rules defining  verifications depending on fieldType and the specific class inherited from abstract class TypeRule in the array
      */
     @Field
-    private ArrayList<TypeRule> typeRules;
+    @Builder.Default
+    @NonFinal
+    private ArrayList<TypeRule> typeRules = new ArrayList<>();
     /**
      * Whether the field will be hidden on the front-end app
      */
     @Field
-    boolean hidden;
+    @Builder.Default
+    @NonNull
+    boolean hidden = false;
     /**
      * Possible list of selector values, such as a dropdown or a list selectable with a radio-button-style array (only for use with the SELECTOR fieldType)
      */
     @Field
-    private ArrayList<String> selectorValues;
+    @Builder.Default
+    @NonNull
+    private ArrayList<String> selectorValues = new ArrayList<>();
     /**
      * Data type for the field value
      */
     @Field
-    private FieldType fieldType;
-
-    // Test constructor
-    Rule() {
-        this.optional = true;
-        this.excludes = new ArrayList<>();
-        this.typeRules = new ArrayList<>();
-        this.fieldType = FieldType.INTEGER;
-        this.hidden = false;
-        this.selectorValues = null;
-    }
-
-    Rule(FieldType fieldType, boolean optional, boolean hidden, ArrayList<String> excludes) {
-        this.fieldType = fieldType;
-        this.optional = optional;
-        this.hidden = hidden;
-        this.excludes = excludes;
-        this.selectorValues = new ArrayList<>();
-        this.typeRules = new ArrayList<>();
-
-    }
-    Rule(FieldType fieldType, boolean optional, boolean hidden, String[] excludes) {
-        this.fieldType = fieldType;
-        this.optional = optional;
-        this.hidden = hidden;
-        this.excludes = new ArrayList<>(List.of(excludes));
-        this.selectorValues = new ArrayList<>();
-        this.typeRules = new ArrayList<>();
-
-    }
-
-    Rule(FieldType fieldType, boolean optional, boolean hidden, ArrayList<String> excludes, ArrayList<String> selectorValues) {
-        if (fieldType == FieldType.SELECTOR) {
-            this.selectorValues = selectorValues;
-        }else {
-            this.selectorValues = new ArrayList<>();
-        }
-        this.fieldType = fieldType;
-        this.optional = optional;
-        this.hidden = hidden;
-        this.excludes = excludes;
-        this.typeRules = new ArrayList<>();
-
-    }
-    Rule(FieldType fieldType, boolean optional, boolean hidden, String[] excludes, String[] selectorValues) {
-        if (fieldType == FieldType.SELECTOR) {
-            this.selectorValues = new ArrayList<>(List.of(selectorValues));
-        }else {
-            this.selectorValues = new ArrayList<>();
-        }
-        this.fieldType = fieldType;
-        this.optional = optional;
-        this.hidden = hidden;
-        this.excludes = new ArrayList<>(List.of(excludes));
-        this.typeRules = new ArrayList<>();
-
-    }
-
-
-
-    @PersistenceCreator
-    Rule(FieldType fieldType, boolean optional, boolean hidden, ArrayList<String> excludes, ArrayList<String> selectorValues, ArrayList<TypeRule> typeRules) {
-        if (fieldType == FieldType.SELECTOR) {
-            this.selectorValues = selectorValues;
-        }else {
-            this.selectorValues = new ArrayList<>();
-        }
-        this.fieldType = fieldType;
-        this.optional = optional;
-        this.hidden = hidden;
-        this.excludes = excludes;
-        this.typeRules = typeRules;
-
-    }
-
-
+    @Builder.Default
+    @NonNull
+    private FieldType fieldType = FieldType.INTEGER;
     // Test constructor
     public Rule(FieldType fieldType) {
         this.fieldType = fieldType;
@@ -141,13 +87,6 @@ public class Rule {
         this.excludes = new ArrayList<>();
         this.hidden = false;
         this.selectorValues = new ArrayList<>();
-        this.typeRules = new ArrayList<>();
-
-    }
-
-    Rule(String[] selectorValues) {
-        this.fieldType = FieldType.SELECTOR;
-        this.selectorValues = new ArrayList<>(List.of(selectorValues));
         this.typeRules = new ArrayList<>();
 
     }
@@ -252,60 +191,6 @@ public class Rule {
 
 
         return true;
-    }
-
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public ArrayList<String> getExcludes() {
-        return excludes;
-    }
-
-    public void setExcludes(ArrayList<String> excludes) {
-        this.excludes = excludes;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
-    }
-
-    public FieldType getFieldType() {
-        return fieldType;
-    }
-
-    public void setFieldType(FieldType fieldType) {
-        this.fieldType = fieldType;
-    }
-
-    public ArrayList<TypeRule> getTypeRules() {
-        return typeRules;
-    }
-
-    public void setTypeRules(ArrayList<TypeRule> typeRules) {
-        for (TypeRule rule : typeRules) {
-            if (!rule.verifyTypeRuleValidity()){
-                System.out.println("setTypeRules: Tried to set invalid rule " + rule.inspect());
-                return;
-            }
-            this.typeRules = typeRules;
-        }
-    }
-
-    /*public void setTypeRules(TypeRule[] typeRules) {
-        setTypeRules(new ArrayList<>(List.of(typeRules)));
-    }*/
-
-    public ArrayList<String> getSelectorValues() {
-        return this.selectorValues;
     }
 
     public void setSelectorValues(ArrayList<String> selectorValues) {

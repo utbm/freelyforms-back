@@ -43,8 +43,8 @@ public class Generator {
         cityFields.get(1).getRules().setSelectorValues(new ArrayList<>(List.of(countries)));
         cityFields.get(1).getRules().addTypeRule(new AlternativeDisplay("DROPDOWN"));
         ArrayList<Group> groups = new ArrayList<>();
-        groups.add(new Group("streetFields","Rue","Données de rue",streetFields));
-        groups.add(new Group("cityFields","Ville","Données de ville",streetFields));
+        groups.add(Group.builder().name("streetFields").label("Rue").caption("Données de rue").fields(streetFields).build());
+        groups.add(Group.builder().name("cityFields").label("Ville").caption("Données de ville").fields(streetFields).build());
         return new Prefab("streets", "Rues","", groups);
     }
 
