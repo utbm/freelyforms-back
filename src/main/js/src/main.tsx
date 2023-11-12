@@ -14,7 +14,7 @@ export const apiclient = createApiClient(
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(params),
+			body: params?.body ? JSON.stringify(params.body) : undefined,
 		}).then((res) => res.json()),
 	"http://localhost:8080",
 );
