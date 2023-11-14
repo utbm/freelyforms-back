@@ -8,6 +8,9 @@ import {
 import "./index.css";
 import Home from "./pages/index";
 import FourOFour from "./pages/404";
+import Map from "./pages/Map";
+
+
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,6 @@ if (!root) {
 
 ReactDOM.createRoot(root).render(
 	<React.StrictMode>
-		 <RouterProvider router={router} />
+    		 <RouterProvider router={router} />
 	</React.StrictMode>,
 );
