@@ -1,4 +1,5 @@
 import React from 'react';
+import './Material.css';
 
 type MaterialType = {
   id: string;
@@ -6,7 +7,50 @@ type MaterialType = {
   location: string;
 };
 
-export default class Material extends React.Component<MaterialType> {
+type MaterialProps = {
+  material: MaterialType;
+};
+
+export default class Material extends React.Component<MaterialProps, { showFields: boolean }> {
+  constructor(props: MaterialProps) {
+    super(props);
+    this.state = {
+      showFields: false,
+    };
+  }
+
+  toggleFields = () => {
+    this.setState(prevState => ({ showFields: !prevState.showFields }));
+  };
+
+  render() {
+    return (
+      <div className="material">
+        <div className="data">
+
+              <div>ID: {this.props.material.id}</div>
+              <div>({this.props.material.type})</div>
+              <button>
+                <i className="material-icons">location_on</i>
+              </button>
+              <button>
+                <i className="material-icons">delete</i>
+              </button>
+
+            <button onClick={this.toggleFields}>
+            <i className="material-icons">{this.state.showFields ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</i>
+          </button>
+          {this.state.showFields && (
+            <>
+            <br/>
+              azer
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   fieldList: any[] = [];
   
   addField(field: any) {
