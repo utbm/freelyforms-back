@@ -2,14 +2,15 @@ package fr.utbm.da50.freelyforms.core.entity;
 
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Group;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import fr.utbm.da50.freelyforms.core.exception.prefab.InvalidPrefabException;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @Document("prefabs")
+@Builder
+@NoArgsConstructor
+@Getter
 public class Prefab {
 
     //The Prefab class fetches form configurations from the database, and may also add a configuration file.
@@ -36,24 +40,34 @@ public class Prefab {
 
     // Explicitely defining object ID seems to enable the database to recognize updated versions of an object
     @Id
-    ObjectId _id;
+    @Builder.Default
+    @NonNull
+    ObjectId _id = ObjectId.getSmallestWithDate(new Date());
 
     /** Name of the prefab. Should be unique within the collection.
      * */
-    private String name;
+    @Builder.Default
+    @NonNull
+    private String name = "";
 
     /** Prefab display label on the frontend
      * */
-    private String label;
+    @Builder.Default
+    @NonNull
+    private String label = "";
 
     /** Mouse-over text over the prefab
      * */
-    private String caption;
+    @Builder.Default
+    @NonNull
+    private String caption = "";
 
     /** A group holds one or more form fields and ensures they will be grouped together.
      * Group names are identifying within the array and therefore unique within the groups.
      * */
-    private ArrayList<Group> groups;
+    @Builder.Default
+    @NonNull
+    private ArrayList<Group> groups = new ArrayList<>();
 
     @PersistenceCreator
     public Prefab(String name, String label, String caption,  ArrayList<Group> groups) {
@@ -62,18 +76,6 @@ public class Prefab {
         this.caption = caption;
         this.label = label;
         this.groups = groups;
-
-    }
-
-    // Test constructor
-    public Prefab() {
-        super();
-        this.name = "defaultName";
-        this.caption = "defaultCaption";
-        this.label = "defaultLabel";
-        this.groups = new ArrayList<>();
-        this.groups.add(new Group());
-        this.groups.add(new Group());
 
     }
 
@@ -100,29 +102,27 @@ public class Prefab {
 
     /** Verifies that the current state of a prefab and its groups is valid.
      * Also calls verifyGroupValidity on its groups
-     * @return true if the prefab is valid, false if it is not
      * */
-    public Boolean verifyPrefabValidity() {
+    public void verifyPrefabValidity() throws InvalidPrefabException {
         // call this on save of prefab
         // verifies that a group has its members, that no two of its fields share a name, and that those fields are valid themselves
         boolean check = true;
 
         if (name == null || label == null || caption == null)
-            check = false;
+            throw new InvalidPrefabException("One of the following value is null : name, label, caption");
 
         Set<String> groupNames = new HashSet<>();
         for (Group g : groups) {
             if (!groupNames.add(g.getName())){
                 // Set.add returns false if the set does not change (duplicate entry)
                 System.out.println("At least one duplicate entry in group list for prefab " + this.name);
-                check = false;
+                throw new InvalidPrefabException("At least one duplicate entry in group list for prefab " + this.name);
             }
             if (!g.verifyGroupValidity()){
-                check = false;
                 System.out.println("Group " + g.getName() + " invalid");
+                throw new InvalidPrefabException("Group " + g.getName() + " invalid");
             }
         }
-        return check;
     }
 
     /** Verifies that the sent data is accurate to the rules of the prefab
@@ -177,7 +177,9 @@ public class Prefab {
     public void setGroups(ArrayList<Group> groups) {
         ArrayList<Group> previousGroups = this.groups;
         this.groups = groups;
-        if (!verifyPrefabValidity()) {
+        try{
+            verifyPrefabValidity();
+        } catch(InvalidPrefabException exception){
             System.out.println("setGroups() failed: Prefab is invalid");
             this.groups = (previousGroups != null ? previousGroups : new ArrayList<>());
         }

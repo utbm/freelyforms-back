@@ -2,6 +2,7 @@ package fr.utbm.da50.freelyforms.core.repository;
 
 
 import fr.utbm.da50.freelyforms.core.entity.FormData;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author Pourriture
  */
-public interface FormDataRepository extends MongoRepository<FormData, String> {
+public interface FormDataRepository extends MongoRepository<FormData, ObjectId> {
 
     /**
      * @param prefabName the name of the prefab whose form data is being searched for

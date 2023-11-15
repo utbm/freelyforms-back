@@ -2,13 +2,23 @@ package fr.utbm.da50.freelyforms.core.service;
 
 
 import fr.utbm.da50.freelyforms.core.entity.FormData;
+import fr.utbm.da50.freelyforms.core.entity.Prefab;
+import fr.utbm.da50.freelyforms.core.exception.formdata.FieldNotFoundException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.GroupNameNotFoundException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.InvalidFormDataException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.NoExistingFormDataException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.NoExistingPrefabException;
 import fr.utbm.da50.freelyforms.core.repository.FormDataRepository;
+import fr.utbm.da50.freelyforms.core.repository.PrefabRepository;
+import lombok.NonNull;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -24,6 +34,9 @@ public class FormDataService {
 
     @Autowired
     private FormDataRepository formDataRepository;
+
+    @Autowired
+    private PrefabRepository prefabRepository;
 
 
     /**
@@ -50,16 +63,17 @@ public class FormDataService {
      * @param fieldName name of the field belonging to above group
      * @return an array of all field values relating to a single prefab.group.field combination
      */
-    public List<String> getAllFormDataFromPrefabField(String prefabName, String groupName, String fieldName) {
+    @NonNull
+    public List<String> getAllFormDataFromPrefabField(@NonNull String prefabName, @NonNull String groupName, @NonNull String fieldName) throws NoExistingPrefabException, GroupNameNotFoundException, FieldNotFoundException {
+        Prefab prefab = prefabRepository.findPrefabByName(prefabName);
+        if (prefab == null)
+            throw new NoExistingPrefabException("getAllFormData : no pefab for this name : " + prefabName);
+
         List<FormData> data = getAllFormDataFromPrefab(prefabName);
         ArrayList<String> ret = new ArrayList<>();
 
         for (FormData f : data) {
-            try {
-                ret.add(f.getGroup(groupName).getField(fieldName).getValue());
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+            ret.add(f.getGroup(groupName).getField(fieldName).getValue());
         }
         return ret;
     }
@@ -68,44 +82,39 @@ public class FormDataService {
     /**
      * Save form data in the database if it is valid
      * @param formData the data to save
-     * @return the added form data
      */
-    public FormData postFormData(FormData formData) {
-        // TODO : verify form data validity
-        formData = formDataRepository.save(formData);
-        return formData;
+    public void postFormData(FormData formData) throws InvalidFormDataException {
+        formData.verifyDataValidity();
+        formDataRepository.save(formData);
     }
 
 
     /**
      *  Modify form data in the database
      * @param formData the modified form data object (identified by its id)
-     * @return the modified form data object after its save
      */
-    public FormData patchFormData(FormData formData) {
+    public void patchFormData(FormData formData) throws NoExistingFormDataException, InvalidFormDataException {
         // TODO: verify form data validity
         // TODO: verify that the form data exists in the database?
-        formData = formDataRepository.save(formData);
-        return formData;
+        Optional<FormData> existingFormData = formDataRepository.findById(formData.get_id());
+        if(existingFormData.isEmpty())
+            throw new NoExistingFormDataException("PATCH/PUT formdata: no formdata with this id exists");
+        formData.verifyDataValidity();
+        formDataRepository.save(formData);
     }
 
 
     /**
      * Delete form data from the database
-     * @param formData the form data object to delete (identified by its id)
-     * @return true if the deletion was a success
+     * @param formDataId the form data id to delete
      */
-    public boolean deleteFormData(FormData formData) {
+    public void deleteFormData(@NonNull ObjectId formDataId) throws NoExistingFormDataException {
         // TODO : verify that safe deletion is possible?
-        // note: should be modified to accept only the ID instead of the entire form data object
-        // note 2 : or make an alternative method taking an ObjectId paramter instead of a FormData one
+        Optional<FormData> existingFormData = formDataRepository.findById(formDataId);
+        if(existingFormData.isEmpty())
+            throw new NoExistingFormDataException("DELETE formdata: no formdata with this id exists");
+        formDataRepository.deleteById(formDataId);
 
-        try {
-            formDataRepository.delete(formData);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 
 }

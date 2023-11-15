@@ -1,11 +1,22 @@
 package fr.utbm.da50.freelyforms.core.controller;
 
 
+import com.sun.istack.NotNull;
 import fr.utbm.da50.freelyforms.core.entity.FormData;
+import fr.utbm.da50.freelyforms.core.exception.formdata.FieldNotFoundException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.GroupNameNotFoundException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.InvalidFormDataException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.NoExistingFormDataException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.NoExistingPrefabException;
 import fr.utbm.da50.freelyforms.core.service.FormDataService;
+import lombok.NonNull;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,45 +63,62 @@ public class FormDataController {
     @GetMapping("{prefab}/{group}/{field}")
     @ResponseBody
     // GET all data relating to a single field (selector from data value)
-    public List<String> getAllFormDataFromPrefabField(@PathVariable("prefab") String prefabName,
-                                                      @PathVariable("group") String groupName,
-                                                      @PathVariable("field") String fieldName) {
-        return service.getAllFormDataFromPrefabField(prefabName, groupName, fieldName);
+    public List<String> getAllFormDataFromPrefabField(@NonNull @NotNull @PathVariable("prefab") String prefabName,
+                                                      @NonNull @NotNull @PathVariable("group") String groupName,
+                                                      @NonNull @NotNull @PathVariable("field") String fieldName) {
+        try {
+            List<String> formDataFromPrefabField = service.getAllFormDataFromPrefabField(prefabName, groupName, fieldName);
+            if (formDataFromPrefabField.isEmpty())
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+            return formDataFromPrefabField;
+        } catch (NoExistingPrefabException | GroupNameNotFoundException | FieldNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
     }
 
     /**
      * POST /api/formdata/{prefab}
      * @param formData the data to save
-     * @return the added form data
      */
     @PostMapping("{prefab}")
     @ResponseBody
     // POST formdata related to a prefab
-    public FormData postFormData(@RequestBody FormData formData) {
-        return service.postFormData(formData);
+    public void postFormData(@NonNull @NotNull @RequestBody FormData formData) {
+        try {
+            service.postFormData(formData);
+        } catch (InvalidFormDataException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     /**
      * PATCH/PUT /api/formdata/{prefab}
      * @param formData the modified form data object (identified by its id)
-     * @return the modified form data object after its save
      */
     @RequestMapping(value = "{prefab}", method = {RequestMethod.PATCH, RequestMethod.PUT})
     @ResponseBody
     // PATCH/PUT formdata
-    public FormData patchFormData(@RequestBody FormData formData) {
-        return service.patchFormData(formData);
+    public void patchFormData(@NonNull @NotNull @RequestBody FormData formData) {
+        try {
+            service.patchFormData(formData);
+        } catch (NoExistingFormDataException | InvalidFormDataException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     /**
-     * DELETE /api/formdata/{prefab}
-     * @param formData the form data object to delete (identified by its id)
-     * @return true if the deletion was a success
+     * DELETE /api/formdata
+     * @param formDataId the form data object to delete (identified by its id)
      */
-    @DeleteMapping("{prefab}")
+    @DeleteMapping
     @ResponseBody
     // DELETE formdata
-    public boolean deleteFormData(@RequestBody FormData formData) {
-        return service.deleteFormData(formData);
+    public void deleteFormData(@NonNull @NotNull @RequestBody ObjectId formDataId) {
+        try {
+            service.deleteFormData(formDataId);
+        } catch (NoExistingFormDataException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

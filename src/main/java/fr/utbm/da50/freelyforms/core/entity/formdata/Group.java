@@ -1,5 +1,6 @@
 package fr.utbm.da50.freelyforms.core.entity.formdata;
 
+import fr.utbm.da50.freelyforms.core.exception.formdata.FieldNotFoundException;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.PersistenceCreator;
@@ -53,15 +54,15 @@ public class Group {
     /**
      * @param name the name of the field to look for
      * @return the field that has been looked for
-     * @throws Exception if the field has not been found
+     * @throws FieldNotFoundException if the field has not been found
      */
-    public Field getField(String name) throws Exception {
+    public Field getField(String name) throws FieldNotFoundException {
         for (Field f : this.fields) {
             if (f.getName().equals(name)) {
                 return f;
             }
         }
-        throw new Exception("Field" + name +  " not found in group " + this.name);
+        throw new FieldNotFoundException("Field" + name +  " not found in group " + this.name);
     }
 
     /**
