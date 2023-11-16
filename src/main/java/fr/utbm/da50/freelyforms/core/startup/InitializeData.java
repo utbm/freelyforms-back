@@ -36,7 +36,8 @@ public class InitializeData {
 
         Resource resource = new ClassPathResource("/data/users.json");
         try (InputStream inputStream = resource.getInputStream()) {
-            List<User> persons = objectMapper.readValue(inputStream, new TypeReference<List<User>>() {});
+            List<User> persons = objectMapper.readValue(inputStream, new TypeReference<>() {
+            });
             // Insert the data into the database
             mongoTemplate.insertAll(persons);
 

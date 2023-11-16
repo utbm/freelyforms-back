@@ -61,8 +61,8 @@ public class AlternativeDisplay extends TypeRule {
      * @return true - alternativeDisplay is a display rule and as such is always true
      */
     @Override
-    public boolean verifyFormData(String data, Rule.FieldType fieldType) {
-        return true;
+    public void verifyFormData(String data, Rule.FieldType fieldType) {
+        return;
     }
     // Value is a valid String from a list
 }

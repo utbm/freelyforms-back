@@ -1,6 +1,10 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
+import fr.utbm.da50.freelyforms.core.exception.formdata.FieldNotFoundException;
+import fr.utbm.da50.freelyforms.core.exception.formdata.GroupNameNotFoundException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.NoExistingPrefabException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import fr.utbm.da50.freelyforms.core.service.FormDataService;
 import org.springframework.data.annotation.PersistenceCreator;
 
@@ -47,22 +51,23 @@ public class SelectDataSet extends TypeRule {
     /**
      * @param data      entered form data to validate
      * @param fieldType the actual type of the field
-     * @return true if data/fieldtype are valid for this rule
      */
     @Override
-    public boolean verifyFormData(String data, Rule.FieldType fieldType) {
+    public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
         if (!verifyTypeRuleValidity()) {
-            return false;
+            throw new TypeRuleFormDataException("Type rule is not valid");
         }
         FormDataService service = new FormDataService();
         String[] split = this.getValue().split("\\.");
-        List<String> values = service.getAllFormDataFromPrefabField(split[0], split[1], split[2]);
-        if (values.contains(data)) {
-            return true;
+        List<String> values;
+        try {
+            values = service.getAllFormDataFromPrefabField(split[0], split[1], split[2]);
+        } catch (NoExistingPrefabException | GroupNameNotFoundException | FieldNotFoundException e) {
+            throw new TypeRuleFormDataException("Exception in getAllFormDataFromPrefab Field : " + e.getMessage());
         }
-
-        System.out.println("form data value " + data + " not in data set " + values.toString());
-        return false;
+        if (!values.contains(data)) {
+            throw new TypeRuleFormDataException("form data value " + data + " not in data set " + values);
+        }
 
     }
     // Value is a String representing a form.group.field combination?

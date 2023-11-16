@@ -1,5 +1,6 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab;
 
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.RuleException;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
@@ -77,8 +78,8 @@ public class Field {
      * @param data
      * @return true if the data is valid for this field
      */
-    boolean validFieldValue (String data) {
-        return this.rules.checkDataRules(data);
+    void validFieldValue (String data) throws RuleException {
+        this.rules.checkDataRules(data);
     }
 
 }

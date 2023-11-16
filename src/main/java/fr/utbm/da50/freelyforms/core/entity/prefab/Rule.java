@@ -1,6 +1,8 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.rule.TypeRule;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.RuleException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import lombok.*;
 import lombok.experimental.NonFinal;
 import lombok.extern.jackson.Jacksonized;
@@ -135,62 +137,48 @@ public class Rule {
      * @param data the form data value to verify against the rule
      * @return whether the form data value matches the rule, displays errors in the console if it isn't
      */
-    public Boolean checkDataRules(String data) {
+    public void checkDataRules(String data) throws RuleException {
 
         // TODO: check excluded field in sent form
-
-
-        try {
-            // check non-optional field being absent
-            if (!optional && (data == null || data.equals(""))) {
-                throw new Exception("Non-optional field wasn't filled out");
-            }
-
-
-
-            // check matching type (data is assumed a string)
-            switch (fieldType) {
-                case INTEGER:
-                    int val = Integer.parseInt(data);
-                    break;
-                case STRING:
-                    break;
-                case FLOAT:
-                    float fl = Float.parseFloat(data);
-                    break;
-                case DATE:
-                    LocalDate date = LocalDate.parse(data);
-                    break;
-                case DATETIME:
-                    LocalDateTime datetime = LocalDateTime.parse(data);
-                    break;
-                case BOOLEAN:
-                    boolean bool = Boolean.parseBoolean(data);
-                    if (!"true".equals(data) && !"false".equals(data))
-                        throw new Exception("Data not a boolean");
-                    break;
-                case SELECTOR:
-                    // split response string?
-                    break;
-
-            }
-
-            for (TypeRule rule : typeRules) {
-                if (!rule.verifyFormData(data, fieldType)) {
-                    throw new Exception("Rule not respected: Data" + data + "does not match rule" + rule.inspect());
-                }
-            }
-
-        }
-        catch (Exception e) {
-            System.out.println("Field rule broken");
-            System.out.println(e);
-            return false;
+        // check non-optional field being absent
+        if (!optional && (data == null || data.equals(""))) {
+            throw new RuleException("Non-optional field wasn't filled out");
         }
 
+        // check matching type (data is assumed a string)
+        switch (fieldType) {
+            case INTEGER:
+                int val = Integer.parseInt(data);
+                break;
+            case STRING:
+                break;
+            case FLOAT:
+                float fl = Float.parseFloat(data);
+                break;
+            case DATE:
+                LocalDate date = LocalDate.parse(data);
+                break;
+            case DATETIME:
+                LocalDateTime datetime = LocalDateTime.parse(data);
+                break;
+            case BOOLEAN:
+                boolean bool = Boolean.parseBoolean(data);
+                if (!"true".equals(data) && !"false".equals(data))
+                    throw new RuleException("Data not a boolean");
+                break;
+            case SELECTOR:
+                // split response string?
+                break;
 
+        }
 
-        return true;
+        for (TypeRule rule : typeRules) {
+            try {
+                rule.verifyFormData(data, fieldType);
+            }catch (TypeRuleFormDataException e) {
+                throw new RuleException("Rule not respected: Data" + data + "does not match rule" + rule.inspect() + ". Exception : " + e.getMessage());
+            }
+        }
     }
 
     public void setSelectorValues(ArrayList<String> selectorValues) {

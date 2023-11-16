@@ -3,6 +3,7 @@ package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
@@ -79,7 +80,7 @@ public abstract class TypeRule {
      * @param fieldType the actual type of the field
      * @return true if data/fieldtype are valid for this rule
      */
-    abstract public boolean verifyFormData(String data, Rule.FieldType fieldType);
+    abstract public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException;
 
     /**
      * @param fieldType the actual type of the field

@@ -1,7 +1,9 @@
 package fr.utbm.da50.freelyforms.core.service;
 
 import fr.utbm.da50.freelyforms.core.entity.User;
+import fr.utbm.da50.freelyforms.core.exception.user.UserNotFoundException;
 import fr.utbm.da50.freelyforms.core.repository.UserRepository;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,25 +31,32 @@ public class UserService {
      */
     public User saveUser(User user) {
         user.setId(UUID.randomUUID().toString().split("-")[0]);
-        return userRepository.save(user); }
+        return userRepository.save(user);
+    }
 
     /**
      * @param id the id of the user
      * @return the user
      */
-    public Optional<User> getUser(String id) { return userRepository.findById(id); }
+    @NonNull
+    public User getUser(@NonNull String id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isEmpty())
+            throw new UserNotFoundException("User " + id + " not found.");
+        return user.get();
+
+    }
 
     /**
      * @param id the id of the user
      * @return the deleted user
      */
-    public Optional<User> deleteUser(String id) {
+    public void deleteUser(String id) throws UserNotFoundException {
 
         Optional<User> user = userRepository.findById(id);
-
+        if(user.isEmpty())
+            throw new UserNotFoundException("User " + id + " not found.");
         userRepository.delete(user.get());
-
-        return user;
     }
 }
 

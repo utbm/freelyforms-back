@@ -1,6 +1,7 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -40,35 +41,27 @@ public class MinimumRule extends TypeRule {
     }
 
     @Override
-    public boolean verifyFormData(String data, Rule.FieldType fieldType) {
-        try {
+    public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
             float ruleValue = Float.parseFloat(this.getValue());
             switch (fieldType) {
                 case INTEGER:
                 case FLOAT:
                     float dataValue = Float.parseFloat(data);
                     if (dataValue < ruleValue)
-                        return false;
-                    else
-                        return true;
+                        throw new TypeRuleFormDataException("Data value ("+ dataValue +") < Rule value (" + ruleValue + ")");
                     // unreachable break statement
                 case STRING:
                     if (data.length() < ruleValue)
-                        return false;
-                    else
-                        return true;
+                        throw new TypeRuleFormDataException("Data length < Rule value");
                     // unreachable break statement
                 case DATE, DATETIME:
                     // todo: add date, datetime support
-                    return true;
+                    return ;
                 default:
                     // data not in associated types results in failure
-                    return false;
+                    return;
 
             }
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     // Value is an integer (minimum or min string length)

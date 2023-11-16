@@ -1,6 +1,7 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -39,8 +40,9 @@ public class RegexMatch extends TypeRule {
      * @return true if data/fieldtype are valid for this rule
      */
     @Override
-    public boolean verifyFormData(String data, Rule.FieldType fieldType) {
+    public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
         Pattern regexPattern = Pattern.compile(this.getValue());
-        return regexPattern.matcher(data).find();
+        if(!regexPattern.matcher(data).find())
+            throw new TypeRuleFormDataException("Data does not match the regex");
     }
 }
