@@ -1,5 +1,6 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
@@ -29,7 +30,8 @@ import java.util.ArrayList;
  */
 
 // this is used by jackson to determine in which inherited class JSON objects sent to the API should be translated into
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "name")
+//@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "name")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "name", visible = true)
 @JsonSubTypes({
         // It might be a good idea to turn these static string values into enum values like with
         @JsonSubTypes.Type(value = AlternativeDisplay.class, name = "AlternativeDisplay"),
@@ -78,7 +80,6 @@ public abstract class TypeRule {
     /**
      * @param data entered form data to validate
      * @param fieldType the actual type of the field
-     * @return true if data/fieldtype are valid for this rule
      */
     abstract public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException;
 
