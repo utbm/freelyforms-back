@@ -11,9 +11,14 @@
 		"format": "prettier --write src"
 	},
 	"dependencies": {
+		"framer-motion": "^10.16.5",
+		"mobile-detect": "^1.4.5",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-dom-confetti": "^0.2.0",
+		"react-icons": "^4.12.0",
 		"react-router-dom": "^6.17.0",
+		"react-textarea-autosize": "^8.5.3",
 		"tailwind-scrollbar-hide": "^1.1.7"
 	},
 	"devDependencies": {
