@@ -1,21 +1,23 @@
 import React from 'react';
-import './Material.css';
-
+import Location from './Location';
+import './Material.css'
 type MaterialType = {
   id: string;
   type: string;
   location: string;
   fields: { name: string; type: string; data: any }[];
+  locationDetails?: Location;
 };
 
 type MaterialProps = {
   material: MaterialType;
 };
 
-export default class Material extends React.Component<
-  MaterialProps,
-  { showFields: boolean }
-> {
+type MaterialState = {
+  showFields: boolean;
+};
+
+export default class Material extends React.Component<MaterialProps, MaterialState> {
   constructor(props: MaterialProps) {
     super(props);
     this.state = {
@@ -53,9 +55,12 @@ export default class Material extends React.Component<
             <>
               {material.fields.map((field, index) => (
                 <div key={index} style={{ marginLeft: '20px' }}>
-                  <strong>{field.name }</strong>: {field.data} (Type: {field.type})
+                  <strong>{field.name}</strong> : {field.data} (Type: {field.type})
                 </div>
               ))}
+              {material.locationDetails && (
+                <Location {...material.locationDetails} />
+              )}
             </>
           )}
         </div>

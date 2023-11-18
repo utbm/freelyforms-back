@@ -35,7 +35,8 @@ button {
   cursor: pointer;
 }
 
-button.location .material-icons:before {
+button.location .material-icons:before,
+button.pinpoint .material-icons:before {
   content: "location_on";
 }
 

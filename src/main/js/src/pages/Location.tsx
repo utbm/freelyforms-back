@@ -8,7 +8,15 @@ type LocationType = {
 };
 
 export default class Location extends React.Component<LocationType> {
-  getType() {
-    return this.props.radius > 50 ? 'Large' : 'Small';
+  render() {
+    return (
+      <div>
+        <strong>Location Details:</strong>
+        <div>X: {this.props.x}</div>
+        <div>Y: {this.props.y}</div>
+        <div>Radius: {this.props.radius}</div>
+        <div>Address: {this.props.address}</div>
+      </div>
+    );
   }
 }

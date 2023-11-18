@@ -1,19 +1,10 @@
 import React from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 import Material from './Material';
 import './leaflet.css';
 import './styles.css';
 
-type MaterialType = {
-  id: string;
-  type: string;
-  location: string;
-  fields: { name: string; type: string; data: any }[];
-};
-
-type AppState = {
-  materials: MaterialType[];
-};
 
 class Home extends React.Component<{}, AppState> {
   constructor(props: {}) {
@@ -23,11 +14,16 @@ class Home extends React.Component<{}, AppState> {
         {
           id: '1',
           type: 'Type 1',
-          location: 'Location 1',
           fields: [
             { name: 'Field 1', type: 'string', data: 'Data 1' },
             { name: 'Field 2', type: 'number', data: 42 },
           ],
+          locationDetails: {
+            x: 51.52,
+            y: -0.09,
+            radius: 10,
+            address: 'Location 1 Address',
+          },
         },
         {
           id: '2',
@@ -39,14 +35,19 @@ class Home extends React.Component<{}, AppState> {
           ],
         },
         { id: '3', type: 'Type 3', location: 'Location 3', fields: [
-          { name: 'Field 1', type: 'string', data: 'abcsz' },
-          { name: 'Field 2', type: 'number', data: 42 },
+          { name: 'Field 1', type: 'string', data: 'Data 3' },
+          { name: 'Field 2', type: 'number', data: 48 },
         ] },
       ],
     };
   }
 
   render() {
+    const blueIcon = new L.Icon({
+      iconUrl: '/../../node_modules/leaflet/dist/images/marker-icon.png',
+      shadowUrl: '/../..//node_modules/leaflet/dist/images/marker-shadow.png',
+    });
+
     return (
       <div style={{ display: 'flex' }}>
         <MapContainer
@@ -54,10 +55,23 @@ class Home extends React.Component<{}, AppState> {
           zoom={13}
           style={{ height: '900px', width: '50%' }}
         >
+
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
+          {this.state.materials.map((material) => (
+            <Marker
+              key={material.id}
+              position={[material.locationDetails?.x || 0, material.locationDetails?.y || 0]}
+              icon={blueIcon}
+            >
+              
+              <Popup>{material.id}</Popup>
+            </Marker>
+
+            
+          ))}
         </MapContainer>
         <div style={{ width: '50%' }}>
           {this.state.materials.map((material) => (
