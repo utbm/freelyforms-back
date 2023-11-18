@@ -5,13 +5,17 @@ type MaterialType = {
   id: string;
   type: string;
   location: string;
+  fields: { name: string; type: string; data: any }[];
 };
 
 type MaterialProps = {
   material: MaterialType;
 };
 
-export default class Material extends React.Component<MaterialProps, { showFields: boolean }> {
+export default class Material extends React.Component<
+  MaterialProps,
+  { showFields: boolean }
+> {
   constructor(props: MaterialProps) {
     super(props);
     this.state = {
@@ -20,54 +24,42 @@ export default class Material extends React.Component<MaterialProps, { showField
   }
 
   toggleFields = () => {
-    this.setState(prevState => ({ showFields: !prevState.showFields }));
+    this.setState((prevState) => ({ showFields: !prevState.showFields }));
   };
 
   render() {
+    const { material } = this.props;
+    const { showFields } = this.state;
+
     return (
       <div className="material">
         <div className="data">
-
-              <div>ID: {this.props.material.id}</div>
-              <div>({this.props.material.type})</div>
-              <button>
-                <i className="material-icons">location_on</i>
-              </button>
-              <button>
-                <i className="material-icons">delete</i>
-              </button>
-
-            <button onClick={this.toggleFields}>
-            <i className="material-icons">{this.state.showFields ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}</i>
+          <div>ID: {material.id}</div>
+          <div>({material.type})</div>
+          <button>
+            <i className="material-icons">location_on</i>
           </button>
-          {this.state.showFields && (
+          <button>
+            <i className="material-icons">delete</i>
+          </button>
+          <button onClick={this.toggleFields}>
+            <i className="material-icons">
+              {showFields ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+            </i>
+          </button>
+        </div>
+        <div className="fields">
+          {showFields && (
             <>
-            <br/>
-              azer
+              {material.fields.map((field, index) => (
+                <div key={index} style={{ marginLeft: '20px' }}>
+                  <strong>{field.name }</strong>: {field.data} (Type: {field.type})
+                </div>
+              ))}
             </>
           )}
         </div>
       </div>
     );
-  }
-
-  fieldList: any[] = [];
-  
-  addField(field: any) {
-    this.fieldList.push(field);
-  }
-
-  removeField(field: any) {
-    const index = this.fieldList.indexOf(field);
-    if (index > -1) {
-      this.fieldList.splice(index, 1);
-    }
-  }
-
-  updateField(oldField: any, newField: any) {
-    const index = this.fieldList.indexOf(oldField);
-    if (index > -1) {
-      this.fieldList[index] = newField;
-    }
   }
 }

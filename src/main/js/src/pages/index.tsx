@@ -8,6 +8,7 @@ type MaterialType = {
   id: string;
   type: string;
   location: string;
+  fields: { name: string; type: string; data: any }[];
 };
 
 type AppState = {
@@ -19,8 +20,28 @@ class Home extends React.Component<{}, AppState> {
     super(props);
     this.state = {
       materials: [
-        { id: '1', type: 'Type 1', location: 'Location 1' },
-        { id: '2', type: 'Type 2', location: 'Location 2' },
+        {
+          id: '1',
+          type: 'Type 1',
+          location: 'Location 1',
+          fields: [
+            { name: 'Field 1', type: 'string', data: 'Data 1' },
+            { name: 'Field 2', type: 'number', data: 42 },
+          ],
+        },
+        {
+          id: '2',
+          type: 'Type 2',
+          location: 'Location 2',
+          fields: [
+            { name: 'Field 1', type: 'boolean', data: "true" },
+            { name: 'Field 2', type: 'string', data: 'Data 2' },
+          ],
+        },
+        { id: '3', type: 'Type 3', location: 'Location 3', fields: [
+          { name: 'Field 1', type: 'string', data: 'abcsz' },
+          { name: 'Field 2', type: 'number', data: 42 },
+        ] },
       ],
     };
   }
@@ -49,6 +70,3 @@ class Home extends React.Component<{}, AppState> {
 }
 
 export default Home;
-
-
-//testing

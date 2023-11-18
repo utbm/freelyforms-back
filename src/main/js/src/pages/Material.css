@@ -1,8 +1,10 @@
+/* Add this to your Material.css file */
 .material {
   display: flex;
+  flex-direction: column; /* Change to column to stack items vertically */
   align-items: center;
   background-color: white;
-  color:black;
+  color: black;
   margin: 10px;
   padding: 10px;
   border-radius: 5px;
@@ -55,4 +57,15 @@ button.delete .material-icons:before {
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column; /* Display fields vertically */
+  align-items: flex-start; /* Align fields to the left */
+  margin-top: 10px; /* Adjust as needed for spacing between data and fields */
+}
+
+.fields div {
+  margin-bottom: 10px; /* Add margin-bottom for spacing between fields */
 }
