@@ -13,6 +13,7 @@ type MaterialType = {
 type MaterialProps = {
   material: MaterialType;
   onLocationChange?: (index: number, newCoordinates: { x: number; y: number }) => void;
+  onFieldEdit?: (index: number, fieldName: string, editedValue: string) => void;
 };
 
 type MaterialState = {
@@ -80,11 +81,14 @@ export default class Material extends React.Component<
     this.setState({ editedFieldValue: event.target.value });
   };
 
-  handleLocationFieldChange = (
+
+handleLocationFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    fieldName: string
+    fieldName: string,
+    index: number
   ) => {
     this.setState({ editedFieldValue: event.target.value });
+    this.props.onFieldEdit?.(index, fieldName, event.target.value);
   };
 
   handleOutsideClick = (event: MouseEvent) => {

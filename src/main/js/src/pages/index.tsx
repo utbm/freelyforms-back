@@ -59,7 +59,6 @@ class Home extends React.Component<{}, AppState> {
       ],
     };
   }
-
   handleLocationChange = (
     materialId: string,
     locationIndex: number,
@@ -72,6 +71,101 @@ class Home extends React.Component<{}, AppState> {
           updatedLocations[locationIndex] = {
             ...updatedLocations[locationIndex],
             ...newCoordinates,
+          };
+
+          return {
+            ...material,
+            locations: updatedLocations,
+          };
+        }
+
+        return material;
+      });
+
+      return {
+        materials: updatedMaterials,
+      };
+    });
+  };
+
+  handleFieldEdit = (
+    materialId: string,
+    locationIndex: number,
+    fieldName: string,
+    editedValue: string
+  ) => {
+    this.setState((prevState) => {
+      const updatedMaterials = prevState.materials.map((material) => {
+        if (material.id === materialId && material.locations) {
+          const updatedLocations = [...material.locations];
+          updatedLocations[locationIndex] = {
+            ...updatedLocations[locationIndex],
+            [fieldName]: editedValue,
+          };
+
+          return {
+            ...material,
+            locations: updatedLocations,
+          };
+        }
+
+        return material;
+      });
+
+      return {
+        materials: updatedMaterials,
+      };
+    });
+  };
+
+ 
+  handleFieldChange = (
+    materialId: string,
+    locationIndex: number,
+    fieldName: string,
+    editedValue: string
+  ) => {
+    event?.stopPropagation();
+    this.setState({
+      editingMaterialId: materialId,
+      editingLocationIndex: locationIndex,
+      editingFieldName: fieldName,
+      editedFieldValue: editedValue,
+    });
+  };
+
+  handleKeyPress = (
+    materialId: string,
+    locationIndex: number,
+    fieldName: string,
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === 'Enter') {
+      this.handleFieldEdit(
+        materialId,
+        locationIndex,
+        fieldName,
+        this.state.editedFieldValue
+      );
+
+      // Clear editing state after Enter is pressed
+      this.setState({
+        editingMaterialId: null,
+        editingLocationIndex: null,
+        editingFieldName: null,
+        editedFieldValue: '',
+      });
+    }
+  };
+
+  handlePopupToggle = (materialId: string, locationIndex: number) => {
+    this.setState((prevState) => {
+      const updatedMaterials = prevState.materials.map((material) => {
+        if (material.id === materialId && material.locations) {
+          const updatedLocations = [...material.locations];
+          updatedLocations[locationIndex] = {
+            ...updatedLocations[locationIndex],
+            popupOpen: !updatedLocations[locationIndex].popupOpen,
           };
 
           return {
@@ -114,8 +208,58 @@ class Home extends React.Component<{}, AppState> {
                 position={[location.x, location.y]}
                 icon={blueIcon}
               >
-                <Popup>ID : {material.id} 
-                 <br></br>Location {index+1}</Popup>
+                <Popup
+                  onOpen={() => this.handlePopupToggle(material.id, index)}
+                  onClose={() => this.handlePopupToggle(material.id, index)}
+                >
+                  ID: {material.id}
+                  <br />
+                  Location {index + 1}:
+                  {Object.entries(location).map(
+                    ([fieldName, fieldValue]) => (
+                      <div key={fieldName}>
+                        <strong>{fieldName}</strong>:{' '}
+                        {this.state.editingMaterialId === material.id &&
+                        this.state.editingLocationIndex === index &&
+                        this.state.editingFieldName === fieldName ? (
+                          <input
+                            type="text"
+                            value={this.state.editedFieldValue}
+                            onChange={(e) =>
+                              this.handleFieldChange(
+                                material.id,
+                                index,
+                                fieldName,
+                                e.target.value
+                              )
+                            }
+                            onKeyPress={(e) =>
+                              this.handleKeyPress(
+                                material.id,
+                                index,
+                                fieldName,
+                                e
+                              )
+                            }
+                          />
+                        ) : (
+                          <span
+                            onClick={() =>
+                              this.handleFieldChange(
+                                material.id,
+                                index,
+                                fieldName,
+                                fieldValue
+                              )
+                            }
+                          >
+                            {fieldValue}
+                          </span>
+                        )}
+                      </div>
+                    )
+                  )}
+                </Popup>
               </Marker>
             ))
           )}
@@ -127,6 +271,9 @@ class Home extends React.Component<{}, AppState> {
               material={material}
               onLocationChange={(index, newCoordinates) =>
                 this.handleLocationChange(material.id, index, newCoordinates)
+              }
+              onFieldEdit={(index, fieldName, editedValue) =>
+                this.handleFieldEdit(material.id, index, fieldName, editedValue)
               }
             />
           ))}
