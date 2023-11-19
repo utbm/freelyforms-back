@@ -11,7 +11,6 @@ export default class Location extends React.Component<LocationType> {
   render() {
     return (
       <div>
-        <strong>Location Details:</strong>
         <div>X: {this.props.x}</div>
         <div>Y: {this.props.y}</div>
         <div>Radius: {this.props.radius}</div>

@@ -1,4 +1,3 @@
-// Material.tsx
 import React from 'react';
 import Location from './Location';
 import './Material.css';
@@ -13,14 +12,15 @@ type MaterialType = {
 
 type MaterialProps = {
   material: MaterialType;
+  onLocationChange?: (index: number, newCoordinates: { x: number; y: number }) => void;
 };
 
 type MaterialState = {
   showFields: boolean;
   editingFieldIndex: number | null;
   editingLocationField: string | null;
-  editedFieldValue: string; // Added this line
-  editingLocationIndex: number | null; // Added this line
+  editedFieldValue: string; 
+  editingLocationIndex: number | null; 
 };
 
 export default class Material extends React.Component<
@@ -35,8 +35,8 @@ export default class Material extends React.Component<
       showFields: false,
       editingFieldIndex: null,
       editingLocationField: null,
-      editedFieldValue: '', 
-      editingLocationIndex: null, 
+      editedFieldValue: '',
+      editingLocationIndex: null,
     };
   }
 
@@ -111,7 +111,7 @@ export default class Material extends React.Component<
   };
 
   updateField = () => {
-    const { material } = this.props;
+    const { material, onLocationChange } = this.props;
     const {
       editingFieldIndex,
       editingLocationField,
@@ -129,6 +129,12 @@ export default class Material extends React.Component<
       updatedMaterial.locations![editingLocationIndex][
         editingLocationField
       ] = editedFieldValue;
+
+      // Update coordinates in parent component
+      onLocationChange?.(editingLocationIndex, {
+        x: parseFloat(updatedMaterial.locations![editingLocationIndex].x),
+        y: parseFloat(updatedMaterial.locations![editingLocationIndex].y),
+      });
 
       // TODO: Add logic to update state or dispatch an action to update state in a Redux store
     }
@@ -185,36 +191,39 @@ export default class Material extends React.Component<
                   (Type: {field.type})
                 </div>
               ))}
-              {material.locations && material.locations.map((location, index) => (
-                <div key={index} style={{ marginLeft: '20px' }}>
-                  <strong>Location {index + 1}:</strong>
-                  {Object.entries(location).map(([fieldName, fieldValue]) => (
-                    <div key={fieldName}>
-                      <strong>{fieldName}</strong> :{' '}
-                      {editingLocationField === fieldName &&
-                      editingLocationIndex === index ? (
-                        <input
-                          type="text"
-                          value={editedFieldValue}
-                          onChange={(e) =>
-                            this.handleLocationFieldChange(e, fieldName)
-                          }
-                          onBlur={this.stopEditingField}
-                          onKeyPress={this.handleKeyPress}
-                        />
-                      ) : (
-                        <span
-                          onClick={() =>
-                            this.startEditingLocationField(fieldName, index)
-                          }
-                        >
-                          {fieldValue}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))}
+              {material.locations &&
+                material.locations.map((location, index) => (
+                  <div key={index} style={{ marginLeft: '20px' }}>
+                    <strong>Location {index + 1}:</strong>
+                    {Object.entries(location).map(
+                      ([fieldName, fieldValue]) => (
+                        <div key={fieldName}>
+                          <strong>{fieldName}</strong> :{' '}
+                          {editingLocationField === fieldName &&
+                          editingLocationIndex === index ? (
+                            <input
+                              type="text"
+                              value={editedFieldValue}
+                              onChange={(e) =>
+                                this.handleLocationFieldChange(e, fieldName)
+                              }
+                              onBlur={this.stopEditingField}
+                              onKeyPress={this.handleKeyPress}
+                            />
+                          ) : (
+                            <span
+                              onClick={() =>
+                                this.startEditingLocationField(fieldName, index)
+                              }
+                            >
+                              {fieldValue}
+                            </span>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                ))}
             </>
           )}
         </div>
