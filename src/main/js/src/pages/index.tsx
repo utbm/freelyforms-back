@@ -18,13 +18,18 @@ class Home extends React.Component<{}, AppState> {
             { name: 'Field 1', type: 'string', data: 'Data 1' },
             { name: 'Field 2', type: 'number', data: 42 },
           ],
-          locationDetails: {
+          locations: [{
             x: 51.52,
             y: -0.09,
             radius: 10,
             address: 'Location 1 Address',
-          },
-        },
+          },{
+            x: 51.53,
+            y: -0.09,
+            radius: 10,
+            address: 'Location 1 Address 2 ',
+          }]},
+
         {
           id: '2',
           type: 'Type 2',
@@ -33,6 +38,12 @@ class Home extends React.Component<{}, AppState> {
             { name: 'Field 1', type: 'boolean', data: "true" },
             { name: 'Field 2', type: 'string', data: 'Data 2' },
           ],
+          locations: [{
+            x: 51.52,
+            y: -0.08,
+            radius: 0,
+            address: 'Location 2 Address',
+          }]
         },
         { id: '3', type: 'Type 3', location: 'Location 3', fields: [
           { name: 'Field 1', type: 'string', data: 'Data 3' },
@@ -61,15 +72,15 @@ class Home extends React.Component<{}, AppState> {
             attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {this.state.materials.map((material) => (
-            <Marker
-              key={material.id}
-              position={[material.locationDetails?.x || 0, material.locationDetails?.y || 0]}
-              icon={blueIcon}
-            >
-              
-              <Popup>{material.id}</Popup>
-            </Marker>
-
+            material.locations && material.locations.map((location, index) => (
+              <Marker
+                key={`${material.id}_${index}`}
+                position={[location.x, location.y]}
+                icon={blueIcon}
+              >
+                <Popup>ID : {material.id}</Popup>
+              </Marker>
+            ))
             
           ))}
         </MapContainer>
