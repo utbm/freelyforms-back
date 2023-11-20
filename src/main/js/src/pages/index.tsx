@@ -185,11 +185,6 @@ class Home extends React.Component<{}, AppState> {
   };
 
   render() {
-    const blueIcon = new L.Icon({
-      iconUrl: '/../../node_modules/leaflet/dist/images/marker-icon.png',
-      shadowUrl: '/../..//node_modules/leaflet/dist/images/marker-shadow.png',
-    });
-
     return (
       <div style={{ display: 'flex' }}>
         <MapContainer
@@ -208,7 +203,16 @@ class Home extends React.Component<{}, AppState> {
               <Marker
                 key={`${material.id}_${index}`}
                 position={[location.x, location.y]}
-                icon={blueIcon}
+                icon={
+                  L.icon({
+                    iconUrl: '/../../node_modules/leaflet/dist/images/marker-icon.png',
+                    shadowUrl: '/../..//node_modules/leaflet/dist/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41],
+                  }) as any // Cast to any to avoid TypeScript errors
+                }
               >
                 <Popup
                   onOpen={() => this.handlePopupToggle(material.id, index)}
@@ -266,7 +270,7 @@ class Home extends React.Component<{}, AppState> {
               {location.radius !== 0 && (
               <Circle
                  key={`${material.id}_${index}_circle_${location.radius}`}
-                center={[location.x-0.0001, location.y+0.0001]}
+                center={[location.x, location.y]}
                 radius={location.radius}
                 pathOptions={{ color: 'red' }}
               />
