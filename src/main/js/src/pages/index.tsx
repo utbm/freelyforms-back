@@ -58,8 +58,10 @@ class Home extends React.Component<{}, AppState> {
           ],
         },
       ],
+      assignedColors: {}, // New array to track assigned colors
+
     };
-  }
+  };
   handleLocationChange = (
     materialId: string,
     locationIndex: number,
@@ -183,6 +185,33 @@ class Home extends React.Component<{}, AppState> {
       };
     });
   };
+  getRandomColor() {
+    const colors = ['blue', 'red', 'green', 'orange', 'black', 'grey', 'yellow', 'violet'];
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  }
+  getColorCode (color: string){
+    switch (color) {
+      case 'blue':
+        return '#2A81CB';
+      case 'red':
+        return '#CB2B3E';
+      case 'green':
+        return '#2AAD27';
+      case 'orange':
+        return '#CB8427';
+      case 'black':
+        return '#3D3D3D';
+      case 'grey':
+        return '#7B7B7B';
+      case 'yellow':
+        return '#CAC428';
+      case 'violet':
+        return '#9C2BCB';
+      default:
+        return '#0000FF'; // Handle other cases or return a default color
+    }
+  }
 
   render() {
     return (
@@ -198,85 +227,100 @@ class Home extends React.Component<{}, AppState> {
           />
           {this.state.materials.map((material: { locations: any[]; id: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; }) =>
             material.locations &&
-            material.locations.map((location, index) => (
-              <React.Fragment key={`${material.id}_${index}`}>
-              <Marker
-                key={`${material.id}_${index}`}
-                position={[location.x, location.y]}
-                icon={
-                  L.icon({
-                    iconUrl: '/../../node_modules/leaflet/dist/images/marker-icon.png',
-                    shadowUrl: '/../..//node_modules/leaflet/dist/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41],
-                  }) as any // Cast to any to avoid TypeScript errors
+            material.locations.map((location, index) => {
+              // Assign a color to the material if not assigned yet
+              if (!this.state.assignedColors[material.id]) {
+                let color = this.getRandomColor();
+                // Check if the color has been assigned to another material
+                while (Object.values(this.state.assignedColors).includes(color)) {
+                  color = this.getRandomColor();
                 }
-              >
-                <Popup
-                  onOpen={() => this.handlePopupToggle(material.id, index)}
-                  onClose={() => this.handlePopupToggle(material.id, index)}
-                >
-                  ID: {material.id}
-                  <br />
-                  Location {index + 1}:
-                  {Object.entries(location).map(
-                    ([fieldName, fieldValue]) => (
-                      <div key={fieldName}>
-                        <strong>{fieldName}</strong>:{' '}
-                        {this.state.editingMaterialId === material.id &&
-                        this.state.editingLocationIndex === index &&
-                        this.state.editingFieldName === fieldName ? (
-                          <input
-                            type="text"
-                            value={this.state.editedFieldValue}
-                            onChange={(e) =>
-                              this.handleFieldChange(
-                                material.id,
-                                index,
-                                fieldName,
-                                e.target.value
-                              )
-                            }
-                            onKeyPress={(e) =>
-                              this.handleKeyPress(
-                                material.id,
-                                index,
-                                fieldName,
-                                e
-                              )
-                            }
-                          />
-                        ) : (
-                          <span
-                            onClick={() =>
-                              this.handleFieldChange(
-                                material.id,
-                                index,
-                                fieldName,
-                                fieldValue
-                              )
-                            }
-                          >
-                            {fieldValue}
-                          </span>
-                        )}
-                      </div>
-                    )
+                this.setState((prevState) => ({
+                  assignedColors: {
+                    ...prevState.assignedColors,
+                    [material.id]: color,
+                  },
+                }));
+              }
+
+              return (
+                <React.Fragment key={`${material.id}_${index}`}>
+                  <Marker
+                    key={`${material.id}_${index}`}
+                    position={[location.x, location.y]}
+                    icon={
+                      L.icon({
+                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${this.state.assignedColors[material.id]}.png`,
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41],
+                      }) as any
+                    }
+                  >
+                    <Popup
+                      onOpen={() => this.handlePopupToggle(material.id, index)}
+                      onClose={() => this.handlePopupToggle(material.id, index)}
+                    >
+                      ID: {material.id}
+                      <br />
+                      Location {index + 1}:
+                      {Object.entries(location).map(([fieldName, fieldValue]) => (
+                        <div key={fieldName}>
+                          <strong>{fieldName}</strong>:{' '}
+                          {this.state.editingMaterialId === material.id &&
+                          this.state.editingLocationIndex === index &&
+                          this.state.editingFieldName === fieldName ? (
+                            <input
+                              type="text"
+                              value={this.state.editedFieldValue}
+                              onChange={(e) =>
+                                this.handleFieldChange(
+                                  material.id,
+                                  index,
+                                  fieldName,
+                                  e.target.value
+                                )
+                              }
+                              onKeyPress={(e) =>
+                                this.handleKeyPress(
+                                  material.id,
+                                  index,
+                                  fieldName,
+                                  e
+                                )
+                              }
+                            />
+                          ) : (
+                            <span
+                              onClick={() =>
+                                this.handleFieldChange(
+                                  material.id,
+                                  index,
+                                  fieldName,
+                                  fieldValue
+                                )
+                              }
+                            >
+                              {fieldValue}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </Popup>
+                  </Marker>
+                  {location.radius !== 0 && (
+                    <Circle
+                      key={`${material.id}_${index}_circle_${location.radius}`}
+                      center={[location.x, location.y]}
+                      radius={location.radius}
+                      pathOptions={{ color: this.getColorCode(this.state.assignedColors[material.id]) }}
+                    />
                   )}
-                </Popup>
-              </Marker>
-              {location.radius !== 0 && (
-              <Circle
-                 key={`${material.id}_${index}_circle_${location.radius}`}
-                center={[location.x, location.y]}
-                radius={location.radius}
-                pathOptions={{ color: 'red' }}
-              />
-            )}
-              </React.Fragment>
-            ))
+                </React.Fragment>
+              );
+            })
           )}
         </MapContainer>
         <div style={{ width: '50%' }}>
