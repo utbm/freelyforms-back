@@ -4,6 +4,7 @@ import L from 'leaflet';
 import Material from './Material';
 import './leaflet.css';
 import './styles.css';
+import Location from './Location';
 
 class Home extends React.Component<{}, AppState> {
   constructor(props: {}) {
@@ -64,7 +65,7 @@ class Home extends React.Component<{}, AppState> {
     locationIndex: number,
     newCoordinates: { x: number; y: number }
   ) => {
-    this.setState((prevState) => {
+    this.setState((prevState: { materials: any[]; }) => {
       const updatedMaterials = prevState.materials.map((material) => {
         if (material.id === materialId && material.locations) {
           const updatedLocations = [...material.locations];
@@ -94,7 +95,7 @@ class Home extends React.Component<{}, AppState> {
     fieldName: string,
     editedValue: string
   ) => {
-    this.setState((prevState) => {
+    this.setState((prevState: { materials: any[]; }) => {
       const updatedMaterials = prevState.materials.map((material) => {
         if (material.id === materialId && material.locations) {
           const updatedLocations = [...material.locations];
@@ -159,7 +160,7 @@ class Home extends React.Component<{}, AppState> {
   };
 
   handlePopupToggle = (materialId: string, locationIndex: number) => {
-    this.setState((prevState) => {
+    this.setState((prevState: { materials: any[]; }) => {
       const updatedMaterials = prevState.materials.map((material) => {
         if (material.id === materialId && material.locations) {
           const updatedLocations = [...material.locations];
@@ -200,7 +201,7 @@ class Home extends React.Component<{}, AppState> {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {this.state.materials.map((material) =>
+          {this.state.materials.map((material: { locations: any[]; id: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; }) =>
             material.locations &&
             material.locations.map((location, index) => (
               <Marker
@@ -265,7 +266,7 @@ class Home extends React.Component<{}, AppState> {
           )}
         </MapContainer>
         <div style={{ width: '50%' }}>
-          {this.state.materials.map((material) => (
+          {this.state.materials.map((material: { id: any; type?: string; location?: string; fields?: { name: string; type: string; data: any; }[]; locations?: Location[] | undefined; }) => (
             <Material
               key={material.id}
               material={material}
