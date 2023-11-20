@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import Material from './Material';
 import './leaflet.css';
@@ -22,13 +22,13 @@ class Home extends React.Component<{}, AppState> {
             {
               x: 51.52,
               y: -0.09,
-              radius: 10,
+              radius: 100,
               address: 'Location 1 Address',
             },
             {
               x: 51.53,
               y: -0.09,
-              radius: 10,
+              radius: 20,
               address: 'Location 1 Address 2 ',
             },
           ],
@@ -44,7 +44,7 @@ class Home extends React.Component<{}, AppState> {
             {
               x: 51.52,
               y: -0.08,
-              radius: 0,
+              radius: 200,
               address: 'Location 2 Address',
             },
           ],
@@ -204,6 +204,7 @@ class Home extends React.Component<{}, AppState> {
           {this.state.materials.map((material: { locations: any[]; id: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; }) =>
             material.locations &&
             material.locations.map((location, index) => (
+              <React.Fragment key={`${material.id}_${index}`}>
               <Marker
                 key={`${material.id}_${index}`}
                 position={[location.x, location.y]}
@@ -262,6 +263,15 @@ class Home extends React.Component<{}, AppState> {
                   )}
                 </Popup>
               </Marker>
+              {location.radius !== 0 && (
+              <Circle
+                 key={`${material.id}_${index}_circle_${location.radius}`}
+                center={[location.x-0.0001, location.y+0.0001]}
+                radius={location.radius}
+                pathOptions={{ color: 'red' }}
+              />
+            )}
+              </React.Fragment>
             ))
           )}
         </MapContainer>
