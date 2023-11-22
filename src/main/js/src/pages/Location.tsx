@@ -13,8 +13,8 @@ export default class Location extends React.Component<LocationType> {
       <div>
         <div>X: {this.props.x}</div>
         <div>Y: {this.props.y}</div>
-        <div>Radius: {this.props.radius}</div>
-        <div>Address: {this.props.address}</div>
+        <div>Rayon : {this.props.radius}</div>
+        <div>Adresse: {this.props.address}</div>
       </div>
     );
   }

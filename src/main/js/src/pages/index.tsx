@@ -28,7 +28,7 @@ class Home extends React.Component<{}, AppState> {
             {
               x: 51.53,
               y: -0.09,
-              radius: 20,
+              radius: 600,
               address: 'Location 1 Address 2 ',
             },
           ],
@@ -44,7 +44,7 @@ class Home extends React.Component<{}, AppState> {
             {
               x: 51.52,
               y: -0.08,
-              radius: 200,
+              radius: 400,
               address: 'Location 2 Address',
             },
           ],

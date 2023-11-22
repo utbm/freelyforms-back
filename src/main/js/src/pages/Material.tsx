@@ -22,6 +22,7 @@ type MaterialState = {
   editingLocationField: string | null;
   editedFieldValue: string; 
   editingLocationIndex: number | null; 
+  radiusValues: { [key: number]: number }; // New state property for radius values
 };
 
 export default class Material extends React.Component<
@@ -38,6 +39,7 @@ export default class Material extends React.Component<
       editingLocationField: null,
       editedFieldValue: '',
       editingLocationIndex: null,
+      radiusValues: {}, // Initialize radius values
     };
   }
 
@@ -81,6 +83,29 @@ export default class Material extends React.Component<
     this.setState({ editedFieldValue: event.target.value });
   };
 
+
+  handleRadiusChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    locationIndex: number
+  ) => {
+    const radiusValue = parseInt(event.target.value, 10);
+
+    this.setState((prevState) => ({
+      radiusValues: {
+        ...prevState.radiusValues,
+        [locationIndex]: radiusValue,
+      },
+    }));
+
+    const { material, onLocationChange } = this.props;
+
+    // Update the radius in the parent component
+    onLocationChange?.(locationIndex, {
+      x: parseFloat(material.locations![locationIndex].x),
+      y: parseFloat(material.locations![locationIndex].y),
+      radius: radiusValue,
+    });
+  };
 
 handleLocationFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -148,12 +173,14 @@ handleLocationFieldChange = (
 
   render() {
     const { material } = this.props;
+
     const {
       showFields,
       editingFieldIndex,
       editingLocationField,
       editedFieldValue,
       editingLocationIndex,
+      radiusValues,
     } = this.state;
 
     return (
@@ -201,6 +228,22 @@ handleLocationFieldChange = (
                     <strong>Location {index + 1}:</strong>
                     {Object.entries(location).map(
                       ([fieldName, fieldValue]) => (
+                        fieldName === 'radius' ? (
+                          <div key="radius" style={{ marginLeft: '20px' }}>
+                          <strong>Radius:</strong>{' '}
+                          <input
+                            type="range"
+                            min="0"
+                            max="2000"
+                            value={radiusValues[index] || 0}
+                            onChange={(e) =>
+                              this.handleRadiusChange(e, index)
+                            }
+                          />
+                          {radiusValues[index]} meters
+                        </div>
+                      ) : 
+                      
                         <div key={fieldName}>
                           <strong>{fieldName}</strong> :{' '}
                           {editingLocationField === fieldName &&
@@ -214,7 +257,9 @@ handleLocationFieldChange = (
                               onBlur={this.stopEditingField}
                               onKeyPress={this.handleKeyPress}
                             />
-                          ) : (
+                          
+                          ) 
+                          : (
                             <span
                               onClick={() =>
                                 this.startEditingLocationField(fieldName, index)
@@ -223,7 +268,8 @@ handleLocationFieldChange = (
                               {fieldValue}
                             </span>
                           )}
-                        </div>
+                          
+                         </div>
                       )
                     )}
                   </div>
