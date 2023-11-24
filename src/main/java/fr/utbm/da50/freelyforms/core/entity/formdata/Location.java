@@ -8,7 +8,6 @@ import java.util.UUID;
 /**
  * The Location class holds data about where materials
  * are present on the map
- * @author illuminatumSolis
  */
 @Data
 public class Location {

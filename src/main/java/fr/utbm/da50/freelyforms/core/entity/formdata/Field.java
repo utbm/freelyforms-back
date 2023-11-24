@@ -11,8 +11,6 @@ import org.springframework.data.annotation.PersistenceCreator;
  * Note: the other entity of this name in the prefab package is related to form configuration,
  * whereas this one is related to data holding
  * </p>
- *
- * @author Pourriture
  */
 @Data
 public class Field

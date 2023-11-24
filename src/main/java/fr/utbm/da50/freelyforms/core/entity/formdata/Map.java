@@ -8,8 +8,6 @@ import java.util.UUID;
 
 /**
  * The Map class holds data.
- *
- * @author illuminatumSolis
  */
 @Data
 public class Map {

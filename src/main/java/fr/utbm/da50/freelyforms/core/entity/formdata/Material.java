@@ -10,7 +10,6 @@ import java.util.UUID;
 /**
  * The Material class holds data of a material including locations
  * (where that material is present).
- * @author illuminatumSolis
  */
 @Data
 public class Material {

@@ -74,42 +74,42 @@ public class FormData {
         return true;
     }
 
-    public String getPrefabName() {
-        return prefabName;
-    }
-
-    public void setPrefabName(String prefabName) {
-        this.prefabName = prefabName;
-    }
-
-    public ArrayList<Group> getGroups() {
-        return groups;
-    }
-
     /**
      * @param name the name of the group to look for
      * @return the group that has been looked for
-     * @throws Exception if the group has not been found
      */
-    public Group getGroup(String name) throws Exception {
+    public Group getGroup(String name){
         for (Group g : this.groups) {
             if (g.getName().equals(name)) {
                 return g;
             }
         }
-        throw new Exception("Group " + name +  " not found in FormData " + _id + " of prefabName " + prefabName);
+        return null;
     }
-
     public void setGroups(ArrayList<Group> groups) {
         this.groups = groups;
     }
-
     /**
-     * @param name the name of the new group
+     * @param group the name of the new group
      */
-    public void addGroup(String name) {
-        this.groups.add(new Group(name, new ArrayList<>()));
+    public boolean addGroup(Group group){
+        System.out.println("\nthis.groups.isEmpty()" + this.groups.isEmpty() );
+        if(this.groups.isEmpty()){
+            this.groups.add(group);
+        } else{
+            boolean proceed = true;
+            for(Group p : this.groups){
+                System.out.println("p.getName().equals(group.getName()): " + p.getName().equals(group.getName()));
+                if(p.getName().equals(group.getName())){
+                    proceed = false;
+                }
+            }
+            if(proceed){
+                this.groups.add(group);
+                return true;
+            }
+        }
+        return false;
     }
-
 
 }

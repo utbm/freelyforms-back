@@ -1,5 +1,6 @@
 package fr.utbm.da50.freelyforms.core.entity.formdata;
 
+import lombok.Data;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -11,29 +12,33 @@ import java.util.ArrayList;
  *
  * Note: the other entity of this name in the prefab package is related to form configuration,
  * whereas this one is related to data holding
- * </p>
  *
- * @author Pourriture
  */
+@Data
 public class Group {
     /**
      * Name of the group, unique within a FormData object and mirroring a group name in the related Prefab object
      */
     private String name;
-
+    /**
+     * Each group has a map
+     * */
+    private  Map map;
     /**
      * Fields of the group, mirroring group fields in the related Prefab object
      */
     private ArrayList<Field> fields;
 
     @PersistenceCreator
-    public Group(String name, ArrayList<Field> fields) {
+    public Group(String name, ArrayList<Field> fields, Map map) {
         this.name = name;
         this.fields = fields;
+        this.map = map;
     }
     public Group(){
         this.name = "DEFAULT_NAME";
         this.fields = null;
+        this.map = null;
     }
 
     /**
@@ -44,38 +49,21 @@ public class Group {
         for (Field f : fields){
             ret.append("\n\t").append(f.inspect());
         }
+        ret.append(map.inspect());
         return ret.toString();
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
-
 
     /**
      * @param name the name of the field to look for
      * @return the field that has been looked for
-     * @throws Exception if the field has not been found
      */
-    public Field getField(String name) throws Exception {
+    public Field getField(String name){
         for (Field f : this.fields) {
             if (f.getName().equals(name)) {
                 return f;
             }
         }
-        throw new Exception("Field" + name +  " not found in group " + this.name);
+       return  null;
     }
 
     /**
