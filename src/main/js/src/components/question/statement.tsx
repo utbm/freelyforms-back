@@ -4,7 +4,7 @@ import Reveal from '../reveal'
 import type { Question } from './index'
 
 interface Statement extends Question {
-  duration?: number
+  duration?: number | null
 }
 
 export default function Statement( props: Statement ) {

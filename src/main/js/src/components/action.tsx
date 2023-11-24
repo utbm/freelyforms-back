@@ -1,8 +1,8 @@
 import { BsSkipEnd } from 'react-icons/bs'
 
 interface Props {
-  hidden: boolean,
-  next: () => void,
+  hidden?: boolean,
+  next?: () => void,
   answer?: string | string[] | null,
   required?: boolean,
   action?: string

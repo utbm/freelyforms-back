@@ -16,9 +16,9 @@ interface Option {
 }
 
 interface SelectQuestion extends Question {
-  answer?: string[] | null,
-  setAnswer: (val: string[] | null) => void,
-  helper: Helper,
+  answer?: string[] | string,
+  setAnswer: (val: string[]) => void,
+  helper?: Helper,
   setHelper: (val: Helper) => void,
   multiple?: boolean,
   options?: Option[],
@@ -98,7 +98,9 @@ export default function Select( props: SelectQuestion ) {
   }
 
   const next = () => {
-    props.next()
+    if(props.next) {
+      props.next()
+    }
   }
 
   return (

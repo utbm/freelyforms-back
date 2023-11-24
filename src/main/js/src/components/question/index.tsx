@@ -3,40 +3,48 @@ import Final from './final'
 import Text from './text'
 import Select from './select'
 
-interface Helper {
+export interface Helper {
   value: string | null, visible?: boolean
 }
 
 export interface Question {
-  id: string,
-  current: string,
+  id: number,
+  current?: number | null,
   main?: string,
   desc?: string,
   autocomplete?: string,
-  required: boolean,
+  required?: boolean,
   type?: string,
-  next: () => void,
-  move: (dir:string) => void,
-  hidden: boolean,
+  next?: () => void,
+  move?: (dir:string) => void,
+  hidden?: boolean,
   isLast?: boolean,
   action?: string,
-  helper: Helper,
-  setHelper: (val: Helper) => void,
+  helper?: Helper,
+  setHelper?: (val: Helper) => void,
+  duration?: number | null,
+  letter?: number,
+  condition?: {
+    question: number,
+    includes?: string | null,
+    answered?: boolean
+  }[]
 }
 
 interface GenericQuestion extends Question {
-  setAnswer: (answers: {[key: string|number]: (string | string[] | null)}) => void,
-  setHelpers: (helpers: {[key: string|number]: Helper}) => void
+  setAnswer: (answers: {[key: string|number]: (string | string[])}) => void,
+  setHelpers: (helpers: {[key: string|number]: Helper}) => void,
+  answer: string | string[]
 }
 
 export default function Question( props: GenericQuestion ) {
 
   const custom = {
     ...props,
-    next: props.move.bind(null, 'next'),
-    prev: props.move.bind(null, 'prev'),
-    setAnswer: (answer: string | string[] | null) => {
-      const res: {[key: string|number]: (string | string[] | null)} = {}
+    next: props.move ? props.move.bind(null, 'next') : () => {},
+    prev: props.move ? props.move.bind(null, 'prev') : () => {},
+    setAnswer: (answer: string | string[]) => {
+      const res: {[key: string|number]: (string | string[])} = {}
       res[props.id] = answer
       return props.setAnswer(res)
     },

@@ -8,17 +8,23 @@ import Reveal from '../reveal'
 import Action from '../action'
 
 interface TextQuestion extends Question {
-  answer?: string | null,
-  setAnswer: (val: string | null) => void
+  answer?: string | string[],
+  setAnswer: (val: string) => void
 }
 
 export default function Text( props: TextQuestion ) {
   
   const updateHelper = (val?: string | null) => {
+    if(!props.setHelper) {
+      return;
+    }
     if(!props.required) {
       props.setHelper({ value: null, visible: false })
     } else {
       const a = val !== undefined ? val : props.answer
+      if(typeof a !== 'string') {
+        return
+      }
       if(!a || !a.length) {
         props.setHelper({ value: 'Please fill this in' })
       } else if(props.type === 'email' && !isEmail(a)) {
@@ -38,9 +44,8 @@ export default function Text( props: TextQuestion ) {
   }, []);
 
   const setAnswer = (val: string) => {
-    const normalized = (val && val.length > 0) ? val : null
-    props.setAnswer(normalized)
-    updateHelper(normalized)
+    props.setAnswer(val)
+    updateHelper(val)
   }
 
   return (
@@ -77,11 +82,14 @@ export default function Text( props: TextQuestion ) {
             (props.helper && props.helper.visible) ? 
             <Error text={props.helper.value} /> :
             <Action {...props} next={() => {
-              if(isAndroid) {
-                setTimeout(props.next, 250)
-              } else {
-                props.next()
+              if(props.next) {
+                if(isAndroid) {
+                  setTimeout(props.next, 250)
+                } else {
+                  props.next()
+                }
               }
+              
             }} />
           }
         </form>
@@ -92,6 +100,7 @@ export default function Text( props: TextQuestion ) {
 
 function isEmail( email: string ) {
   return email.match(
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(\.+\))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    // eslint-disable-next-line no-useless-escape
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   )
 }
