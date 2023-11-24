@@ -1,9 +1,11 @@
 package fr.utbm.da50.freelyforms.core.service;
 
 
+import com.mongodb.client.MongoClients;
 import fr.utbm.da50.freelyforms.core.entity.FormData;
 import fr.utbm.da50.freelyforms.core.repository.FormDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 
@@ -24,6 +26,9 @@ public class FormDataService {
 
     @Autowired
     private FormDataRepository formDataRepository;
+
+    @Autowired
+    private final MongoTemplate mongoTemplate = new MongoTemplate(MongoClients.create("mongodb+srv://<manman>:<lKlx7IraHVvKg5w1>@cluster0.eplugoj.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp"),"freelyforms");
 
 
     /**
