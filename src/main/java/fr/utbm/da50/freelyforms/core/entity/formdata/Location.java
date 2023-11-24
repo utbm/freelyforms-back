@@ -6,13 +6,8 @@ import org.springframework.data.annotation.PersistenceCreator;
 import java.util.UUID;
 
 /**
- * The Material class holds the data. Its name mirrors the name of a field in the related Prefab class
- * <p>
- *
- * Note: the other entity of this name in the prefab package is related to form configuration,
- * whereas this one is related to data holding
- * </p>
- *
+ * The Location class holds data about where materials
+ * are present on the map
  * @author illuminatumSolis
  */
 @Data
@@ -37,9 +32,6 @@ public class Location {
      */
     private String address;
 
-    /**
-     * returns TRUE if it is a single point otherwise returns FALSE
-     */
     @PersistenceCreator
     public Location(String address,double x, double y, double radius){
         id = UUID.randomUUID().toString();
@@ -55,10 +47,13 @@ public class Location {
 
     }
 
+    /**
+     * @return TRUE if it is a point
+     *         FALSE if it is a zone
+     * */
     public Boolean getType(){
         return radius == 0;
     }
-
     /**
      * @return a stringified representation of the location
      */

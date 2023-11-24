@@ -8,21 +8,12 @@ import java.util.UUID;
 
 
 /**
- * The Material class holds the data. Its name mirrors the name of a field in the related Prefab class
- * <p>
- *
- * Note: the other entity of this name in the prefab package is related to form configuration,
- * whereas this one is related to data holding
- * </p>
- *
+ * The Material class holds data of a material including locations
+ * (where that material is present).
  * @author illuminatumSolis
  */
 @Data
 public class Material {
-    /**
-     * Each material has a unique Identifier
-     * */
-    private final String _id;
     /**
      * Each material has a unique name
      * */
@@ -42,7 +33,6 @@ public class Material {
 
     @PersistenceCreator
     public Material(String name, String type, String color, ArrayList<Location> locationArrayList){
-        _id = UUID.randomUUID().toString();
         this.name = name;
         this.type = type;
         this.color = color;
@@ -50,7 +40,6 @@ public class Material {
     }
 
     public Material(){
-        this._id = UUID.randomUUID().toString();
         this.name="DEFAULT_NAME";
         this.type = "DEFAULT_TYPE";
         this.color = "#000000";
