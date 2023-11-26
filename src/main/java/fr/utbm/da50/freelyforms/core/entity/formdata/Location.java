@@ -43,7 +43,6 @@ public class Location {
         id = UUID.randomUUID().toString();
         this.x = this.y = this.radius = 0;
         this.address = "DEFAULT_ADDRESS";
-
     }
 
     /**
