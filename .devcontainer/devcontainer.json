@@ -50,7 +50,7 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "java -version",
 
-	// Configure tool-specific properties.
+	// Configure tool-specific properties.ff
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
