@@ -209,7 +209,7 @@ class Home extends React.Component<{}, AppState> {
       case 'violet':
         return '#9C2BCB';
       default:
-        return '#0000FF'; // Handle other cases or return a default color
+        return '#0000FF'; // Handle other cases or return a default colorr
     }
   }
 
