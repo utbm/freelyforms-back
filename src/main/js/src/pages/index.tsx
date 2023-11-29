@@ -89,6 +89,7 @@ handleDeleteMaterial = (materialId) => {
 };
 
 
+
   handleLocationChange = (
     materialId: string,
     locationIndex: number,
@@ -147,6 +148,49 @@ handleDeleteMaterial = (materialId) => {
       };
     });
   };
+
+
+
+handleAddLocation = (materialId, newLocationData) => {
+  this.setState((prevState) => {
+    const updatedMaterials = prevState.materials.map((material) => {
+      if (material.id === materialId && material.locations) {
+        return {
+          ...material,
+          locations: [...material.locations, newLocationData],
+        };
+      }
+
+      return material;
+    });
+
+    return {
+      materials: updatedMaterials,
+    };
+  });
+};
+
+handleDeleteLocation = (materialId, locationIndex) => {
+  this.setState((prevState) => {
+    const updatedMaterials = prevState.materials.map((material) => {
+      if (material.id === materialId && material.locations) {
+        const updatedLocations = [...material.locations];
+        updatedLocations.splice(locationIndex, 1);
+
+        return {
+          ...material,
+          locations: updatedLocations,
+        };
+      }
+
+      return material;
+    });
+
+    return {
+      materials: updatedMaterials,
+    };
+  });
+};
 
  
   handleFieldChange = (
@@ -381,8 +425,9 @@ handleDeleteMaterial = (materialId) => {
                 this.handleFieldEdit(material.id, index, fieldName, editedValue)
               }
               onDelete={() => this.handleDeleteMaterial(material.id)} // Add this line
-
-            />
+              onAddLocation={this.handleAddLocation} // Pass the callback here
+              onDeleteLocation={(index) => this.handleDeleteLocation(material.id, index)} // Pass the material ID and index here
+              />
           ))}
         </div>
       </div>

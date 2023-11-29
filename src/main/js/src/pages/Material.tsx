@@ -172,6 +172,27 @@ handleLocationFieldChange = (
     this.stopEditingField();
   };
 
+  handleAddLocation = () => {
+    const { material } = this.props;
+  
+    // Assuming you have default values for a new location
+    const newLocationData = {
+      x: 51.52,
+      y: -0.09,
+      radius: 0,
+      address: 'New Location adress',
+    };
+  
+    // Trigger the onLocationChange callback to add the new location to the material
+    this.props.onAddLocation?.(material.id, newLocationData);
+  };
+
+  handleDeleteLocation = (index: number) => {
+    // Pass the index to the parent component for deletion
+    this.props.onDeleteLocation?.(index);
+  };
+
+
   render() {
     const { material } = this.props;
 
@@ -189,7 +210,7 @@ handleLocationFieldChange = (
         <div className="data">
           <div>ID: {material.id}</div>
           <div>({material.type})</div>
-          <button>
+          <button onClick={this.handleAddLocation}>
             <i className="material-icons">location_on</i>
           </button>
       <button onClick={() => this.props.onDelete(material.id)}>
@@ -226,6 +247,9 @@ handleLocationFieldChange = (
               {material.locations &&
                 material.locations.map((location, index) => (
                   <div key={index} style={{ marginLeft: '20px' }}>
+                      <button onClick={() => this.handleDeleteLocation(index)}>
+                              Delete
+                            </button> <br></br>
                     <strong>Location {index + 1}:</strong>
                     {Object.entries(location).map(
                       ([fieldName, fieldValue]) => (
