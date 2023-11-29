@@ -9,11 +9,12 @@ type MaterialType = {
   fields: { name: string; type: string; data: any }[];
   locations?: Location[];
 };
-
 type MaterialProps = {
   material: MaterialType;
   onLocationChange?: (index: number, newCoordinates: { x: number; y: number }) => void;
   onFieldEdit?: (index: number, fieldName: string, editedValue: string) => void;
+  onDelete?: () => void; // Add this line
+
 };
 
 type MaterialState = {
@@ -191,9 +192,9 @@ handleLocationFieldChange = (
           <button>
             <i className="material-icons">location_on</i>
           </button>
-          <button>
-            <i className="material-icons">delete</i>
-          </button>
+      <button onClick={() => this.props.onDelete(material.id)}>
+        <i className="material-icons">delete</i>
+      </button>
           <button onClick={this.toggleFields}>
             <i className="material-icons">
               {showFields ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}

@@ -59,9 +59,36 @@ class Home extends React.Component<{}, AppState> {
         },
       ],
       assignedColors: {}, // New array to track assigned colors
-
     };
   };
+
+handleCreateMaterial = () => {
+  // Create a new material with default values
+  const newMaterial = {
+    id: Date.now().toString(), // Generate a unique ID (you can use a library like uuid for better uniqueness)
+    type: 'New Type', // Set default type
+    fields: [
+      { name: 'Default Field', type: 'string', data: 'Default Data' },
+    ],
+    locations: [
+      { x: 51.5, y: -0.1, radius: 200, address: 'Default Location Address' },
+    ],
+  };
+
+  // Update the state to include the new material
+  this.setState((prevState) => ({
+    materials: [...prevState.materials, newMaterial],
+  }));
+};
+
+handleDeleteMaterial = (materialId) => {
+  // Update the state to remove the selected material
+  this.setState((prevState) => ({
+    materials: prevState.materials.filter((material) => material.id !== materialId),
+  }));
+};
+
+
   handleLocationChange = (
     materialId: string,
     locationIndex: number,
@@ -185,10 +212,26 @@ class Home extends React.Component<{}, AppState> {
       };
     });
   };
+
   getRandomColor() {
     const colors = ['blue', 'red', 'green', 'orange', 'black', 'grey', 'yellow', 'violet'];
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    return colors[randomIndex];
+    
+    const availableColors = colors.filter(color => !this.state.assignedColors[color]);
+    if (availableColors.length === 0) {
+      this.setState({ assignedColors: {} });
+    }
+
+    const randomIndex = Math.floor(Math.random() * availableColors.length);
+    const randomColor = availableColors[randomIndex];
+
+    this.setState(prevState => ({
+      assignedColors: {
+        ...prevState.assignedColors,
+        [randomColor]: true,
+      },
+    }));
+
+    return randomColor;
   }
   getColorCode (color: string){
     switch (color) {
@@ -323,6 +366,9 @@ class Home extends React.Component<{}, AppState> {
             })
           )}
         </MapContainer>
+        <button onClick={this.handleCreateMaterial}>
+    Add New Material
+  </button>
         <div style={{ width: '50%' }}>
           {this.state.materials.map((material: { id: any; type?: string; location?: string; fields?: { name: string; type: string; data: any; }[]; locations?: Location[] | undefined; }) => (
             <Material
@@ -334,6 +380,8 @@ class Home extends React.Component<{}, AppState> {
               onFieldEdit={(index, fieldName, editedValue) =>
                 this.handleFieldEdit(material.id, index, fieldName, editedValue)
               }
+              onDelete={() => this.handleDeleteMaterial(material.id)} // Add this line
+
             />
           ))}
         </div>
