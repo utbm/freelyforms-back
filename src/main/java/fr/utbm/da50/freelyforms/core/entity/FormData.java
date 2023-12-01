@@ -11,11 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * The FormData class holds data that has been filled by users, in its Group and Field classes ;
  * the structure of these groups and classes mirrors the structure of the associated prefab.
- *
+ * <p>
  * Once a form is filled, the front-end app sends the result to the FormData API,
  * which turns the input into a FormData object.
  * This class is used by SpringData to identify and store FormData documents in the form_data collection.
@@ -23,13 +24,11 @@ import java.util.ArrayList;
  * @author Pourriture
  * */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Document("form_data")
 public class FormData {
 
     @Id
-    ObjectId _id;
+    private final ObjectId _id;
 
     /**
      * name of the prefab to which this form data is related to
@@ -42,10 +41,15 @@ public class FormData {
 
     @PersistenceCreator
     public FormData(String prefabName, ArrayList<Group> groups) {
+        this._id = new ObjectId();
         this.prefabName = prefabName;
         this.groups = groups;
     }
-
+    public FormData() {
+        this._id = new ObjectId();
+        this.prefabName = null;
+        this.groups = null;
+    }
     /**
      * @return a string representing the form data
      */

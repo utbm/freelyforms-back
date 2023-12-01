@@ -57,11 +57,11 @@ public class FormDataController {
      * @param formData the formdata object
      * @return FormData Object
      */
-//    @PatchMapping("/patch")
-//    @ResponseBody
-//    public FormData modifyFormData(@RequestBody FormData formData){
-//        return formData;
-//    }
+    @PatchMapping("/patch")
+    @ResponseBody
+    public FormData modifyFormData(@RequestBody FormData formData){
+        return service.modifyFormData(formData);
+    }
     /**
      * DELETE /api/formdata/delete
      * @param requestBodyData contains id of formdata object

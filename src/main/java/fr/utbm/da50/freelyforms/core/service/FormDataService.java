@@ -51,8 +51,17 @@ public class FormDataService {
      * @param formData Formdata Object to be saved
      * @return FormData object
      */
-    public FormData postFormData(FormData formData){
-        return mongoTemplate.insert(formData);
+    public FormData postFormData(FormData formData){return mongoTemplate.insert(formData);}
+    /**
+     * Modify a formdata and save it in the database
+     * @param formData Formdata Object to be saved
+     * @return FormData object
+     */
+    public FormData modifyFormData(FormData formData){
+        Query query = new Query(Criteria.where("_id").is(formData.get_id()));
+        Update update = new Update().set("prefabName",formData.getPrefabName()).set("groups",formData.getGroups());
+        mongoTemplate.updateFirst(query,update,FormData.class);
+        return formData;
     }
     /**
      * Delete a formdata from the database
