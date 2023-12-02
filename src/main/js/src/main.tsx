@@ -2,10 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createApiClient } from "./apiClient/client";
+import { DevTools } from "jotai-devtools";
 
 import "./index.css";
 import Home from "./pages/Home";
 import FourOFour from "./pages/404";
+import { PrefabCreation } from "./pages/prefabCreation";
 
 export const apiclient = createApiClient(
 	(method, url, params) =>
@@ -25,6 +27,11 @@ const router = createBrowserRouter([
 		element: <Home />,
 		errorElement: <FourOFour />,
 	},
+	{
+		path: "/prefab-creation",
+		element: <PrefabCreation />,
+		errorElement: <FourOFour />,
+	},
 ]);
 
 const root = document.getElementById("root");
@@ -35,6 +42,7 @@ if (!root) {
 
 ReactDOM.createRoot(root).render(
 	<React.StrictMode>
+		<DevTools />
 		<RouterProvider router={router} />
 	</React.StrictMode>,
 );
