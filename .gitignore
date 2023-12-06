@@ -33,3 +33,5 @@ bin/
 
 ### VS Code ###
 .vscode/settings.json
+
+.DS_Store

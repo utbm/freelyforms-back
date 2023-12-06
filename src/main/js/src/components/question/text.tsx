@@ -22,10 +22,8 @@ export default function Text( props: TextQuestion ) {
       props.setHelper({ value: null, visible: false })
     } else {
       const a = val !== undefined ? val : props.answer
-      if(typeof a !== 'string') {
-        return
-      }
-      if(!a || !a.length) {
+
+      if(!a || typeof a !== 'string' || !a.length) {
         props.setHelper({ value: 'Please fill this in' })
       } else if(props.type === 'email' && !isEmail(a)) {
         props.setHelper({ value: 'Your email seems invalid' })

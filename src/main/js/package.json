@@ -11,7 +11,10 @@
 		"format": "prettier --write src"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.11.1",
 		"framer-motion": "^10.16.5",
+		"jotai": "^2.6.0",
+		"jotai-devtools": "^0.7.0",
 		"mobile-detect": "^1.4.5",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",

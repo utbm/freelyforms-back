@@ -22,20 +22,29 @@ export default function Home( ) {
     return md.os() === "AndroidOS";
   }, []);
 
-	const [survey, setSurvey] = useState<null | Survey>(null)
+	const [survey, _setSurvey] = useState<null | Survey>(null)
+  const _survey = useRef<null | Survey>(null)
+  const setSurvey = (value: null | Survey) => {
+    _survey.current = value;
+    _setSurvey(value);
+  }
   useEffect(() => {
     setSurvey(STATIC);
   }, [])
-	const [hidden, setHidden] = useState<{[key: string|number]: boolean}>({})
+	const [hidden, setHidden] = useState<Record<string | number, boolean>>({})
 
-	interface Answers {[key: string|number]: (string | string[])}
+	type Answers = Record<string | number, string | string[]>
+
+
 	const [_answers, _setAnswers] = useState<Answers>({})
   const answers = useRef<Answers>({})
 
   interface Helpers {[key: string|number] : Helper}
   const helpers = useRef<Helpers>({})
+  const [_helpers, _setHelpers] = useState<Helpers>({})
   const setHelpers = (val: Helpers) => {
     helpers.current = val
+    _setHelpers(val)
   }
 
   const [letter, setPressedLetter] = useState<number|null>()
@@ -44,15 +53,15 @@ export default function Home( ) {
   const moving = useRef<string | null>(null)
 
   const move = async ( target: string ) => {
-    if(moving.current === target || question.current === ((survey?.questions.length || 0) - 1)) {
+    if(moving.current === target || question.current === ((_survey.current?.questions.length || 0) - 1)) {
       return
     }
 
-    const q = survey?.questions[question.current || 0]
+    const q = _survey.current?.questions[question.current || 0]
     const h = helpers.current[question.current || 0]
 
     // is field invalid
-    if(target === 'next' && q?.required && h.value) {
+    if(target === 'next' && q?.required && h?.value) {
       const res = helpers.current
       res[question.current || 0] = { ...res[question.current || 0], visible: true }
       setHelpers({...res})
@@ -65,7 +74,7 @@ export default function Home( ) {
     // starts moving
     let id = question.current || 0
     let node: (HTMLElement | null) = null
-    while(!node && id < (survey?.questions.length || 0)) {
+    while(!node && id < (_survey.current?.questions.length || 0)) {
       id = target === 'next' ? id + 1 : id - 1
       node = document.getElementById(`q${id}`)
     }
@@ -176,7 +185,7 @@ export default function Home( ) {
                   answers.current = updatedAnswers
                   updateHidden(id)
                 }} 
-                helper={helpers.current[id]}
+                helper={_helpers[id]}
                 setHelpers={(val) => setHelpers({...helpers.current, ...val})}
               />)}
           )
