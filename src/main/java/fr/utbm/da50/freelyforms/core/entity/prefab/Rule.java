@@ -53,14 +53,14 @@ public class Rule {
     @Field
     @Builder.Default
     @NonFinal
-    private ArrayList<String> excludes = new ArrayList<>();
+    private List<String> excludes = new ArrayList<>();
     /**
      * Rules defining  verifications depending on fieldType and the specific class inherited from abstract class TypeRule in the array
      */
     @Field
     @Builder.Default
     @NonFinal
-    private ArrayList<TypeRule> typeRules = new ArrayList<>();
+    private List<TypeRule> typeRules = new ArrayList<>();
     /**
      * Whether the field will be hidden on the front-end app
      */
@@ -74,7 +74,7 @@ public class Rule {
     @Field
     @Builder.Default
     @NonNull
-    private ArrayList<String> selectorValues = new ArrayList<>();
+    private List<String> selectorValues = new ArrayList<>();
     /**
      * Data type for the field value
      */

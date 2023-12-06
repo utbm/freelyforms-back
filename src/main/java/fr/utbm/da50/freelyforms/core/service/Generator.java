@@ -8,6 +8,7 @@ import fr.utbm.da50.freelyforms.core.entity.prefab.Group;
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
 import fr.utbm.da50.freelyforms.core.entity.prefab.rule.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -54,12 +55,25 @@ public class Generator {
      */
     public static Prefab generatePerson() {
         ArrayList<Field> personFields = new ArrayList<>();
-        personFields.add(new Field("name","Nom","",new Rule(Rule.FieldType.STRING)));
+        TypeRule nameRule = new MaximumRule(50);
+        List<TypeRule> typeRules = new ArrayList<>();
+        typeRules.add(nameRule);
+
+        TypeRule sexRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.CHECKBOX);
+        List<TypeRule> sexTypeRules = new ArrayList<>();
+        sexTypeRules.add(sexRule);
+        List<String> sexSelectorValues = new ArrayList<>();
+        sexSelectorValues.add("Homme");
+        sexSelectorValues.add("Femme");
+
+        personFields.add(new Field("name","Nom","",Rule.builder().fieldType(Rule.FieldType.STRING).typeRules(typeRules).build()));
         personFields.add(new Field("dob","Date de naissance", "", new Rule(Rule.FieldType.DATE)));
         personFields.add(new Field("street","Rue de domicile","",new Rule(Rule.FieldType.SELECTOR)));
         personFields.get(2).getRules().addTypeRule(new SelectDataSet("streets.streetFields.streetName"));
         personFields.add(new Field("phone","Téléphone","0612345678", new Rule(Rule.FieldType.STRING)));
         personFields.get(3).getRules().addTypeRule(new RegexMatch("(('+'[0-9]{2})|0)[0-9]{8}"));
+        personFields.add(Field.builder().name("sex").label("Sexe").rules(Rule.builder().fieldType(Rule.FieldType.STRING).typeRules(sexTypeRules).selectorValues(sexSelectorValues).build()).build());
+
 
         ArrayList<Group> groups = new ArrayList<>();
         groups.add(new Group("personFields", "Identité", "", personFields));
