@@ -59,8 +59,9 @@ class Home extends React.Component<{}, AppState> {
         },
       ],
       assignedColors: {}, // New array to track assigned colors
+      colorIndex:0,
     };
-  };
+  }
 
 handleCreateMaterial = () => {
   // Create a new material with default values
@@ -259,24 +260,10 @@ handleDeleteLocation = (materialId, locationIndex) => {
 
   getRandomColor() {
     const colors = ['blue', 'red', 'green', 'orange', 'black', 'grey', 'yellow', 'violet'];
-    
-    const availableColors = colors.filter(color => !this.state.assignedColors[color]);
-    if (availableColors.length === 0) {
-      this.setState({ assignedColors: {} });
-    }
-
-    const randomIndex = Math.floor(Math.random() * availableColors.length);
-    const randomColor = availableColors[randomIndex];
-
-    this.setState(prevState => ({
-      assignedColors: {
-        ...prevState.assignedColors,
-        [randomColor]: true,
-      },
-    }));
-
-    return randomColor;
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
   }
+
   getColorCode (color: string){
     switch (color) {
       case 'blue':
@@ -317,11 +304,8 @@ handleDeleteLocation = (materialId, locationIndex) => {
             material.locations.map((location, index) => {
               // Assign a color to the material if not assigned yet
               if (!this.state.assignedColors[material.id]) {
-                let color = this.getRandomColor();
-                // Check if the color has been assigned to another material
-                while (Object.values(this.state.assignedColors).includes(color)) {
-                  color = this.getRandomColor();
-                }
+                const color = this.getRandomColor();
+
                 this.setState((prevState) => ({
                   assignedColors: {
                     ...prevState.assignedColors,
