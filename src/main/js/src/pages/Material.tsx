@@ -14,6 +14,8 @@ type MaterialProps = {
   onLocationChange?: (index: number, newCoordinates: { x: number; y: number }) => void;
   onFieldEdit?: (index: number, fieldName: string, editedValue: string) => void;
   onDelete?: () => void; // Add this line
+  onLocationSetManually?: (index: number) => void;
+
 
 };
 
@@ -31,6 +33,9 @@ export default class Material extends React.Component<
   MaterialState
 > {
   private outsideClickListener: () => void = () => {};
+  handleSetManually = (index: number) => {
+    this.props.onLocationSetManually?.(index);
+  };
 
   constructor(props: MaterialProps) {
     super(props);
@@ -222,11 +227,13 @@ handleLocationFieldChange = (
             </i>
           </button>
         </div>
+        
         <div className="fields">
           {showFields && (
             <>
               {material.fields.map((field, index) => (
                 <div key={index} style={{ marginLeft: '20px' }}>
+                  
                   <strong>{field.name}</strong> :{' '}
                   {editingFieldIndex === index ? (
                     <input
@@ -251,6 +258,10 @@ handleLocationFieldChange = (
                               Delete
                             </button> <br></br>
                     <strong>Location {index + 1}:</strong>
+                    <br></br>
+                    <button onClick={() => this.handleSetManually(index)}>
+                  Set Manually
+                </button>
                     {Object.entries(location).map(
                       ([fieldName, fieldValue]) => (
                         fieldName === 'radius' ? (

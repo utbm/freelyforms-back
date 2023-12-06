@@ -287,6 +287,28 @@ handleDeleteLocation = (materialId, locationIndex) => {
     }
   }
 
+  handleSetManually = (materialId: string, locationIndex: number) => {
+    this.setState({
+      manualSetMaterialId: materialId,
+      manualSetLocationIndex: locationIndex,
+    });
+  };
+
+  handleMapClick = (event: any) => {
+    const { manualSetMaterialId, manualSetLocationIndex } = this.state;
+
+    if (manualSetMaterialId !== null && manualSetLocationIndex !== null) {
+      const newCoordinates = { x: event.latlng.lat, y: event.latlng.lng };
+      this.handleLocationChange(manualSetMaterialId, manualSetLocationIndex, newCoordinates);
+
+      // Clear manual set state
+      this.setState({
+        manualSetMaterialId: null,
+        manualSetLocationIndex: null,
+      });
+    }
+  };
+
   render() {
     return (
       <div style={{ display: 'flex' }}>
@@ -294,6 +316,7 @@ handleDeleteLocation = (materialId, locationIndex) => {
           center={[51.505, -0.09]}
           zoom={13}
           style={{ height: '900px', width: '50%' }}
+          onClick={this.handleMapClick}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -337,6 +360,12 @@ handleDeleteLocation = (materialId, locationIndex) => {
                       ID: {material.id}
                       <br />
                       Location {index + 1}:
+                      <br />
+                      <button className='btn_set_coordinates'
+                      onClick={() => this.handleSetManually(material.id, index)}
+                    >
+                      Set Manually
+                    </button>
                       {Object.entries(location).map(([fieldName, fieldValue]) => (
                         <div key={fieldName}>
                           <strong>{fieldName}</strong>:{' '}

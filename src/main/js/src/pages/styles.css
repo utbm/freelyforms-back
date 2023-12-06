@@ -2,3 +2,8 @@
 .leaflet-container{
     height:100px;
 }
+
+.btn_set_coordinates{
+    background-color: grey;
+    color:white;
+}
