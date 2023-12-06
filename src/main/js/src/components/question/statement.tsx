@@ -13,8 +13,8 @@ export default function Statement( props: Statement ) {
     <section className='hero min-h-screen p-1 pb-12' id={`q${props.id}`}>
       <Reveal duration={.2} className='hero-content text-center w-full max-w-xl'>
         <div className='max-w-md text-left flex flex-col w-full'>
-          <h1 className='text-lg font-bold'>{props.main}</h1>
-          <p className='pt-2 pb-6 text-sm'>{props.desc}</p>
+          <h1 className='text-lg font-bold'>{props.label}</h1>
+          <p className='pt-2 pb-6 text-sm'>{props.caption}</p>
           <button
             className='btn btn-primary self-end relative'
             onClick={props.next}
@@ -27,13 +27,6 @@ export default function Statement( props: Statement ) {
                 width={11}
               />
             </span>
-            {
-              props.duration &&
-              <div className='absolute text-xs bottom-[-25px] text-base-200 font-normal normal-case flex justify-center items-center gap-1'>
-                <MdAccessTimeFilled size={15}/>
-                Takes {props.duration}
-              </div>
-            }
           </button>
         </div>
       </Reveal>

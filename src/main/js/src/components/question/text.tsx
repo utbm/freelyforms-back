@@ -50,8 +50,8 @@ export default function Text( props: TextQuestion ) {
     <section className='hero min-h-screen p-1 pb-12' id={`q${props.id}`}>
       <Reveal duration={.2} className='hero-content text-center w-full max-w-lg'>
         <form className='text-left flex flex-col w-full' method='POST' action='javascript:void(0)'>
-          <h1 className='text-lg font-bold'>{props.main}</h1>
-          <p className='pt-2 pb-4 text-sm'>{props.desc}</p>
+          <h1 className='text-lg font-bold'>{props.label}</h1>
+          <p className='pt-2 pb-4 text-sm'></p>
           {
             (props.type !== 'long text' && props.autocomplete) ? 
             <input
@@ -67,7 +67,7 @@ export default function Text( props: TextQuestion ) {
             <TextareaAutosize
               name={props.type === 'email' ? `email` : `q${props.id}-focus`}
               id={`q${props.id}-focus`}
-              placeholder='Your answer goes here'
+              placeholder={props.caption}
               className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
               maxRows={10}
               onChange={e => setAnswer(e.target.value)}

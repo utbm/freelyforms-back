@@ -8,8 +8,9 @@ export function useControls(move: (direction: string) => void, setLetter: (keyco
 
 	useEffect(() => {
 		// space, enter & arrows
-		window.onkeydown = (e: KeyboardEvent) => {
-			const isWriting = e?.isComposing;
+		window.onkeydown = (e: any) => {
+			const isWriting = e?.target?.tagName === 'TEXTAREA' ||
+        (e.target.tagName === 'INPUT' && e.target.type === 'text')
 
 			if ((e.key == " " || e.code == "Space" || e.keyCode == 32) && !isWriting) {
 				e.preventDefault();

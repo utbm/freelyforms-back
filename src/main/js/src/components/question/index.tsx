@@ -8,10 +8,10 @@ export interface Helper {
 }
 
 export interface Question {
-  id: number,
+  id: string,
   current?: number | null,
-  main?: string,
-  desc?: string,
+  label?: string,
+  caption?: string,
   autocomplete?: string,
   required?: boolean,
   type?: string,
@@ -22,7 +22,6 @@ export interface Question {
   action?: string,
   helper?: Helper,
   setHelper?: (val: Helper) => void,
-  duration?: number | null,
   letter?: number,
   condition?: {
     question: number,
@@ -60,7 +59,7 @@ export default function Question( props: GenericQuestion ) {
       return <Statement {...custom} />
     case 'final':
       return <Final {...custom} />
-    case 'text':
+    case 'STRING':
     case 'long text':
     case 'email':
       return <Text {...custom} />
