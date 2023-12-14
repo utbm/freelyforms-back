@@ -63,11 +63,11 @@ public class FormDataController {
     @GetMapping("{prefab}/{group}/{field}")
     @ResponseBody
     // GET all data relating to a single field (selector from data value)
-    public List<String> getAllFormDataFromPrefabField(@NonNull @NotNull @PathVariable("prefab") String prefabName,
+    public List<Object> getAllFormDataFromPrefabField(@NonNull @NotNull @PathVariable("prefab") String prefabName,
                                                       @NonNull @NotNull @PathVariable("group") String groupName,
                                                       @NonNull @NotNull @PathVariable("field") String fieldName) {
         try {
-            List<String> formDataFromPrefabField = service.getAllFormDataFromPrefabField(prefabName, groupName, fieldName);
+            List<Object> formDataFromPrefabField = service.getAllFormDataFromPrefabField(prefabName, groupName, fieldName);
             if (formDataFromPrefabField.isEmpty())
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             return formDataFromPrefabField;

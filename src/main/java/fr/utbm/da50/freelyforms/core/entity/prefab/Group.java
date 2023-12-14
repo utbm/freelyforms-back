@@ -4,10 +4,7 @@ import lombok.experimental.NonFinal;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.PersistenceCreator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The Group class holds the form fields that will be displayed on the front-end for the user to fill.
@@ -31,21 +28,21 @@ public class Group {
     /** Group display label on the frontend
      * */
     @Builder.Default
-            @NonNull
+    @NonNull
     String label = "DefaultGroupLabel";
 
     /** Mouse-over text over the group
      * */
     @Builder.Default
-            @NonNull
+    @NonNull
     String caption = "caption";
 
     /** A group holds one or more form fields and ensures they will be grouped together.
      * Field names are identifying within the group and therefore unique within the fields.
      * */
     @Builder.Default
-            @NonNull
-    ArrayList<Field> fields = new ArrayList<>();
+    @NonNull
+    List<Field> fields = new ArrayList<>();
 
 
 

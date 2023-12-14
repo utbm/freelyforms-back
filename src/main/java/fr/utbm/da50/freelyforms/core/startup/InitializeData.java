@@ -49,11 +49,13 @@ public class InitializeData {
 
         Prefab personPrefab = Generator.generatePerson();
         Prefab streetsPrefab = Generator.generateStreet();
+        Prefab carsPrefab = Generator.generateCars();
         FormData personFormData = Generator.generateFormData(personPrefab);
         FormData streetsFormData = Generator.generateFormData(streetsPrefab);
 
         mongoTemplate.insert(personPrefab);
         mongoTemplate.insert(streetsPrefab);
+        mongoTemplate.insert(carsPrefab);
         mongoTemplate.insert(personFormData);
         mongoTemplate.insert(streetsFormData);
 

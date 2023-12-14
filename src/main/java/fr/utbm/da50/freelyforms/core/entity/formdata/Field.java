@@ -34,7 +34,7 @@ public class Field
      */
     @Builder.Default
     @NonNull
-    private String value = "";
+    private Object value = "";
 
 
     /**

@@ -40,7 +40,8 @@ public class AlternativeDisplay extends TypeRule {
         CHECKBOX,
         RADIO,
         SLIDER,
-        CALENDAR
+        CALENDAR,
+        MULTIPLE_CHOICE
     }
 
     /**

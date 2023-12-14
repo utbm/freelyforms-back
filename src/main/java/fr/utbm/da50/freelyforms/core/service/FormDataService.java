@@ -64,13 +64,13 @@ public class FormDataService {
      * @return an array of all field values relating to a single prefab.group.field combination
      */
     @NonNull
-    public List<String> getAllFormDataFromPrefabField(@NonNull String prefabName, @NonNull String groupName, @NonNull String fieldName) throws NoExistingPrefabException, GroupNameNotFoundException, FieldNotFoundException {
+    public List<Object> getAllFormDataFromPrefabField(@NonNull String prefabName, @NonNull String groupName, @NonNull String fieldName) throws NoExistingPrefabException, GroupNameNotFoundException, FieldNotFoundException {
         Prefab prefab = prefabRepository.findPrefabByName(prefabName);
         if (prefab == null)
             throw new NoExistingPrefabException("getAllFormData : no pefab for this name : " + prefabName);
 
         List<FormData> data = getAllFormDataFromPrefab(prefabName);
-        ArrayList<String> ret = new ArrayList<>();
+        ArrayList<Object> ret = new ArrayList<>();
 
         for (FormData f : data) {
             ret.add(f.getGroup(groupName).getField(fieldName).getValue());

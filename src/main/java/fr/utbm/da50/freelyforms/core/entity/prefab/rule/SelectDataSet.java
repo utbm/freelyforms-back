@@ -59,7 +59,7 @@ public class SelectDataSet extends TypeRule {
         }
         FormDataService service = new FormDataService();
         String[] split = this.getValue().split("\\.");
-        List<String> values;
+        List<Object> values;
         try {
             values = service.getAllFormDataFromPrefabField(split[0], split[1], split[2]);
         } catch (NoExistingPrefabException | GroupNameNotFoundException | FieldNotFoundException e) {

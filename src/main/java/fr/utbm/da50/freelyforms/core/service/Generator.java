@@ -8,7 +8,6 @@ import fr.utbm.da50.freelyforms.core.entity.prefab.Group;
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
 import fr.utbm.da50.freelyforms.core.entity.prefab.rule.*;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -79,6 +78,100 @@ public class Generator {
         groups.add(new Group("personFields", "Identité", "", personFields));
 
         return new Prefab("people", "Gens", "Personnes", groups);
+
+    }
+
+    /**
+     *
+     * @return the Person prefab
+     */
+    public static Prefab generateCars() {
+        List<Field> generalInformationGroup = new ArrayList<>();
+        List<Field> technicalInformationGroup = new ArrayList<>();
+        List<Field> feedbackInformationGroup = new ArrayList<>();
+
+        TypeRule sexRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.CHECKBOX);
+        List<TypeRule> sexTypeRules = new ArrayList<>();
+        sexTypeRules.add(sexRule);
+
+        TypeRule yearRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.CALENDAR);
+        List<TypeRule> yearRules = new ArrayList<>();
+        yearRules.add(yearRule);
+
+        TypeRule namesMaximumRule = new MaximumRule(50);
+        List<TypeRule> namesRules = new ArrayList();
+        namesRules.add(namesMaximumRule);
+
+        Field brand = Field.builder().name("brand").label("Quel est la marque de la voiture?").caption("Citroen").rules(Rule.builder().fieldType(Rule.FieldType.STRING).typeRules(namesRules).build()).build();
+        Field model = Field.builder().name("model").label("Quel est le modèle de la voiture?").caption("Xsara").rules(Rule.builder().fieldType(Rule.FieldType.STRING).typeRules(namesRules).build()).build();
+        Field year = Field.builder().name("year").label("Quelle est la date de mise en circulation de la voiture?").caption("12/06/2000").rules(Rule.builder().fieldType(Rule.FieldType.DATE).typeRules(yearRules).build()).build();
+
+        generalInformationGroup.add(brand);
+        generalInformationGroup.add(model);
+        generalInformationGroup.add(year);
+
+        TypeRule engineTypeRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.DROPDOWN);
+        List<TypeRule> engineRules = new ArrayList();
+        engineRules.add(engineTypeRule);
+
+        List<String> engineSelectorValues = new ArrayList<>();
+        engineSelectorValues.add("1.8");
+        engineSelectorValues.add("1.9");
+        engineSelectorValues.add("2.0");
+        engineSelectorValues.add("2.0 HDI");
+
+        TypeRule optionsTypeRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.MULTIPLE_CHOICE);
+        List<TypeRule> optionsRules = new ArrayList();
+        optionsRules.add(optionsTypeRule);
+
+        List<String> optionsSelectorValues = new ArrayList<>();
+        engineSelectorValues.add("1.8");
+        engineSelectorValues.add("1.9");
+        engineSelectorValues.add("2.0");
+        engineSelectorValues.add("2.0 HDI");
+
+        TypeRule colorTypeRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.RADIO);
+        List<TypeRule> colorTypeRules = new ArrayList();
+        colorTypeRules.add(colorTypeRule);
+
+        List<String> colorSelectorValues = new ArrayList<>();
+        colorSelectorValues.add("Noir");
+        colorSelectorValues.add("Blanc");
+        colorSelectorValues.add("Rouge");
+        colorSelectorValues.add("Bleu");
+
+
+
+        Field engine = Field.builder().name("engine").label("Quel est la motorisation de la voiture?").caption("2.0 HDI").rules(Rule.builder().fieldType(Rule.FieldType.SELECTOR).selectorValues(engineSelectorValues).typeRules(engineRules).build()).build();
+        Field options = Field.builder().name("options").label("Quelles sont les options de la voiture?").rules(Rule.builder().fieldType(Rule.FieldType.SELECTOR).selectorValues(optionsSelectorValues).typeRules(optionsRules).build()).build();
+        Field color = Field.builder().name("color").label("Quelle est la couleur de la voiture?").rules(Rule.builder().fieldType(Rule.FieldType.SELECTOR).selectorValues(colorSelectorValues).typeRules(colorTypeRules).build()).build();
+
+        technicalInformationGroup.add(engine);
+        technicalInformationGroup.add(options);
+        technicalInformationGroup.add(color);
+
+        TypeRule emailTypeRule = new EmailRegexMatch();
+        List<TypeRule> emailTypeRules = new ArrayList<>();
+        emailTypeRules.add(emailTypeRule);
+
+        Field comment = Field.builder().name("comment").label("Quel commentaire pouvez vous faire sur cette voiture?").caption("La Xsara elle est aberrante frérot.").rules(Rule.builder().fieldType(Rule.FieldType.STRING).build()).build();
+        Field tripsNumber = Field.builder().name("tripsNumber").label("Combien de trajets (en moyenne) faites vous par semaine avec cette voiture?").caption("12").rules(Rule.builder().fieldType(Rule.FieldType.INTEGER).build()).build();
+        Field email = Field.builder().name("email").label("Entrez votre adresse email pour tenter de remporter la magnifique Xsara RS").caption("gmk@miteux.fr").rules(Rule.builder().fieldType(Rule.FieldType.STRING).typeRules(emailTypeRules).build()).build();
+
+
+        feedbackInformationGroup.add(comment);
+        feedbackInformationGroup.add(tripsNumber);
+        feedbackInformationGroup.add(email);
+
+        ArrayList<Group> groups = new ArrayList<>();
+        Group generalInformation =  Group.builder().name("generalInformation").label("Informations générales sur la voiture").fields(generalInformationGroup).build();
+        Group technicalInformation = Group.builder().name("technicalInformation").label("Informations techniques sur la voiture").fields(technicalInformationGroup).build();
+        Group feedbackInformation = Group.builder().name("feedbackInformation").label("Feeback de l'utilisateur sur la voiture").fields(feedbackInformationGroup).build();
+        groups.add(generalInformation);
+        groups.add(technicalInformation);
+        groups.add(feedbackInformation);
+
+        return Prefab.builder().name("cars").label("Formulaire sur les voitures").groups(groups).build();
 
     }
 
