@@ -2,16 +2,12 @@ package fr.utbm.da50.freelyforms.core.entity;
 
 
 import fr.utbm.da50.freelyforms.core.entity.formdata.Group;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * The FormData class holds data that has been filled by users, in its Group and Field classes ;
@@ -28,7 +24,7 @@ import java.util.UUID;
 public class FormData {
 
     @Id
-    private final ObjectId _id;
+    private ObjectId _id;
 
     /**
      * name of the prefab to which this form data is related to
@@ -39,7 +35,6 @@ public class FormData {
      */
     ArrayList<Group> groups;
 
-    @PersistenceCreator
     public FormData(String prefabName, ArrayList<Group> groups) {
         this._id = new ObjectId();
         this.prefabName = prefabName;
@@ -97,13 +92,11 @@ public class FormData {
      * @param group the name of the new group
      */
     public boolean addGroup(Group group){
-        System.out.println("\nthis.groups.isEmpty()" + this.groups.isEmpty() );
         if(this.groups.isEmpty()){
             this.groups.add(group);
         } else{
             boolean proceed = true;
             for(Group p : this.groups){
-                System.out.println("p.getName().equals(group.getName()): " + p.getName().equals(group.getName()));
                 if(p.getName().equals(group.getName())){
                     proceed = false;
                 }

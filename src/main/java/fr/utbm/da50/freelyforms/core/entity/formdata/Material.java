@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 
 /**
