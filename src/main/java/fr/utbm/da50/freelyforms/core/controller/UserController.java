@@ -15,6 +15,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(path = "api/users")
+@CrossOrigin(origins = "http://localhost:5173") // Replace with the origin of your React app
 public class UserController {
 
     private final UserService userService;

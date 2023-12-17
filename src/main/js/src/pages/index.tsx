@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import Material from './Material';
@@ -7,6 +7,7 @@ import './styles.css';
 import Location from './Location';
 
 class Home extends React.Component<{}, AppState> {
+
   constructor(props: {}) {
     super(props);
     this.state = {
@@ -62,6 +63,28 @@ class Home extends React.Component<{}, AppState> {
       colorIndex:0,
     };
   }
+
+  componentDidMount() {
+    this.getMaterials();
+  }
+
+  getMaterials() {
+      const fetchData = async () => {
+        try {
+          const response = await fetch('http://localhost:8080/api/prefabs/materials');
+          console.log('Response:', response);
+          const result = await response.json();
+          console.log('Data:', result);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+
+  }
+
+  
 
 handleCreateMaterial = () => {
   // Create a new material with default values
