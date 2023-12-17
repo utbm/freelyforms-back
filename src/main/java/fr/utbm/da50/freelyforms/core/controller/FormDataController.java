@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.utbm.da50.freelyforms.core.entity.FormData;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Group;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Map;
+import fr.utbm.da50.freelyforms.core.entity.formdata.Material;
 import fr.utbm.da50.freelyforms.core.service.FormDataService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controller for the FormData API
@@ -195,6 +195,43 @@ public class FormDataController {
                 objectMapper.convertValue(requestBodyData.get("formDataID"),ObjectId.class),
                 objectMapper.convertValue(requestBodyData.get("groupName"),String.class));
         return res;
+    }
+
+    @GetMapping("/Group/Map/MaterialALL")
+    @ResponseBody
+    public ArrayList<Material> getMapMaterialArrayList(@RequestParam String formDataID,
+                                                       @RequestParam String groupName){
+        ArrayList<Material> materialArrayList = service.getFormDataMapMaterialArrayList(
+                                                    objectMapper.convertValue(formDataID,ObjectId.class),groupName);
+        return materialArrayList;
+    }
+
+    @GetMapping("/Group/Map/Material")
+    @ResponseBody
+    public Material getMapMaterial(@RequestParam String formDataID,
+                                        @RequestParam String groupName,
+                                            @RequestParam String materialName){
+        Material material = service.getFormDataMapMaterial(objectMapper.convertValue(formDataID,ObjectId.class)
+                                                                ,groupName,materialName);
+        return material;
+    }
+    @PostMapping("/Group/Map/Material/post")
+    @ResponseBody
+    public ArrayList<Material> postMapMaterial(@RequestBody JsonNode requestBodyData){
+        ArrayList<Material> materialArrayList = service.addFormDataMapMaterial(
+                objectMapper.convertValue(requestBodyData.get("formDataID"),ObjectId.class),
+                objectMapper.convertValue(requestBodyData.get("groupName"),String.class),
+                objectMapper.convertValue(requestBodyData.get("material"),Material.class));
+        return materialArrayList;
+    }
+    @DeleteMapping("/Group/Map/Material/delete")
+    @ResponseBody
+    public ArrayList<Material> deleteMapMaterial(@RequestBody JsonNode requestBodyData){
+        ArrayList<Material> materialArrayList = service.removeFormDataMapMaterial(
+                objectMapper.convertValue(requestBodyData.get("formDataID"),ObjectId.class),
+                objectMapper.convertValue(requestBodyData.get("groupName"),String.class),
+                objectMapper.convertValue(requestBodyData.get("materialName"),String.class));
+        return materialArrayList;
     }
 
 

@@ -2,9 +2,7 @@ package fr.utbm.da50.freelyforms.core.entity.formdata;
 
 import lombok.Data;
 
-import javax.persistence.Id;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * The Map class holds data.
@@ -38,6 +36,32 @@ public class Map {
             ret.append("n\t").append(m.inspect());
         }
         return ret.toString();
+    }
+
+    public Material getMaterial(String materialName){
+        for(Material m : this.materialArrayList){
+            if (m.getName().equals(materialName)){
+                return m;
+            }
+        }
+        return null;
+    }
+    public ArrayList<Material> addMaterial(Material material){
+        if(this.materialArrayList.isEmpty()){
+            this.materialArrayList.add(material);
+        } else{
+            boolean proceed = true;
+            for(Material m : this.materialArrayList){
+                if (m.getName().equals(material.getName())) {
+                    proceed = false;
+                    break;
+                }
+            }
+            if(proceed){
+                this.materialArrayList.add(material);
+            }
+        }
+        return this.materialArrayList;
     }
 
 }

@@ -5,6 +5,7 @@ import com.mongodb.client.MongoClients;
 import fr.utbm.da50.freelyforms.core.entity.FormData;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Group;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Map;
+import fr.utbm.da50.freelyforms.core.entity.formdata.Material;
 import fr.utbm.da50.freelyforms.core.repository.FormDataRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -224,6 +224,78 @@ public class FormDataService {
         }
         return false;
     }
+
+    /**
+     * Get ALL materials of the map in a specific group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @return ArrayList<Material>
+     */
+    public ArrayList<Material> getFormDataMapMaterialArrayList(ObjectId formDataID, String groupName){
+        Query  query = new Query(Criteria.where("_id").is(formDataID)
+                                    .and("groups.name").is(groupName));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+        if(tempFormData != null ){
+            return tempFormData.getGroup(groupName).getMap().getMaterialArrayList();
+        }
+        return null;
+    }
+    /**
+     * Get a specific material of the map in a specific group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @param materialName name of the material
+     * @return Material
+     */
+    public Material getFormDataMapMaterial(ObjectId formDataID, String groupName,String materialName){
+        Query query = new Query(Criteria.where("_id").is(formDataID)
+                .and("groups").elemMatch(Criteria.where("name").is(groupName)
+                        .and("map.materialArrayList.name").is(materialName)));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+        if(tempFormData != null ){
+            return tempFormData.getGroup(groupName).getMap().getMaterial(materialName);
+        }
+        return null;
+    }
+    /**
+     * Add a material to list of materials of the map in a specific group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @param material material object
+     * @return Material
+     */
+    public ArrayList<Material> addFormDataMapMaterial(ObjectId formDataID, String groupName, Material material){
+        Query  query = new Query(Criteria.where("_id").is(formDataID)
+                .and("groups.name").is(groupName));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+        if(tempFormData != null ){
+            tempFormData.getGroup(groupName).getMap().addMaterial(material);
+            Update update = new Update().set("groups.$.map.materialArrayList",tempFormData.getGroup(groupName).getMap().getMaterialArrayList());
+            mongoTemplate.updateFirst(query,update,FormData.class);
+            return tempFormData.getGroup(groupName).getMap().getMaterialArrayList();
+        }
+        return null;
+    }
+    /**
+     * Delete a material of list of materials of a map in a specific group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @return true if the deletion was a success
+     */
+    public ArrayList<Material> removeFormDataMapMaterial(ObjectId formDataID, String groupName, String materialName){
+        Query  query = new Query(Criteria.where("_id").is(formDataID)
+                .and("groups.name").is(groupName));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+        if(tempFormData != null ){
+            tempFormData.getGroup(groupName).getMap().getMaterialArrayList().removeIf(m->m.getName().equals(materialName));
+            Update update = new Update().set("groups.$.map.materialArrayList",tempFormData.getGroup(groupName).getMap().getMaterialArrayList());
+            mongoTemplate.updateFirst(query,update,FormData.class);
+            return tempFormData.getGroup(groupName).getMap().getMaterialArrayList();
+        }
+        return null;
+    }
+
+
 
     /**
      * @return all form data in the database
