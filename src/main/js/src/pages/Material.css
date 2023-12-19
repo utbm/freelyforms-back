@@ -65,8 +65,64 @@ button.delete .material-icons:before {
   flex-direction: column; /* Display fields vertically */
   align-items: flex-start; /* Align fields to the left */
   margin-top: 10px; /* Adjust as needed for spacing between data and fields */
+  width: 500px; /* Set a fixed width */
+
 }
 
 .fields div {
   margin-bottom: 10px; /* Add margin-bottom for spacing between fields */
+  background-color: #ffffff; /* Light gray background */
+  padding: 10px;
+  margin: 5px 0; /* Add margin between items */
+  border-radius: 5px;
 }
+
+.fields div:hover {
+  background-color: #ebe8e8; /* Light gray background */
+
+}
+
+
+.singleFields{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  border: 1px solid black; /* Add a border for separation between fields */
+  background-color: white;
+}
+
+.locationFields{
+  margin: 20px 0; /* Add margin between location fields */
+  padding: 10px;
+  background-color:white;
+  border: 1px solid black; /* Add a border for separation between fields */
+  border-radius: 5px;
+  text-align: center; 
+  width: 500px; /* Set a fixed width */
+  
+}
+
+/* Add this to your Buttons.css file */
+
+.locationButtons {
+  display: flex;
+  justify-content: space-between; /* Add space between buttons */
+}
+
+.locationButtons button {
+  background-color: #3d3d3f; /* Blue background color */
+  color: #fff; /* White text color */
+  padding: 10px 15px; /* Padding for better spacing */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+
+  /* Add additional styles as needed */
+}
+
+.locationButtons button:hover {
+  background-color: #707074; /* Darker blue on hover */
+}
+

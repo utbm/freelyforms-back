@@ -1,23 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-
-import "./index.css";
+import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import Home from "./pages/index";
 import FourOFour from "./pages/404";
+import Menu from "./pages/Menu";
+import "./index.css";
+import Header from "./pages/Header";
 
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-		errorElement: <FourOFour />
-  },
-]);
 
 const root = document.getElementById("root");
 
@@ -26,7 +15,14 @@ if (!root) {
 }
 
 ReactDOM.createRoot(root).render(
-	<React.StrictMode>
-    		 <RouterProvider router={router} />
-	</React.StrictMode>,
+  <React.StrictMode>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Menu />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="*" element={<FourOFour />} />
+      </Routes>
+    </Router>
+  </React.StrictMode>,
 );

@@ -232,7 +232,7 @@ handleLocationFieldChange = (
           {showFields && (
             <>
               {material.fields.map((field, index) => (
-                <div key={index} style={{ marginLeft: '20px' }}>
+                <div key={index} className="singleFields" style={{ marginLeft: '20px' }}>
                   
                   <strong>{field.name}</strong> :{' '}
                   {editingFieldIndex === index ? (
@@ -253,19 +253,24 @@ handleLocationFieldChange = (
               ))}
               {material.locations &&
                 material.locations.map((location, index) => (
-                  <div key={index} style={{ marginLeft: '20px' }}>
-                      <button onClick={() => this.handleDeleteLocation(index)}>
-                              Delete
-                            </button> <br></br>
-                    <strong>Location {index + 1}:</strong>
-                    <br></br>
+                
+                  <div key={index} className="locationFields" style={{ marginLeft: '20px' }}>
+                    <span className='locationButtons'>
                     <button onClick={() => this.handleSetManually(index)}>
-                  Set Manually
-                </button>
+                        Set Manually
+                      </button>
+                    <button onClick={() => this.handleDeleteLocation(index)}>
+                              Delete
+                            </button> 
+                    </span>
+                            
+                            <br></br>
+                    <strong>Location {index + 1}</strong>
+                    <br></br>
                     {Object.entries(location).map(
                       ([fieldName, fieldValue]) => (
                         fieldName === 'radius' ? (
-                          <div key="radius" style={{ marginLeft: '20px' }}>
+                          <div key="radius" className='singleFields' >
                           <strong>Radius:</strong>{' '}
                           <input
                             type="range"
@@ -280,7 +285,7 @@ handleLocationFieldChange = (
                         </div>
                       ) : 
                       
-                        <div key={fieldName}>
+                        <div key={fieldName} className='singleFields'>
                           <strong>{fieldName}</strong> :{' '}
                           {editingLocationField === fieldName &&
                           editingLocationIndex === index ? (

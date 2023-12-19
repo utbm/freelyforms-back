@@ -446,7 +446,7 @@ handleDeleteLocation = (materialId, locationIndex) => {
             })
           )}
         </MapContainer>
-        <button onClick={this.handleCreateMaterial}>
+        <button className="btn_add_material" onClick={this.handleCreateMaterial}>
     Add New Material
   </button>
         <div style={{ width: '50%' }}>
