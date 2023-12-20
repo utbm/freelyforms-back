@@ -37,7 +37,7 @@
   }
   
   .btn_add_material:hover {
-	background-color: #ebe8e8; /* Change background color on hover */
+	background-color:  rgb(126, 125, 125); /* Change background color on hover */
 	color: white; /* Change text color on hover */
 	border-color: #ebe8e8; /* Change border color on hover */
   }

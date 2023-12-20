@@ -5,6 +5,7 @@ import Material from './Material';
 import './styles/leaflet.css';
 import './styles/styles.css';
 import Location from './Location';
+import { useLocation } from 'react-router-dom';
 
 class Home extends React.Component<{}, AppState> {
 
@@ -12,52 +13,6 @@ class Home extends React.Component<{}, AppState> {
     super(props);
     this.state = {
       materials: [
-        {
-          id: '1',
-          type: 'Type 1',
-          fields: [
-            { name: 'Field 1', type: 'string', data: 'Data 1' },
-            { name: 'Field 2', type: 'number', data: 42 },
-          ],
-          locations: [
-            {
-              x: 51.52,
-              y: -0.09,
-              radius: 100,
-              address: 'Location 1 Address',
-            },
-            {
-              x: 51.53,
-              y: -0.09,
-              radius: 600,
-              address: 'Location 1 Address 2 ',
-            },
-          ],
-        },
-        {
-          id: '2',
-          type: 'Type 2',
-          fields: [
-            { name: 'Field 1', type: 'boolean', data: 'true' },
-            { name: 'Field 2', type: 'string', data: 'Data 2' },
-          ],
-          locations: [
-            {
-              x: 51.52,
-              y: -0.08,
-              radius: 400,
-              address: 'Location 2 Address',
-            },
-          ],
-        },
-        {
-          id: '3',
-          type: 'Type 3',
-          fields: [
-            { name: 'Field 1', type: 'string', data: 'Data 3' },
-            { name: 'Field 2', type: 'number', data: 48 },
-          ],
-        },
       ],
       assignedColors: {}, // New array to track assigned colors
       colorIndex:0,
@@ -65,35 +20,56 @@ class Home extends React.Component<{}, AppState> {
   }
 
   componentDidMount() {
-    this.getMaterials();
+    // Retrieve the group name from the query parameters
+    const searchParams = new URLSearchParams(window.location.search);
+    const groupName = searchParams.get('groupName');
+
+    if (groupName) {
+      // Call your API to get materials based on the selected group name
+      this.getMaterialsByGroup(groupName);
+    }
   }
+// Inside the Home class
+getMaterialsByGroup(groupName) {
+  // Update the state with materials based on the selected group
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/formdata/Group/Map/MaterialALL?formDataID=5f9a514b49d94064dcd66337&groupName=${groupName}`);
+      const result = await response.json();
+      
+      // Map the materials to the desired structure
+      const mappedMaterials = result.map((material) => ({
+        id: material.name, // Use 'name' as 'id'
+        type: material.type,
+        fields: [],
+        locations: material.locationArrayList.map((location) => ({
+          x: location.x,
+          y: location.y,
+          radius: location.radius,
+          address: location.address,
+        })),
+      }));
 
-  getMaterials() {
-      const fetchData = async () => {
-        try {
-          const response = await fetch('http://localhost:8080/api/formdata/Group/Map/MaterialALL?formDataID=5f9a514b49d94064dcd66337&groupName=HelloWorld2');
-          console.log('Response:', response);
-          const result = await response.json();
-          console.log('Data:', result);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-  
-      fetchData();
+      console.log('Data:', mappedMaterials);
 
-  }
+      // Update the state with the materials received from the API
+      this.setState({
+        materials: mappedMaterials,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-  
+  fetchData();
+}
 
 handleCreateMaterial = () => {
   // Create a new material with default values
   const newMaterial = {
     id: Date.now().toString(), // Generate a unique ID (you can use a library like uuid for better uniqueness)
     type: 'New Type', // Set default type
-    fields: [
-      { name: 'Default Field', type: 'string', data: 'Default Data' },
-    ],
+    fields: [],
     locations: [
       { x: 51.5, y: -0.1, radius: 200, address: 'Default Location Address' },
     ],
@@ -206,7 +182,6 @@ handleDeleteLocation = (materialId, locationIndex) => {
           locations: updatedLocations,
         };
       }
-
       return material;
     });
 

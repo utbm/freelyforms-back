@@ -15,6 +15,7 @@ const Menu = () => {
     try {
       const response = await fetch('http://localhost:8080/api/formdata/Group/All?formDataID=5f9a514b49d94064dcd66337');
       const data = await response.json();
+      console.log("Groups : ", data);
       setGroups(data);
       setPopupOpen(true);
     } catch (error) {
@@ -24,10 +25,15 @@ const Menu = () => {
 
   const handleGroupSelection = (groupName) => {
     setPopupOpen(false);
-    // You can perform additional actions with the selected group name if needed
-    // Use Link or navigate to '/home'
-    navigate('/home'); // Use navigate instead of history.push
+    // Pass the selected group name to the '/home' route
+    navigate(`/home?groupName=${encodeURIComponent(groupName)}`);
   };
+
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
   return (
     <div className="menu-container">
       <strong><h1 className="menu-title">FreelyForms</h1></strong> 
@@ -48,8 +54,9 @@ const Menu = () => {
       <Link to="/exit" className="menu-small-button">
         Exit
       </Link>
-      {isPopupOpen && <FormPopup groups={groups} onSelect={handleGroupSelection} triggerButtonRef={buttonRef} />}
-
+      {isPopupOpen && (
+        <FormPopup groups={groups} onSelect={handleGroupSelection} onClose={handleClosePopup} triggerButtonRef={buttonRef} />
+      )}
     </div>
   );
 };

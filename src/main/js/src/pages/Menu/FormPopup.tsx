@@ -1,9 +1,10 @@
 // FormPopup.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './FormPopup.css';
 
-const FormPopup = ({ groups, onSelect, triggerButtonRef }) => {
-  const [popupStyle, setPopupStyle] = useState({}); 
+const FormPopup = ({ groups, onSelect, triggerButtonRef, onClose }) => {
+  const [popupStyle, setPopupStyle] = useState({});
+  const popupRef = useRef(null);
 
   useEffect(() => {
     const updatePosition = () => {
@@ -31,8 +32,26 @@ const FormPopup = ({ groups, onSelect, triggerButtonRef }) => {
     };
   }, [triggerButtonRef]);
 
+  const handleOutsideClick = (event) => {
+    if (popupRef.current && !popupRef.current.contains(event.target)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseDown = (event) => {
+      handleOutsideClick(event);
+    };
+
+    document.addEventListener('mousedown', handleMouseDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, [onClose]);
+
   return (
-    <div className="form-popup" style={popupStyle}>
+    <div ref={popupRef} className="form-popup" style={popupStyle}>
       <h2>Select a Group</h2>
 
       <div className="group-buttons">
