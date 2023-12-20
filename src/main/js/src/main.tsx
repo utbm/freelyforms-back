@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import Home from "./pages/index";
-import FourOFour from "./pages/404";
-import Menu from "./pages/Menu";
+import FourOFour from "./pages/error/404";
+import Menu from "./pages/Menu/Menu";
 import "./index.css";
-import Header from "./pages/Header";
+import Header from "./pages/Header/Header";
 
 
 const root = document.getElementById("root");

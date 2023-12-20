@@ -11,22 +11,29 @@
   
   /* Menu.css */
   .menu-container {
+    text-align: center;
+    justify-content: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    border: 2px solid #3d3d3f;
+    background-color: azure;
   }
   
   .menu-title {
-    font-size: 54px;
+    font-size: 58px;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: #000000;
     padding: 20px;
     border-radius: 40px;
   }
   
   .menu-button {
-    background-color: #007bff;
+    background-color: #4747f1;
+    justify-content: center;
+    align-items: center;
+    display : flex;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -37,14 +44,16 @@
   }
   
   .menu-button:hover {
-    background-color: #0056b3;
+    background-color: #6767f3;
   }
   
   .menu-map {
     width: 100%;
     max-width: 600px; /* Adjust the max-width as needed */
     margin-bottom: 20px;
-    border-radius: 60px;
+    border-radius: 80px;
+    border: 2px solid #000; /* Adjust the color and width of the border as needed */
+
   }
   
   .menu-small-button {
@@ -59,5 +68,16 @@
   
   .menu-small-button:hover {
     background-color: #c82333;
+  }
+
+  .menu-footer{
+    font-size: 14px;
+    color:black;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 20px;
   }
   

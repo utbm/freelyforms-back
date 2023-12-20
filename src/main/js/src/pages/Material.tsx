@@ -1,6 +1,6 @@
 import React from 'react';
 import Location from './Location';
-import './Material.css';
+import './styles/Material.css';
 
 type MaterialType = {
   id: string;

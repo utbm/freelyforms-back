@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import Material from './Material';
-import './leaflet.css';
-import './styles.css';
+import './styles/leaflet.css';
+import './styles/styles.css';
 import Location from './Location';
 
 class Home extends React.Component<{}, AppState> {
@@ -71,7 +71,7 @@ class Home extends React.Component<{}, AppState> {
   getMaterials() {
       const fetchData = async () => {
         try {
-          const response = await fetch('http://localhost:8080/api/prefabs/materials');
+          const response = await fetch('http://localhost:8080/api/formdata/Group/Map/MaterialALL?formDataID=5f9a514b49d94064dcd66337&groupName=HelloWorld2');
           console.log('Response:', response);
           const result = await response.json();
           console.log('Data:', result);
