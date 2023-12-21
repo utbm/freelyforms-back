@@ -11,7 +11,7 @@
 
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
-	background-color: #242424;
+	/* background-color: #242424; */
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -29,10 +29,4 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.btn.btn-primary {
-	background: linear-gradient(90deg, #5197f7 0%, #8a7ed5 100%);
-	border-color: transparent;
-	color: #fff;
 }

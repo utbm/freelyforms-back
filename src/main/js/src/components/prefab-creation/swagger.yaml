@@ -1,0 +1,950 @@
+openapi: 3.0.1
+info:
+  title: Api Documentation
+  description: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: "1.0"
+servers:
+  - url: //localhost:8080/
+tags:
+  - name: prefab-controller
+    description: Prefab Controller
+  - name: open-api-web-mvc-resource
+    description: Open Api Web Mvc Resource
+  - name: user-controller
+    description: User Controller
+  - name: form-data-controller
+    description: Form Data Controller
+  - name: basic-error-controller
+    description: Basic Error Controller
+paths:
+  /api/formdata:
+    get:
+      tags:
+        - form-data-controller
+      summary: getAllFormData
+      operationId: getAllFormDataUsingGET
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormData"
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    delete:
+      tags:
+        - form-data-controller
+      summary: deleteFormData
+      operationId: deleteFormDataUsingDELETE
+      requestBody:
+        description: formDataId
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ObjectId"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+      x-codegen-request-body-name: formDataId
+  /api/formdata/{prefab}:
+    get:
+      tags:
+        - form-data-controller
+      summary: getAllFormDataFromPrefab
+      operationId: getAllFormDataFromPrefabUsingGET
+      parameters:
+        - name: prefab
+          in: path
+          description: prefab
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FormData"
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    put:
+      tags:
+        - form-data-controller
+      summary: patchFormData
+      operationId: patchFormDataUsingPUT
+      requestBody:
+        description: formData
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormData"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: formData
+    post:
+      tags:
+        - form-data-controller
+      summary: postFormData
+      operationId: postFormDataUsingPOST
+      requestBody:
+        description: formData
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormData"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: formData
+    patch:
+      tags:
+        - form-data-controller
+      summary: patchFormData
+      operationId: patchFormDataUsingPATCH
+      requestBody:
+        description: formData
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormData"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+      x-codegen-request-body-name: formData
+  /api/formdata/{prefab}/{group}/{field}:
+    get:
+      tags:
+        - form-data-controller
+      summary: getAllFormDataFromPrefabField
+      operationId: getAllFormDataFromPrefabFieldUsingGET
+      parameters:
+        - name: prefab
+          in: path
+          description: prefab
+          required: true
+          schema:
+            type: string
+        - name: group
+          in: path
+          description: group
+          required: true
+          schema:
+            type: string
+        - name: field
+          in: path
+          description: field
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+  /api/prefabs:
+    get:
+      tags:
+        - prefab-controller
+      summary: getAllPrefabs
+      operationId: getAllPrefabsUsingGET
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Prefab"
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    post:
+      tags:
+        - prefab-controller
+      summary: postPrefab
+      operationId: postPrefabUsingPOST
+      requestBody:
+        description: newPrefab
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Prefab"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: newPrefab
+  /api/prefabs/{name}:
+    get:
+      tags:
+        - prefab-controller
+      summary: getPrefab
+      operationId: getPrefabUsingGET
+      parameters:
+        - name: name
+          in: path
+          description: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Prefab"
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    put:
+      tags:
+        - prefab-controller
+      summary: patchPrefab
+      operationId: patchPrefabUsingPUT
+      parameters:
+        - name: name
+          in: path
+          description: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: patchedPrefab
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Prefab"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: patchedPrefab
+    delete:
+      tags:
+        - prefab-controller
+      summary: deletePrefab
+      operationId: deletePrefabUsingDELETE
+      parameters:
+        - name: name
+          in: path
+          description: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+    patch:
+      tags:
+        - prefab-controller
+      summary: patchPrefab
+      operationId: patchPrefabUsingPATCH
+      parameters:
+        - name: name
+          in: path
+          description: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: patchedPrefab
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Prefab"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+      x-codegen-request-body-name: patchedPrefab
+  /api/users:
+    post:
+      tags:
+        - user-controller
+      summary: saveUser
+      operationId: saveUserUsingPOST
+      requestBody:
+        description: user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/User"
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: user
+  /api/users/{id}:
+    get:
+      tags:
+        - user-controller
+      summary: getUser
+      operationId: getUserUsingGET
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    delete:
+      tags:
+        - user-controller
+      summary: deleteUser
+      operationId: deleteUserUsingDELETE
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+  /error:
+    get:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingGET
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    put:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingPUT
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    post:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingPOST
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "201":
+          description: Created
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+    delete:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingDELETE
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+    options:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingOPTIONS
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+    head:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingHEAD
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+    patch:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingPATCH
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties: {}
+        "204":
+          description: No Content
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+  /v3/api-docs:
+    get:
+      tags:
+        - open-api-web-mvc-resource
+      summary: openapiJson
+      operationId: openapiJsonUsingGET
+      requestBody:
+        description: apiDocsUrl
+        content:
+          application/json:
+            schema:
+              type: string
+        required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: byte
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: apiDocsUrl
+  /v3/api-docs.yaml:
+    get:
+      tags:
+        - open-api-web-mvc-resource
+      summary: openapiYaml
+      operationId: openapiYamlUsingGET
+      requestBody:
+        description: apiDocsUrl
+        content:
+          application/json:
+            schema:
+              type: string
+        required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: string
+                format: byte
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: apiDocsUrl
+components:
+  schemas:
+    Field:
+      type: object
+      properties:
+        caption:
+          type: string
+        label:
+          type: string
+        name:
+          type: string
+        rules:
+          $ref: "#/components/schemas/Rule"
+    FormData:
+      type: object
+      properties:
+        _id:
+          $ref: "#/components/schemas/ObjectId"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+        prefabName:
+          type: string
+    Group:
+      type: object
+      properties:
+        caption:
+          type: string
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/Field"
+        label:
+          type: string
+        name:
+          type: string
+    ModelAndView:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        model:
+          type: object
+          properties: {}
+        modelMap:
+          type: object
+          additionalProperties:
+            type: object
+            properties: {}
+        reference:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        view:
+          $ref: "#/components/schemas/View"
+        viewName:
+          type: string
+    ObjectId:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        timestamp:
+          type: integer
+          format: int32
+    Prefab:
+      type: object
+      properties:
+        _id:
+          $ref: "#/components/schemas/ObjectId"
+        caption:
+          type: string
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+        label:
+          type: string
+        name:
+          type: string
+    Rule:
+      type: object
+      properties:
+        excludes:
+          type: array
+          items:
+            type: string
+        fieldType:
+          type: string
+          enum:
+            - INTEGER
+            - STRING
+            - FLOAT
+            - DATE
+            - DATETIME
+            - BOOLEAN
+            - SELECTOR
+        hidden:
+          type: boolean
+        optional:
+          type: boolean
+        selectorValues:
+          type: array
+          items:
+            type: string
+        typeRules:
+          type: array
+          items:
+            $ref: "#/components/schemas/TypeRule"
+    TypeRule:
+      type: object
+      properties:
+        associatedTypes:
+          type: array
+          items:
+            type: string
+            enum:
+              - INTEGER
+              - STRING
+              - FLOAT
+              - DATE
+              - DATETIME
+              - BOOLEAN
+              - SELECTOR
+        name:
+          type: string
+        value:
+          type: string
+    User:
+      type: object
+      properties:
+        age:
+          type: integer
+          format: int64
+        firstname:
+          type: string
+        id:
+          type: string
+        lastname:
+          type: string
+    View:
+      type: object
+      properties:
+        contentType:
+          type: string
+x-original-swagger-version: "2.0"

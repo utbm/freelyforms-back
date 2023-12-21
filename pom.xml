@@ -76,6 +76,12 @@
             <version>4.12.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -104,7 +110,7 @@
                 <executions>
                     <!-- Ce plugin installe node et npm à des versions valides et à jour pour permettre un package groupé avec applications frontend et backend
                     -->
-                    <execution>
+                    <!-- <execution>
                         <id>install node and pnpm</id>
                         <goals>
                             <goal>install-node-and-pnpm</goal>
@@ -131,7 +137,7 @@
                         <configuration>
                             <arguments>run build</arguments>
                         </configuration>
-                    </execution>
+                    </execution> -->
                 </executions>
             </plugin>
             <!-- Ce plugin insère l'application frontend dans le même package que l'application backend
@@ -143,11 +149,12 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <?m2e execute onConfiguration,onIncremental?>
                         <phase>generate-resources</phase>
                         <configuration>
                             <target>
                                 <copy todir="${project.build.directory}/classes/public">
-                                    <fileset dir="${project.basedir}/src/main/js/dist"/>
+                                    <fileset dir="${frontend-src-dir}/dist"/>
                                 </copy>
                             </target>
                         </configuration>

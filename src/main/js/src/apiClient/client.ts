@@ -6,14 +6,14 @@ export namespace Schemas {
 		name: string;
 		value: string;
 	}>;
-	export type Rule = Partial<{
+	export type Rule = {
 		excludes: Array<string>;
 		fieldType: "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
 		hidden: boolean;
 		optional: boolean;
 		selectorValues: Array<string>;
 		typeRules: Array<TypeRule>;
-	}>;
+	};
 	export type Field = Partial<{ caption: string; label: string; name: string; rules: Rule }>;
 	export type ObjectId = Partial<{ date: string; timestamp: number }>;
 	export type Group = Partial<{ caption: string; fields: Array<Field>; label: string; name: string }>;
@@ -467,3 +467,34 @@ export function createApiClient(fetcher: Fetcher, baseUrl?: string) {
 */
 
 // </ApiClient
+
+export const associatedTypesWithTypeRules = [
+	{
+		associatedType: "INTEGER",
+		typeRules: ["MaximumRule", "MinimumRule"],
+	},
+	{
+		associatedType: "STRING",
+		typeRules: ["EmailRegexMatch", "RegexMatch", "MaximumRule", "MinimumRule"],
+	},
+	{
+		associatedType: "FLOAT",
+		typeRules: ["MaximumRule", "MinimumRule"],
+	},
+	{
+		associatedType: "DATE",
+		typeRules: ["MaximumRule", "MinimumRule"],
+	},
+	{
+		associatedType: "DATETIME",
+		typeRules: ["MaximumRule", "MinimumRule"],
+	},
+	{
+		associatedType: "BOOLEAN",
+		typeRules: ["AlternativeDisplay"],
+	},
+	{
+		associatedType: "SELECTOR",
+		typeRules: ["AlternativeDisplay", "SelectDataSet"],
+	},
+] as const;
