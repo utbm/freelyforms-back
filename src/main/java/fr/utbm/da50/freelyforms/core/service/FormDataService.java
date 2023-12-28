@@ -4,6 +4,7 @@ package fr.utbm.da50.freelyforms.core.service;
 import com.mongodb.client.MongoClients;
 import fr.utbm.da50.freelyforms.core.entity.FormData;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Group;
+import fr.utbm.da50.freelyforms.core.entity.formdata.Location;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Map;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Material;
 import fr.utbm.da50.freelyforms.core.repository.FormDataRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -280,7 +282,8 @@ public class FormDataService {
      * Delete a material of list of materials of a map in a specific group of a formdata in the database
      * @param formDataID the form data object (identified by its id)
      * @param groupName name of the group
-     * @return true if the deletion was a success
+     * @param materialName material object
+     * @return ArrayList<Material>
      */
     public ArrayList<Material> removeFormDataMapMaterial(ObjectId formDataID, String groupName, String materialName){
         Query  query = new Query(Criteria.where("_id").is(formDataID)
@@ -294,6 +297,85 @@ public class FormDataService {
         }
         return null;
     }
+
+    /**
+     * Get List of locations of a specific material in the map of a group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @param materialName name of the material
+     * @return ArrayList<Location>
+     */
+    public ArrayList<Location> getFormDataMapMaterialLocationArrayList(ObjectId formDataID, String groupName, String materialName){
+        Query  query = new Query(Criteria.where("_id").is(formDataID)
+                .and("groups.name").is(groupName));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+        if(tempFormData != null ){
+            ArrayList<Material> tempMaterialArrayList = tempFormData.getGroup(groupName).getMap().getMaterialArrayList();
+            Optional<Material> result = tempMaterialArrayList.stream().filter(material->materialName.equals(material.getName())).findAny();
+            if(result.isPresent()){
+                Material mat = result.get();
+                return mat.getLocationArrayList();
+            }
+        }
+        return null;
+    }
+    /**
+     * Add a Location to list of locations of a specific material of the map in a specific group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @param materialName name of the material
+     * @param location  location object
+     * @return ArrayList<Location>
+     */
+    public ArrayList<Location> addFormDataMapMaterialLocation(ObjectId formDataID, String groupName,String materialName, Location location){
+        Query  query = new Query(Criteria.where("_id").is(formDataID)
+                .and("groups.name").is(groupName).and("groups.map.materialArrayList.name").is(materialName));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+        if(tempFormData != null ){
+            ArrayList<Material> tempMaterialArrayList = tempFormData.getGroup(groupName).getMap().getMaterialArrayList();
+            Optional<Material> result = tempMaterialArrayList.stream().filter(material -> material.getName().equals(materialName)).findAny();
+            if(result.isPresent()){
+                Material material = result.get();
+                material.addLocation(location);
+                Update update = new Update().set("groups.$.map.materialArrayList.$[mat].locationArrayList",material.getLocationArrayList());
+                update.filterArray(Criteria.where("mat.name").is(materialName));
+                mongoTemplate.updateFirst(query,update,FormData.class);
+                return material.getLocationArrayList();
+            }
+        }
+        return null;
+    }
+    /**
+     * Delete a Location to list of locations of a specific material of the map in a specific group of a formdata in the database
+     * @param formDataID the form data object (identified by its id)
+     * @param groupName name of the group
+     * @param materialName name of the material
+     * @param locationID  location object (identified by its id)
+     * @return ArrayList<Location>
+     */
+    public ArrayList<Location> removeFormDataMapMaterialLocation(ObjectId formDataID, String groupName, String materialName, ObjectId locationID){
+        Query  query = new Query(Criteria.where("_id").is(formDataID)
+                .and("groups.name").is(groupName).and("groups.map.materialArrayList.name").is(materialName)
+                .and("groups.map.materialArrayList.locationArrayList._id").is(locationID));
+        FormData tempFormData = mongoTemplate.findOne(query,FormData.class);
+
+        if(tempFormData != null ){
+            ArrayList<Material> tempMaterialArrayList = tempFormData.getGroup(groupName).getMap().getMaterialArrayList();
+            Optional<Material> result = tempMaterialArrayList.stream().filter(material -> material.getName().equals(materialName)).findAny();
+            if(result.isPresent()){
+                Material material = result.get();
+                material.removeLocation(locationID);
+                Update update = new Update().set("groups.$.map.materialArrayList.$[mat].locationArrayList",material.getLocationArrayList());
+                update.filterArray(Criteria.where("mat.name").is(materialName));
+                mongoTemplate.updateFirst(query,update,FormData.class);
+                return material.getLocationArrayList();
+            }
+        }
+        return null;
+    }
+
+
+
 
 
 

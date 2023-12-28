@@ -1,6 +1,7 @@
 package fr.utbm.da50.freelyforms.core.entity.formdata;
 
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -54,6 +55,14 @@ public class Material {
             i++;
         }
         return ret.toString();
+    }
+
+    public void addLocation(Location location){
+        this.locationArrayList.add(location);
+    }
+
+    public void removeLocation(ObjectId locationID){
+        this.locationArrayList.removeIf(location ->location.get_id().equals(locationID));
     }
 
 }

@@ -1,6 +1,7 @@
 package fr.utbm.da50.freelyforms.core.entity.formdata;
 
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class Location {
     /**
      * Unique Identifier
      */
-    private final String id;
+    private ObjectId _id;
 
     /**
      * Each location has its own coordinates
@@ -33,14 +34,14 @@ public class Location {
 
     @PersistenceCreator
     public Location(String address,double x, double y, double radius){
-        id = UUID.randomUUID().toString();
+        this._id = new ObjectId();
         this.address = address;
         this.radius = radius;
         this.x = x;
         this.y = y;
     }
     public Location(){
-        id = UUID.randomUUID().toString();
+        this._id = new ObjectId();
         this.x = this.y = this.radius = 0;
         this.address = "DEFAULT_ADDRESS";
     }

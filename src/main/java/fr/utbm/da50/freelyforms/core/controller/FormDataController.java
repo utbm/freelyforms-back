@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.utbm.da50.freelyforms.core.entity.FormData;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Group;
+import fr.utbm.da50.freelyforms.core.entity.formdata.Location;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Map;
 import fr.utbm.da50.freelyforms.core.entity.formdata.Material;
 import fr.utbm.da50.freelyforms.core.service.FormDataService;
@@ -234,7 +235,36 @@ public class FormDataController {
         return materialArrayList;
     }
 
+    @GetMapping("/Group/Map/Material/LocationALL")
+    @ResponseBody
+    public ArrayList<Location> getMapMaterialLocationArrayList(@RequestParam String formDataID,
+                                                       @RequestParam String groupName,
+                                                       @RequestParam String materialName){
+        ArrayList<Location> locationArrayList = service.getFormDataMapMaterialLocationArrayList(
+                objectMapper.convertValue(formDataID,ObjectId.class),groupName,materialName);
+        return locationArrayList;
+    }
 
+    @PostMapping("/Group/Map/Material/Location/post")
+    @ResponseBody
+    public ArrayList<Location> postMapMaterialLocation(@RequestBody JsonNode requestBodyData){
+        ArrayList<Location> locationArrayList = service.addFormDataMapMaterialLocation(
+                objectMapper.convertValue(requestBodyData.get("formDataID"),ObjectId.class),
+                objectMapper.convertValue(requestBodyData.get("groupName"),String.class),
+                objectMapper.convertValue(requestBodyData.get("materialName"),String.class),
+                objectMapper.convertValue(requestBodyData.get("location"),Location.class));
+        return locationArrayList;
+    }
+    @DeleteMapping("/Group/Map/Material/Location/delete")
+    @ResponseBody
+    public ArrayList<Location> deleteMapMaterialLocation(@RequestBody JsonNode requestBodyData){
+        ArrayList<Location> locationArrayList = service.removeFormDataMapMaterialLocation(
+                objectMapper.convertValue(requestBodyData.get("formDataID"),ObjectId.class),
+                objectMapper.convertValue(requestBodyData.get("groupName"),String.class),
+                objectMapper.convertValue(requestBodyData.get("materialName"),String.class),
+                objectMapper.convertValue(requestBodyData.get("locationID"),ObjectId.class));
+        return locationArrayList;
+    }
 
 
 //    /**
