@@ -197,7 +197,13 @@ public class FormDataController {
                 objectMapper.convertValue(requestBodyData.get("groupName"),String.class));
         return res;
     }
-
+    /**
+     * GET /api/formdata/Group/Map/MaterialALL
+     * @param formDataID the formdata object (identified by its id)
+     * @param groupName name of the group
+     *
+     * @return ArrayList<Material>
+     */
     @GetMapping("/Group/Map/MaterialALL")
     @ResponseBody
     public ArrayList<Material> getMapMaterialArrayList(@RequestParam String formDataID,
@@ -206,7 +212,14 @@ public class FormDataController {
                                                     objectMapper.convertValue(formDataID,ObjectId.class),groupName);
         return materialArrayList;
     }
-
+    /**
+     * GET /api/formdata/Group/Map/{formDataID}/{groupName}/{materialName}
+     * @param formDataID the formdata object (identified by its id)
+     * @param groupName name of the group
+     * @param materialName name of the material
+     *
+     * @return Material
+     */
     @GetMapping("/Group/Map/Material")
     @ResponseBody
     public Material getMapMaterial(@RequestParam String formDataID,
@@ -216,6 +229,14 @@ public class FormDataController {
                                                                 ,groupName,materialName);
         return material;
     }
+    /**
+     * POST /api/formdata/Group/Map/Material/post
+     * @param requestBodyData contains the formdata object (identified by its id)
+     *                              groupName (name of the group)
+     *                              material Material object
+     *
+     * @return ArrayList<Material>
+     */
     @PostMapping("/Group/Map/Material/post")
     @ResponseBody
     public ArrayList<Material> postMapMaterial(@RequestBody JsonNode requestBodyData){
@@ -225,6 +246,14 @@ public class FormDataController {
                 objectMapper.convertValue(requestBodyData.get("material"),Material.class));
         return materialArrayList;
     }
+    /**
+     * DELETE /api/formdata/Group/Map/Material/delete
+     * @param requestBodyData contains the formdata object (identified by its id)
+     *                        groupName (name of the group)
+     *                        materialName (name of the material)
+     *
+     * @return ArrayList<Material>
+     */
     @DeleteMapping("/Group/Map/Material/delete")
     @ResponseBody
     public ArrayList<Material> deleteMapMaterial(@RequestBody JsonNode requestBodyData){
@@ -234,7 +263,13 @@ public class FormDataController {
                 objectMapper.convertValue(requestBodyData.get("materialName"),String.class));
         return materialArrayList;
     }
-
+    /**
+     * GET /api/formdata/Group/Map/Material/LocationALL
+     * @param formDataID the formdata object (identified by its id)
+     * @param groupName name of the group
+     * @param materialName name of the material
+     * @return ArrayList<Location>
+     */
     @GetMapping("/Group/Map/Material/LocationALL")
     @ResponseBody
     public ArrayList<Location> getMapMaterialLocationArrayList(@RequestParam String formDataID,
@@ -244,7 +279,14 @@ public class FormDataController {
                 objectMapper.convertValue(formDataID,ObjectId.class),groupName,materialName);
         return locationArrayList;
     }
-
+    /**
+     * POST /api/formdata/Group/Map/Material/Location/post
+     * @param requestBodyData contains the formdata object (identified by its id)
+     *      *                        groupName (name of the group)
+     *      *                        materialName (name of the material)
+     *      *                        location Location Object
+     * @return ArrayList<Location>
+     */
     @PostMapping("/Group/Map/Material/Location/post")
     @ResponseBody
     public ArrayList<Location> postMapMaterialLocation(@RequestBody JsonNode requestBodyData){
@@ -255,6 +297,14 @@ public class FormDataController {
                 objectMapper.convertValue(requestBodyData.get("location"),Location.class));
         return locationArrayList;
     }
+    /**
+     * DELETE /api/formdata/Group/Map/Material/Location/delete
+     * @param requestBodyData contains the formdata object (identified by its id)
+     *                        groupName (name of the group)
+     *                        materialName (name of the material)
+     *                        locationID Location object (identified by its id)
+     * @return ArrayList<Location>
+     */
     @DeleteMapping("/Group/Map/Material/Location/delete")
     @ResponseBody
     public ArrayList<Location> deleteMapMaterialLocation(@RequestBody JsonNode requestBodyData){
@@ -267,6 +317,7 @@ public class FormDataController {
     }
 
 
+                                                /// OLD CODE OF PREVIOUS GROUP ///
 //    /**
 //     * GET /api/formdata
 //     * @return all form data in the database
