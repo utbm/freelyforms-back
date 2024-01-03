@@ -313,7 +313,7 @@ handleDeleteLocation = (materialId, locationIndex) => {
         <MapContainer
           center={[51.505, -0.09]}
           zoom={13}
-          style={{ height: '900px', width: '50%' }}
+          style={{ height: '900px', width: '45%', position: 'fixed', top: '50px' }}
           onClick={this.handleMapClick}
         >
           <TileLayer
@@ -424,7 +424,7 @@ handleDeleteLocation = (materialId, locationIndex) => {
         <button className="btn_add_material" onClick={this.handleCreateMaterial}>
     Add New Material
   </button>
-        <div style={{ width: '50%' }}>
+        <div style={{ width: '45%', position: 'absolute', right: '0px', top: '50px' }}>
           {this.state.materials.map((material: { id: any; type?: string; location?: string; fields?: { name: string; type: string; data: any; }[]; locations?: Location[] | undefined; }) => (
             <Material
               key={material.id}
