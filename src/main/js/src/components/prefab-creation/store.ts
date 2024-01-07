@@ -5,11 +5,13 @@ type PrefabWithoutGroups = Omit<Schemas.Prefab, "groups">;
 
 export type GroupType = Schemas.Group & {
 	groupIndex: number;
+	uuid: string;
 };
 
 export type FieldType = Schemas.Field & {
 	groupIndex: number;
 	fieldIndex: number;
+	uuid: string;
 };
 
 export const prefabAtom = atom<PrefabWithoutGroups>({

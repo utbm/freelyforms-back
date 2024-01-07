@@ -1,20 +1,22 @@
 /* eslint-disable */
+
+export type PossibleTypes = "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
 export namespace Schemas {
 	// <Schemas>
 	export type TypeRule = Partial<{
-		associatedTypes: Array<"INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR">;
+		associatedTypes: Array<PossibleTypes>;
 		name: string;
 		value: string;
 	}>;
 	export type Rule = {
 		excludes: Array<string>;
-		fieldType: "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
+		fieldType: PossibleTypes;
 		hidden: boolean;
 		optional: boolean;
 		selectorValues: Array<string>;
 		typeRules: Array<TypeRule>;
 	};
-	export type Field = Partial<{ caption: string; label: string; name: string; rules: Rule }>;
+	export type Field = { caption: string; label: string; name: string; rules: Rule };
 	export type ObjectId = Partial<{ date: string; timestamp: number }>;
 	export type Group = Partial<{ caption: string; fields: Array<Field>; label: string; name: string }>;
 	export type FormData = Partial<{ _id: ObjectId; groups: Array<Group>; prefabName: string }>;
@@ -498,3 +500,6 @@ export const associatedTypesWithTypeRules = [
 		typeRules: ["AlternativeDisplay", "SelectDataSet"],
 	},
 ] as const;
+
+export type AssociatedTypesWithTypeRule = (typeof associatedTypesWithTypeRules)[number];
+export type PossibleTypeRules = AssociatedTypesWithTypeRule["typeRules"][number];

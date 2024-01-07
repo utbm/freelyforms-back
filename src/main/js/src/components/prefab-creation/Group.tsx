@@ -4,7 +4,7 @@ import { BasicComponentInfo } from "./BasicComponentInfo";
 import { useAtom, useSetAtom } from "jotai";
 import { FieldType, fieldsAtom, groupsAtom } from "./store";
 import { BsXLg } from "react-icons/bs";
-import { FieldDropdown } from "./FieldDropdown";
+import { ModalInputChoice } from "./ModalInputChoice";
 
 type GroupProps = {
 	index: number;
@@ -27,9 +27,14 @@ export const Group: FC<GroupProps> = (props) => {
 	return (
 		<div className="flex flex-col flex-gap2 border-dashed border-2 p-3 mb-10">
 			<div className="flex flex-wrap justify-between">
-				<h1 className="text-3xl">Group</h1>
+				<BasicComponentInfo
+					type="group"
+					index={props.index}
+					captionPlaceholder="Type the category of informations contained in this group"
+					labelPlaceholder="Display name of the group"
+				/>
 				<button
-					className="btn btn-error"
+					className="btn btn-sm btn-error"
 					onClick={() => {
 						setGroups((groups) => groups.filter((_, groupIndex) => groupIndex !== props.index));
 					}}
@@ -37,27 +42,24 @@ export const Group: FC<GroupProps> = (props) => {
 					<BsXLg />
 				</button>
 			</div>
-			<BasicComponentInfo
-				type="group"
-				index={props.index}
-				captionPlaceholder="Type the category of informations contained in this group"
-				labelPlaceholder="Display name of the group"
-			/>
-			<h1 className="text-2xl">Fields</h1>
+			{/* <h1 className="text-2xl">Fields</h1> */}
 			{groupFields.map((field, index) => (
-				<Field key={field.name} fieldIndex={index} groupIndex={props.index} />
+				<div className="p-2">
+					<Field key={field.uuid} fieldIndex={index} groupIndex={props.index} />
+				</div>
 			))}
 			<div className="flex self-center">
-				<FieldDropdown
-					onSelect={(item) => {
+				<ModalInputChoice
+					onSelect={(fieldType) => {
 						handleAddField({
-							fieldIndex: fields.length,
+							uuid: crypto.randomUUID(),
+							fieldIndex: groupFields.length,
 							groupIndex: props.index,
 							caption: "",
 							label: "",
 							name: "",
 							rules: {
-								fieldType: "",
+								fieldType: fieldType,
 								excludes: [],
 								hidden: false,
 								optional: false,

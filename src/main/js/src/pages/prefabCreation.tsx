@@ -4,6 +4,7 @@ import { Group } from "../components/prefab-creation/Group";
 import { useAtom, useAtomValue } from "jotai";
 import { fieldsAtom, groupsAtom, prefabAtom } from "../components/prefab-creation/store";
 import { FiPlus } from "react-icons/fi";
+import Select from "../components/question/select";
 
 export const PrefabCreation = () => {
 	const [prefab, setPrefab] = useAtom(prefabAtom);
@@ -38,7 +39,7 @@ export const PrefabCreation = () => {
 
 	return (
 		<div data-theme="light" className="w-screen h-screen p-2 lg:p-6">
-			<form className="flex-col gap-2" onSubmit={handleSendPrefab}>
+			<div className="flex-col gap-2">
 				<div>
 					<h2 className="text-2xl">Create a form</h2>
 					<BasicComponentInfo
@@ -49,9 +50,8 @@ export const PrefabCreation = () => {
 					/>
 				</div>
 				<div>
-					<h2 className="text-2xl">Groups: </h2>
-					{groups.map((_, index) => (
-						<Group index={index} />
+					{groups.map((group, index) => (
+						<Group key={group.name} index={group.groupIndex} />
 					))}
 					<div className="flex justify-center">
 						<button
@@ -59,6 +59,7 @@ export const PrefabCreation = () => {
 							onClick={() => {
 								setGroups((groups) =>
 									groups.concat({
+										uuid: crypto.randomUUID(),
 										groupIndex: groups.length,
 										fields: [],
 										label: "",
@@ -83,7 +84,7 @@ export const PrefabCreation = () => {
 						</span>
 					</button>
 				</div>
-			</form>
+			</div>
 		</div>
 	);
 };
