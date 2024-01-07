@@ -17,11 +17,11 @@ export const PrefabCreation = () => {
 			...prefab,
 			groups: groups.map((group) => ({
 				...group,
-				fields: fields.filter((field) => field.groupIndex === group.groupIndex),
+				fields: fields.filter((field) => field.groupUUID === group.uuid),
 			})),
 		};
 
-		console.log(prefabWithFieldGroups);
+		// console.log(prefabWithFieldGroups);
 		// console.log(ev);
 
 		// // create form data
@@ -51,7 +51,7 @@ export const PrefabCreation = () => {
 				</div>
 				<div>
 					{groups.map((group, index) => (
-						<Group key={group.name} index={group.groupIndex} />
+						<Group key={group.uuid} uuid={group.uuid} />
 					))}
 					<div className="flex justify-center">
 						<button
@@ -60,7 +60,6 @@ export const PrefabCreation = () => {
 								setGroups((groups) =>
 									groups.concat({
 										uuid: crypto.randomUUID(),
-										groupIndex: groups.length,
 										fields: [],
 										label: "",
 										caption: "",

@@ -17,8 +17,8 @@ const IconMapToType: Record<PossibleTypes, string> = {
 };
 
 type FieldProps = {
-	groupIndex: number;
-	fieldIndex: number;
+	groupUUID: string;
+	fieldUUID: string;
 };
 
 const removeField = (fields: FieldType[], fieldUUID: string) => {
@@ -30,18 +30,21 @@ const removeField = (fields: FieldType[], fieldUUID: string) => {
 export const Field: FC<FieldProps> = (props) => {
 	const [fields, setFields] = useAtom(fieldsAtom);
 
-	const field = fields[props.fieldIndex];
+	const field = fields.find((field) => field.uuid === props.fieldUUID);
+	if (!field) {
+		return null;
+	}
 
 	return (
-		<div className="m-1">
+		<div className="m-1 p-2">
 			<div className="flex flex-row gap-5">
 				<div className="flex flex-col gap-4">
 					<BasicComponentInfo
 						type="field"
 						labelPlaceholder="Display name"
 						captionPlaceholder={field.rules.fieldType === "SELECTOR" ? "" : "Type placeholder text"}
-						index={props.fieldIndex}
-						group={props.fieldIndex}
+						uuid={props.fieldUUID}
+						groupUUID={props.groupUUID}
 					>
 						{IconMapToType[field.rules.fieldType]}
 					</BasicComponentInfo>

@@ -39,6 +39,7 @@ export const Selector = ({ onChange }: SelectorOrExcludesProps) => {
 		<div>
 			{selectorOptions.map((option, index) => (
 				<OptionButton
+					key={option}
 					index={index}
 					addableOption={false}
 					name={option}
@@ -104,14 +105,14 @@ export const Rule: FC<RuleProps> = (props) => {
 	const [rules, setRules] = useState<Schemas.Rule>(props.field.rules);
 
 	const handleRuleChange = (rule: Schemas.Rule) => {
-		console.log(rule);
-
 		setRules(rule);
 		setFields((fields) => {
 			const newFields = [...fields];
 
-			newFields[props.field.fieldIndex] = {
-				...newFields[props.field.fieldIndex],
+			const fieldIndex = newFields.findIndex((field) => field.uuid === props.field.uuid);
+
+			newFields[fieldIndex] = {
+				...newFields[fieldIndex],
 				rules: rule,
 			};
 
@@ -120,11 +121,7 @@ export const Rule: FC<RuleProps> = (props) => {
 		props.onChange(rule);
 	};
 
-	const fieldsExceptCurrent = fields
-		.filter((field) => field.fieldIndex !== props.field.fieldIndex)
-		.filter((field) => !field.name);
-
-	console.log("fieldsExceptCurrent", fieldsExceptCurrent);
+	const fieldsExceptCurrent = fields.filter((field) => field.uuid !== props.field.uuid).filter((field) => !field.name);
 
 	const goodOne = associatedTypesWithTypeRules.filter((rule) => rule.associatedType === rules.fieldType);
 	const typeRules = goodOne.length > 0 ? goodOne[0].typeRules.map((rule) => rule) : [];

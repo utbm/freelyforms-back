@@ -7,21 +7,17 @@ import { BsXLg } from "react-icons/bs";
 import { ModalInputChoice } from "./ModalInputChoice";
 
 type GroupProps = {
-	index: number;
-};
-
-const addField = (fields: FieldType[], field: FieldType) => {
-	return fields.concat(field);
+	uuid: string;
 };
 
 export const Group: FC<GroupProps> = (props) => {
 	const setGroups = useSetAtom(groupsAtom);
 	const [fields, setFields] = useAtom(fieldsAtom);
 
-	const groupFields = fields.filter((field) => field.groupIndex === props.index);
+	const groupFields = fields.filter((field) => field.groupUUID === props.uuid);
 
 	const handleAddField = (field: FieldType) => {
-		setFields((fields) => addField(fields, field));
+		setFields((fields) => fields.concat(field));
 	};
 
 	return (
@@ -29,32 +25,31 @@ export const Group: FC<GroupProps> = (props) => {
 			<div className="flex flex-wrap justify-between">
 				<BasicComponentInfo
 					type="group"
-					index={props.index}
+					uuid={props.uuid}
 					captionPlaceholder="Type the category of informations contained in this group"
 					labelPlaceholder="Display name of the group"
 				/>
 				<button
 					className="btn btn-sm btn-error"
 					onClick={() => {
-						setGroups((groups) => groups.filter((_, groupIndex) => groupIndex !== props.index));
+						setGroups((groups) => groups.filter((group) => group.uuid !== props.uuid));
 					}}
 				>
 					<BsXLg />
 				</button>
 			</div>
 			{/* <h1 className="text-2xl">Fields</h1> */}
-			{groupFields.map((field, index) => (
-				<div className="p-2">
-					<Field key={field.uuid} fieldIndex={index} groupIndex={props.index} />
-				</div>
+			<div className="divider divider-info"></div>
+
+			{groupFields.map((field) => (
+				<Field key={field.uuid} fieldUUID={field.uuid} groupUUID={field.groupUUID} />
 			))}
 			<div className="flex self-center">
 				<ModalInputChoice
 					onSelect={(fieldType) => {
 						handleAddField({
 							uuid: crypto.randomUUID(),
-							fieldIndex: groupFields.length,
-							groupIndex: props.index,
+							groupUUID: props.uuid,
 							caption: "",
 							label: "",
 							name: "",
