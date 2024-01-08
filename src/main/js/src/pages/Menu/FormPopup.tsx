@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './FormPopup.css';
 
-const FormPopup = ({ groups, onSelect, triggerButtonRef, onClose }) => {
+const FormPopup = ({ groups, onSelect, triggerButtonRef, onClose, isDeletePopup }) => {
   const [popupStyle, setPopupStyle] = useState({});
   const popupRef = useRef(null);
 
@@ -17,7 +17,7 @@ const FormPopup = ({ groups, onSelect, triggerButtonRef, onClose }) => {
       const newPopupStyle = {
         position: 'absolute',
         top: buttonRect.bottom + 40,
-        left: buttonRect.left + 250,
+        left: buttonRect.left + 390,
         zIndex: 1000,
       };
 
@@ -52,7 +52,7 @@ const FormPopup = ({ groups, onSelect, triggerButtonRef, onClose }) => {
 
   return (
     <div ref={popupRef} className="form-popup" style={popupStyle}>
-      <h2>Select a Group</h2>
+      <h2>{isDeletePopup ? 'Delete a Group' : 'Select a Group'}</h2>
 
       <div className="group-buttons">
         {groups.map((group) => (
