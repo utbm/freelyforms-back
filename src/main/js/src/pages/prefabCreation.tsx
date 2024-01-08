@@ -6,6 +6,53 @@ import { fieldsAtom, groupsAtom, prefabAtom } from "../components/prefab-creatio
 import { FiPlus } from "react-icons/fi";
 import Select from "../components/question/select";
 
+const a = {
+	name: "cars",
+	label: "Formulaire sur les voitures",
+	caption: "",
+	groups: [
+		{
+			name: "generalInformation",
+			label: "Informations générales sur la voiture",
+			caption: "caption",
+			fields: [
+				{
+					name: "brand",
+					label: "Quel est la marque de la voiture?",
+					caption: "Citroen",
+					rules: {
+						optional: false,
+						excludes: [],
+						typeRules: [
+							{
+								associatedTypes: ["INTEGER", "FLOAT", "STRING", "DATE", "DATETIME"],
+								value: "50",
+								name: "MaximumRule",
+							},
+						],
+						hidden: false,
+						selectorValues: [],
+						fieldType: "STRING",
+					},
+				},
+			],
+		},
+	],
+};
+
+function removePropertiesRecursively<T extends object>(obj: T, propertiesToRemove: string[]): T {
+	for (const key in obj) {
+		if (Object.prototype.hasOwnProperty.call(obj, key)) {
+			if (propertiesToRemove.includes(key)) {
+				delete obj[key];
+			} else if (typeof obj[key] === "object" && obj[key] !== null) {
+				removePropertiesRecursively(obj[key] as unknown as object, propertiesToRemove);
+			}
+		}
+	}
+	return obj;
+}
+
 export const PrefabCreation = () => {
 	const [prefab, setPrefab] = useAtom(prefabAtom);
 	const [groups, setGroups] = useAtom(groupsAtom);
@@ -20,9 +67,7 @@ export const PrefabCreation = () => {
 				fields: fields.filter((field) => field.groupUUID === group.uuid),
 			})),
 		};
-
-		// console.log(prefabWithFieldGroups);
-		// console.log(ev);
+		const refinedPrefab = removePropertiesRecursively(prefabWithFieldGroups, ["uuid", "groupUUID"]);
 
 		// // create form data
 		// const formData = new FormData(ev.target);
@@ -33,13 +78,13 @@ export const PrefabCreation = () => {
 		// }
 
 		apiclient.post("/api/prefabs", {
-			...prefabWithFieldGroups,
+			...a,
 		});
 	};
 
 	return (
 		<div data-theme="light" className="w-screen h-screen p-2 lg:p-6">
-			<div className="flex-col gap-2">
+			<form className="flex-col gap-2" onSubmit={handleSendPrefab}>
 				<div>
 					<h2 className="text-2xl">Create a form</h2>
 					<BasicComponentInfo
@@ -83,7 +128,7 @@ export const PrefabCreation = () => {
 						</span>
 					</button>
 				</div>
-			</div>
+			</form>
 		</div>
 	);
 };

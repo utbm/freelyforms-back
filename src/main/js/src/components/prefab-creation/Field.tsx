@@ -35,6 +35,24 @@ export const Field: FC<FieldProps> = (props) => {
 		return null;
 	}
 
+	const handleSelectorChange = (options: string[]) => {
+		setFields((fields) => {
+			const newFields = [...fields];
+
+			const fieldIndex = newFields.findIndex((field) => field.uuid === props.fieldUUID);
+
+			newFields[fieldIndex] = {
+				...newFields[fieldIndex],
+				rules: {
+					...newFields[fieldIndex].rules,
+					selectorOptions: options,
+				},
+			};
+
+			return newFields;
+		});
+	};
+
 	return (
 		<div className="m-1 p-2">
 			<div className="flex flex-row gap-5">
@@ -49,9 +67,9 @@ export const Field: FC<FieldProps> = (props) => {
 						{IconMapToType[field.rules.fieldType]}
 					</BasicComponentInfo>
 					{/* @TODO: Add to state */}
-					{field.rules.fieldType === "SELECTOR" && <Selector onChange={console.log} />}
+					{field.rules.fieldType === "SELECTOR" && <Selector onChange={} />}
 				</div>
-				<Rule field={field} onChange={console.log} />
+				<Rule field={field} onChange={() => {}} />
 
 				<button
 					className="btn btn-sm btn-error"

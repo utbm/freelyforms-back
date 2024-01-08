@@ -37,19 +37,12 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 			setGroups((groups) => {
 				const newGroups = [...groups];
 
-				// newGroups[props.index] = {
-				// 	...newGroups[props.index],
-				// 	[name]: value,
-				// 	// TODO: uncomment this and check if it works
-				// 	// ...(name === "label" ? { name: value } : {}),
-				// };
-
-				//
 				const groupIndex = newGroups.findIndex((group) => group.uuid === props.uuid);
 
 				newGroups[groupIndex] = {
 					...newGroups[groupIndex],
 					[name]: value,
+					...(name === "label" ? { name: value } : {}),
 				};
 
 				return newGroups;
@@ -58,18 +51,12 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 			setFields((fields) => {
 				const newFields = [...fields];
 
-				// newFields[props.index] = {
-				// 	...newFields[props.index],
-				// 	[name]: value,
-				// 	// TODO: uncomment this and check if it works
-				// 	// ...(name === "label" ? { name: value } : {}),
-				// };
-
 				const fieldIndex = newFields.findIndex((field) => field.uuid === props.uuid);
 
 				newFields[fieldIndex] = {
 					...newFields[fieldIndex],
 					[name]: value,
+					...(name === "label" ? { name: value } : {}),
 				};
 
 				return newFields;

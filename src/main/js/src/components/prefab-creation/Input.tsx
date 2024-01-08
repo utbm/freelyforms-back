@@ -2,14 +2,14 @@ import { ComponentProps, FC } from "react";
 
 export const Checkbox: FC<{
 	name: string;
-	checked?: boolean;
+	label?: string;
 	onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ name, checked, onChange }) => {
+}> = ({ name, label, onChange }) => {
 	return (
 		<div className="form-control">
 			<label className="label cursor-pointer p-0 pb-2">
-				<span className="label-text">{name}</span>
-				<input type="checkbox" className="checkbox checkbox-sm checkbox-primary" onChange={onChange} />
+				<span className="label-text">{label ?? name}</span>
+				<input name={name} type="checkbox" className="checkbox checkbox-sm checkbox-primary" onChange={onChange} />
 			</label>
 		</div>
 	);
@@ -49,7 +49,7 @@ export const InputWithoutBorder: FC<InputWithoutBorderProps> = (props) => {
 		<input
 			{...rest}
 			className={
-				"input input-ghost input-sm w-full max-w-xs border-transparent focus:border-transparent focus:ring-0 focus:outline-none" +
+				"input required input-ghost input-sm w-full max-w-xs border-transparent focus:border-transparent focus:ring-0 focus:outline-none" +
 				(classNames ? " " + classNames : "")
 			}
 			autoComplete="off"

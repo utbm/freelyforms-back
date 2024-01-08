@@ -121,7 +121,10 @@ export const Rule: FC<RuleProps> = (props) => {
 		props.onChange(rule);
 	};
 
-	const fieldsExceptCurrent = fields.filter((field) => field.uuid !== props.field.uuid).filter((field) => !field.name);
+	const fieldsExceptCurrent = fields
+		.filter((field) => field.groupUUID === props.field.groupUUID)
+		.filter((field) => field.uuid !== props.field.uuid)
+		.filter((field) => field.name);
 
 	const goodOne = associatedTypesWithTypeRules.filter((rule) => rule.associatedType === rules.fieldType);
 	const typeRules = goodOne.length > 0 ? goodOne[0].typeRules.map((rule) => rule) : [];
@@ -135,8 +138,8 @@ export const Rule: FC<RuleProps> = (props) => {
 	return (
 		<div className="flex flex-row gap-3">
 			<div className="flex flex-col">
-				<Checkbox name="Optional" onChange={handleCheckboxChange} />
-				<Checkbox name="Hidden" onChange={handleCheckboxChange} />
+				<Checkbox name="optional" label="Optional" onChange={handleCheckboxChange} />
+				<Checkbox name="hidden" label="Hidden" onChange={handleCheckboxChange} />
 				<p className="text-sm">Excludes fields:</p>
 				<Select
 					isMulti
@@ -150,7 +153,7 @@ export const Rule: FC<RuleProps> = (props) => {
 					}}
 				/>
 			</div>
-			<TypeRules typeRules={typeRules} fieldType={props.field.rules.fieldType} />
+			<TypeRules typeRules={typeRules} fieldType={props.field.rules.fieldType} fieldUUID={props.field.uuid} />
 		</div>
 	);
 };
