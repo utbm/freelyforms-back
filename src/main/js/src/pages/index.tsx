@@ -6,6 +6,7 @@ import './styles/leaflet.css';
 import './styles/styles.css';
 import Location from './Location';
 import { useLocation } from 'react-router-dom';
+import CreateGroupPopup from './CreateGroupPopup';
 
 class Home extends React.Component<{}, AppState> {
 
@@ -16,8 +17,73 @@ class Home extends React.Component<{}, AppState> {
       ],
       assignedColors: {}, // New array to track assigned colors
       colorIndex:0,
+      isCreateGroupPopupOpen: false,
     };
+  
   }
+  newGroupName: string | null = null;
+  saveGroupButtonRef = React.createRef();
+
+  // Open the create group popup
+
+  handleOpenCreateGroupPopup = () => {
+    this.setState({ isCreateGroupPopupOpen: true });
+  };
+
+  // Close the create group popup
+  handleCloseCreateGroupPopup = () => {
+    this.setState({ isCreateGroupPopupOpen: false });
+  };
+
+  // Save the new group with materials
+  handleSaveGroup = async (groupName: string) => {
+    // Update the new group name
+    this.newGroupName = groupName;
+
+    // Close the create group popup
+    this.handleCloseCreateGroupPopup();
+
+    // Prepare the data for the API request
+    const formDataID = '5f9a514b49d94064dcd66337'; // Example formDataID, replace with your actual ID
+    const newGroupData = {
+      formDataID: formDataID,
+      group: {
+        name: groupName,
+        map: {
+          materialArrayList: this.state.materials.map((material) => ({
+            name: material.id,
+            type: material.type || 'enum', // Use 'enum' as a default type if not provided
+            color: this.getColorCode(this.state.assignedColors[material.id]),
+            locationArrayList: material.locations || [],
+          })),
+        },
+      },
+    };
+
+    try {
+      // Make the API request to create a new group
+      const response = await fetch('http://localhost:8080/api/formdata/Group/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newGroupData),
+      });
+
+      if (response.ok) {
+        console.log('New group created successfully.');
+        // You may want to handle success, update UI, etc.
+      } else {
+        console.error('Failed to create a new group.');
+        // Handle failure, display an error message, etc.
+      }
+    } catch (error) {
+      console.error('Error creating a new group:', error);
+      // Handle error, display an error message, etc.
+    }
+  };
+
+
 
   componentDidMount() {
     // Retrieve the group name from the query parameters
@@ -421,6 +487,14 @@ handleDeleteLocation = (materialId, locationIndex) => {
             })
           )}
         </MapContainer>
+
+        <button ref={this.saveGroupButtonRef} className="btn_save_group" onClick={this.handleOpenCreateGroupPopup}>
+          Save Group
+        </button>
+        {this.state.isCreateGroupPopupOpen && (
+          <CreateGroupPopup onSave={this.handleSaveGroup} buttonRef={this.saveGroupButtonRef} />
+        )}
+       
         <button className="btn_add_material" onClick={this.handleCreateMaterial}>
     Add New Material
   </button>

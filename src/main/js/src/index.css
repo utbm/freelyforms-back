@@ -21,8 +21,7 @@
 	-webkit-text-size-adjust: 100%;
 }
 
-
-.btn_add_material {
+.btn_save_group{
 	background-color: rgb(88, 88, 88);
 	border: 4px solid black; /* Add a transparent border for a subtle outline effect */
 	color: rgb(255, 255, 255);
@@ -35,6 +34,22 @@
 	position: fixed;
 	top: 50px;
 	right: 45%;
+}
+
+
+.btn_add_material {
+	background-color: rgb(88, 88, 88);
+	border: 4px solid black; /* Add a transparent border for a subtle outline effect */
+	color: rgb(255, 255, 255);
+	height: 100px;
+	width: 200px; /* Set a fixed width or adjust as needed */
+	font-size: 18px; /* Adjust font size as needed */
+	border-radius: 25px; /* Add rounded corners for a modern look */
+	cursor: pointer;
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Smooth transition on hover */
+	position: fixed;
+	top: 200px;
+	right: 45%;
   
 	/* Additional styles as needed */
   }
@@ -44,4 +59,9 @@
 	color: white; /* Change text color on hover */
 	border-color: #ebe8e8; /* Change border color on hover */
   }
-  
+
+  .btn_save_group:hover {
+	background-color:  rgb(126, 125, 125); /* Change background color on hover */
+	color: white; /* Change text color on hover */
+	border-color: #ebe8e8; /* Change border color on hover */
+  }
