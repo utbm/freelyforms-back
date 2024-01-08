@@ -23,6 +23,8 @@ export const Selector = ({ onChange }: SelectorOrExcludesProps) => {
 		setSelectorOptions((selectorOptions) => {
 			const newSelectorOptions = [...selectorOptions];
 			newSelectorOptions[index] = name;
+
+			onChange(newSelectorOptions);
 			return newSelectorOptions;
 		});
 	};
@@ -31,6 +33,8 @@ export const Selector = ({ onChange }: SelectorOrExcludesProps) => {
 		setSelectorOptions((selectorOptions) => {
 			const newSelectorOptions = [...selectorOptions];
 			newSelectorOptions.splice(index, 1);
+
+			onChange(newSelectorOptions);
 			return newSelectorOptions;
 		});
 	};

@@ -20,6 +20,11 @@ export const Group: FC<GroupProps> = (props) => {
 		setFields((fields) => fields.concat(field));
 	};
 
+	const handleRemoveGroup = () => {
+		setGroups((groups) => groups.filter((group) => group.uuid !== props.uuid));
+		setFields((fields) => fields.filter((field) => field.groupUUID !== props.uuid));
+	};
+
 	return (
 		<div className="flex flex-col flex-gap2 border-dashed border-2 p-3 mb-10">
 			<div className="flex flex-wrap justify-between">
@@ -29,12 +34,7 @@ export const Group: FC<GroupProps> = (props) => {
 					captionPlaceholder="Type the category of informations contained in this group"
 					labelPlaceholder="Display name of the group"
 				/>
-				<button
-					className="btn btn-sm btn-error"
-					onClick={() => {
-						setGroups((groups) => groups.filter((group) => group.uuid !== props.uuid));
-					}}
-				>
+				<button className="btn btn-sm btn-error" onClick={handleRemoveGroup}>
 					<BsXLg />
 				</button>
 			</div>

@@ -45,7 +45,7 @@ export const Field: FC<FieldProps> = (props) => {
 				...newFields[fieldIndex],
 				rules: {
 					...newFields[fieldIndex].rules,
-					selectorOptions: options,
+					selectorValues: options,
 				},
 			};
 
@@ -66,8 +66,7 @@ export const Field: FC<FieldProps> = (props) => {
 					>
 						{IconMapToType[field.rules.fieldType]}
 					</BasicComponentInfo>
-					{/* @TODO: Add to state */}
-					{field.rules.fieldType === "SELECTOR" && <Selector onChange={} />}
+					{field.rules.fieldType === "SELECTOR" && <Selector onChange={handleSelectorChange} />}
 				</div>
 				<Rule field={field} onChange={() => {}} />
 
