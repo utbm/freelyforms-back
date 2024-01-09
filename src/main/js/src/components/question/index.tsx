@@ -8,6 +8,8 @@ export interface Helper {
 }
 
 export interface Question {
+  n?: number,
+  key: number,
   id: string,
   current?: number | null,
   label?: string,
@@ -49,17 +51,17 @@ export default function Question( props: GenericQuestion ) {
     },
     setHelper: (helper: Helper) => {
       const res: {[key: string|number]: Helper} = {}
-      res[props.id] = { ...props.helper, ...helper}
+      res[props.key] = { ...props.helper, ...helper}
       return props.setHelpers(res)
     }
   }
 
-  switch(props.type) {
+  switch(props.type?.toLowerCase()) {
     case 'statement':
       return <Statement {...custom} />
     case 'final':
       return <Final {...custom} />
-    case 'STRING':
+    case 'string':
     case 'long text':
     case 'email':
       return <Text {...custom} />

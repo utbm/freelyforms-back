@@ -104,7 +104,7 @@ export default function Select( props: SelectQuestion ) {
   }
 
   return (
-    <section className='hero min-h-screen p-1 pb-12' id={`q${props.id}`}>
+    <section className='hero min-h-screen p-1 pb-12' id={props.id}>
       <Reveal duration={.2} className='hero-content text-center w-full max-w-xl'>
         <div className='text-left flex flex-col w-full'>
           <h1 className='text-lg font-bold'>{props.main}</h1>

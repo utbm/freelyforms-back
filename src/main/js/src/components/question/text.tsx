@@ -47,7 +47,7 @@ export default function Text( props: TextQuestion ) {
   }
 
   return (
-    <section className='hero min-h-screen p-1 pb-12' id={`q${props.id}`}>
+    <section className='hero min-h-screen p-1 pb-12' id={props.id}>
       <Reveal duration={.2} className='hero-content text-center w-full max-w-lg'>
         <form className='text-left flex flex-col w-full' method='POST' action='javascript:void(0)'>
           <h1 className='text-lg font-bold'>{props.label}</h1>
@@ -56,8 +56,8 @@ export default function Text( props: TextQuestion ) {
             (props.type !== 'long text' && props.autocomplete) ? 
             <input
               type='text'
-              name={props.type === 'email' ? 'email' : `q${props.id}-focus`}
-              id={`q${props.id}-focus`}
+              name={props.type === 'email' ? 'email' : `${props.id}-focus`}
+              id={`${props.id}-focus`}
               placeholder='Your answer goes here'
               className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
               onChange={e => setAnswer(e.target.value)}
@@ -65,8 +65,8 @@ export default function Text( props: TextQuestion ) {
               autoComplete={props.autocomplete || 'off'}
             /> :
             <TextareaAutosize
-              name={props.type === 'email' ? `email` : `q${props.id}-focus`}
-              id={`q${props.id}-focus`}
+              name={props.type === 'email' ? `email` : `${props.id}-focus`}
+              id={`${props.id}-focus`}
               placeholder={props.caption}
               className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
               maxRows={10}

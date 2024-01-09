@@ -8,7 +8,7 @@ export namespace Schemas {
 	}>;
 	export type Rule = Partial<{
 		excludes: Array<string>;
-		fieldType: "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR";
+		fieldType: "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
 		hidden: boolean;
 		optional: boolean;
 		selectorValues: Array<string>;

@@ -26,7 +26,7 @@ export default function Final( props: FinalQuestion ) {
   const [celebrate, setCelebrate] = useState(false)
 
   useEffect(() => {
-    if(props.confetti && props.current === props.id && !celebrate) {
+    if(props.current === props.n && !celebrate) {
       setTimeout(() => {
         setCelebrate( true )
       }, 500)
@@ -36,11 +36,11 @@ export default function Final( props: FinalQuestion ) {
   return (
     <>
     <Confetti active={ celebrate } config={ confettiConfig }/>
-    <section className='hero min-h-screen p-1 pb-12' id={`q${props.id}`}>
+    <section className='hero min-h-screen p-1 pb-12' id={props.id}>
       <Reveal  duration={.2} className='hero-content text-center w-full max-w-xl'>
         <div className='max-w-md lg:max-w-2xl text-center flex flex-col w-full'>
-          <h1 className='text-3xl font-bold'>{props.main}</h1>
-          <p className='mt-3 pt-2 pb-6 text-xl font-light'>{props.desc}</p>
+          <h1 className='text-3xl font-bold'>{props.label}</h1>
+          {/* <p className='mt-3 pt-2 pb-6 text-xl font-light'>{props.desc}</p> */}
         </div>
       </Reveal>
     </section>
