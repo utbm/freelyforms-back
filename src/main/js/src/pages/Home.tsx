@@ -79,12 +79,12 @@ export default function Home( ) {
     }
 
     const q = _questions.current[question.current || 0]
-    const h = helpers.current[question.current || 0]
+    const h = helpers.current[_questions.current[question.current || 0].id]
 
     // is field invalid
     if(target === 'next' && !q?.rules?.optional && h?.value) {
       const res = helpers.current
-      res[question.current || 0] = { ...res[question.current || 0], visible: true }
+      res[_questions.current[question.current || 0].id] = { ...res[_questions.current[question.current || 0].id], visible: true }
       setHelpers({...res})
       moving.current = target
       return setTimeout(() => {
@@ -214,7 +214,7 @@ export default function Home( ) {
                   answers.current = updatedAnswers
                   // updateHidden(id)
                 }} 
-                helper={_helpers[id]}
+                helper={_helpers[q.id]}
                 setHelpers={(val) => setHelpers({...helpers.current, ...val})}
               />)}
           )
@@ -373,7 +373,7 @@ const PREFAB = {
                                   "DATE",
                                   "DATETIME"
                               ],
-                              "value": "50",
+                              "value": "5",
                               "name": "MaximumRule"
                           }
                       ],

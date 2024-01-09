@@ -9,7 +9,10 @@ import Action from '../action'
 
 interface DateQuestion extends Question {
   answer?: string | string[],
-  setAnswer: (val: string) => void
+  setAnswer: (val: string) => void,
+  rules?: {
+    optional?: boolean
+  }
 }
 
 export default function Date( props: DateQuestion ) {
@@ -18,7 +21,7 @@ export default function Date( props: DateQuestion ) {
     if(!props.setHelper) {
       return;
     }
-    if(!props.required) {
+    if(props.rules?.optional) {
       props.setHelper({ value: null, visible: false })
     } else {
       const a = val !== undefined ? val : props.answer

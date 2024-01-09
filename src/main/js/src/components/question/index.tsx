@@ -54,7 +54,7 @@ export default function Question( props: GenericQuestion ) {
     },
     setHelper: (helper: Helper) => {
       const res: {[key: string|number]: Helper} = {}
-      res[props.key] = { ...props.helper, ...helper}
+      res[props.id] = { ...props.helper, ...helper}
       return props.setHelpers(res)
     }
   }

@@ -19,9 +19,10 @@ interface SelectQuestion extends Question {
   setAnswer: (val: string[]) => void,
   helper?: Helper,
   setHelper: (val: Helper) => void,
-  rules: {
+  rules?: {
     selectorValues: string[],
-    typeRules: TypeRule[]
+    typeRules: TypeRule[],
+    optional?: boolean
   },
   letter?: number
 }
@@ -31,19 +32,19 @@ export default function Select( props: SelectQuestion ) {
   const [willSkip, setWillSkip] = useState(false)
 
   const largestOption = useMemo(() => {
-    const copy = props.rules.selectorValues ? [...props.rules.selectorValues] : []
+    const copy = props.rules?.selectorValues ? [...props.rules.selectorValues] : []
     return copy?.length ? copy.sort((a,b) =>b?.length - a?.length)[0].length : 0
-  }, [props.rules.selectorValues])
+  }, [props.rules?.selectorValues])
 
   useEffect(() => {
     // between A and Z
-    if(props.letter && props.current === props.n && props.letter >= 65 && (props.letter - 65) < (props.rules.selectorValues ?? []).length) {
-      handleClick(props.rules.selectorValues ? props.rules.selectorValues[props.letter - 65] : null)
+    if(props.letter && props.current === props.n && props.letter >= 65 && (props.letter - 65) < (props.rules?.selectorValues ?? []).length) {
+      handleClick(props.rules?.selectorValues ? props.rules?.selectorValues[props.letter - 65] : null)
     }
   }, [props.letter])
 
   const updateHelper = (val?: string[] | null) => {
-    if(!props.required) {
+    if(props.rules?.optional) {
       props.setHelper({ value: null, visible: false })
     } else {
       const a = val !== undefined ? val : props.answer
@@ -70,7 +71,7 @@ export default function Select( props: SelectQuestion ) {
     }
 
     // avoid multiple select if needed
-    if(!props.rules.typeRules.find(rule => rule.value === "MULTIPLE_CHOICE")) {
+    if(!props.rules?.typeRules.find(rule => rule.value === "MULTIPLE_CHOICE")) {
       updated = []
     }
 
@@ -84,7 +85,7 @@ export default function Select( props: SelectQuestion ) {
         updated.push(option)
         setAnswer(updated)
 
-        if(!props.rules.typeRules.find(rule => rule.value === "MULTIPLE_CHOICE")) {
+        if(!props.rules?.typeRules.find(rule => rule.value === "MULTIPLE_CHOICE")) {
           nextWithDelay()
         }
     }
@@ -113,7 +114,7 @@ export default function Select( props: SelectQuestion ) {
           <p className='pt-1 pb-2 text-sm'></p>
           <article className={`grid w-full grid-cols-[repeat(auto-fill,minmax(${largestOption > 20 ? '300' : '200'}px,_1fr))] gap-3 mb-6`}>
             {
-              (props.rules.selectorValues ?? []).map((option, index) => (
+              (props.rules?.selectorValues ?? []).map((option, index) => (
                 <div
                   className={`
                     relative cursor-pointer border-neutral px-10 flex-1 py-2 flex justify-center items-center border rounded-lg

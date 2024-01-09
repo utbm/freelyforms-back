@@ -7,9 +7,19 @@ import Error from './error'
 import Reveal from '../reveal'
 import Action from '../action'
 
+interface TypeRule {
+  value: string,
+  name: string
+}
+
 interface TextQuestion extends Question {
   answer?: string | string[],
-  setAnswer: (val: string) => void
+  setAnswer: (val: string) => void,
+  rules?: {
+    selectorValues: string[],
+    typeRules: TypeRule[],
+    optional?: boolean
+  },
 }
 
 export default function Text( props: TextQuestion ) {
@@ -18,7 +28,7 @@ export default function Text( props: TextQuestion ) {
     if(!props.setHelper) {
       return;
     }
-    if(!props.required) {
+    if(props.rules?.optional) {
       props.setHelper({ value: null, visible: false })
     } else {
       const a = val !== undefined ? val : props.answer
@@ -27,6 +37,13 @@ export default function Text( props: TextQuestion ) {
         props.setHelper({ value: 'Please fill this in' })
       } else if(props.type === 'email' && !isEmail(a)) {
         props.setHelper({ value: 'Your email seems invalid' })
+      } else if(props.rules?.typeRules.find(rule => rule.name === "MaximumRule" && /^[0-9]*$/.test(rule.value))) {
+        const maxLength = Number(props.rules?.typeRules.find(rule => rule.name === "MaximumRule" && /^[0-9]*$/.test(rule.value))?.value)
+        if(props.answer && props.answer.length >= maxLength) {
+          props.setHelper({ value: `Please answer in ${maxLength} characters or less` })
+        } else {
+          props.setHelper({ value: null, visible: false })
+        }
       } else {
         props.setHelper({ value: null, visible: false })
       }

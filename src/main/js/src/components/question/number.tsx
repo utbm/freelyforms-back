@@ -8,7 +8,10 @@ import Action from '../action'
 
 interface NumberQuestion extends Question {
   answer?: string | string[],
-  setAnswer: (val: string) => void
+  setAnswer: (val: string) => void,
+  rules?: {
+    optional?: boolean
+  }
 }
 
 export default function Number( props: NumberQuestion ) {
@@ -17,7 +20,7 @@ export default function Number( props: NumberQuestion ) {
     if(!props.setHelper) {
       return;
     }
-    if(!props.required) {
+    if(props.rules?.optional) {
       props.setHelper({ value: null, visible: false })
     } else {
       const a = val !== undefined ? val : props.answer
