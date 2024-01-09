@@ -28,12 +28,13 @@ export default function Home( ) {
     _survey.current = value;
     _setSurvey(value);
     
-    const array = value?.groups?.flatMap(group => group.fields?.map(field => ({...field, id: `${group.name}.${field.name}`})));
+    const array = value?.groups?.flatMap(group => group.fields?.map(field => ({...field, group: group.label, id: `${group.name}.${field.name}`})));
     array?.push({ 
       id: "thanks",
       label: "Merci pour vos réponses !",
       name: "thanks",
       caption: "thanks",
+      group: "Remerciements",
       rules: {
         excludes: [],
         fieldType: "FINAL",

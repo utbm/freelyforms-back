@@ -2,6 +2,7 @@ import Statement from './statement'
 import Final from './final'
 import Text from './text'
 import Select from './select'
+import Date from './date'
 
 export interface Helper {
   value: string | null, visible?: boolean
@@ -11,6 +12,7 @@ export interface Question {
   n?: number,
   key: number,
   id: string,
+  group?: string,
   current?: number | null,
   label?: string,
   caption?: string,
@@ -62,9 +64,10 @@ export default function Question( props: GenericQuestion ) {
     case 'final':
       return <Final {...custom} />
     case 'string':
-    case 'long text':
     case 'email':
       return <Text {...custom} />
+    case 'date':
+      return <Date {...custom} />
     case 'select':
       return <Select {...custom} />
     default: 

@@ -39,6 +39,7 @@ export default function Final( props: FinalQuestion ) {
     <section className='hero min-h-screen p-1 pb-12' id={props.id}>
       <Reveal  duration={.2} className='hero-content text-center w-full max-w-xl'>
         <div className='max-w-md lg:max-w-2xl text-center flex flex-col w-full'>
+          <p className='pt-1 pb-2 text-sm opacity-40'>{props.group}</p> 
           <h1 className='text-3xl font-bold'>{props.label}</h1>
           {/* <p className='mt-3 pt-2 pb-6 text-xl font-light'>{props.desc}</p> */}
         </div>

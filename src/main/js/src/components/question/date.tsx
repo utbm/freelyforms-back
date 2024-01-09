@@ -7,12 +7,12 @@ import Error from './error'
 import Reveal from '../reveal'
 import Action from '../action'
 
-interface TextQuestion extends Question {
+interface DateQuestion extends Question {
   answer?: string | string[],
   setAnswer: (val: string) => void
 }
 
-export default function Text( props: TextQuestion ) {
+export default function Text( props: DateQuestion ) {
   
   const updateHelper = (val?: string | null) => {
     if(!props.setHelper) {
@@ -23,13 +23,13 @@ export default function Text( props: TextQuestion ) {
     } else {
       const a = val !== undefined ? val : props.answer
 
-      if(!a || typeof a !== 'string' || !a.length) {
-        props.setHelper({ value: 'Please fill this in' })
-      } else if(props.type === 'email' && !isEmail(a)) {
-        props.setHelper({ value: 'Your email seems invalid' })
-      } else {
-        props.setHelper({ value: null, visible: false })
-      }
+      // if(!a || typeof a !== 'string' || !a.length) {
+      //   props.setHelper({ value: 'Please fill this in' })
+      // } else if(props.type === 'email' && !isEmail(a)) {
+      //   props.setHelper({ value: 'Your email seems invalid' })
+      // } else {
+      //   props.setHelper({ value: null, visible: false })
+      // }
     }
 
   }
@@ -53,29 +53,15 @@ export default function Text( props: TextQuestion ) {
           <p className='pt-1 pb-2 text-sm opacity-40'>{props.group}</p>
           <h1 className='text-lg font-bold'>{props.label}</h1>
           <p className='pt-1 pb-2 text-sm'></p>
-          {
-            (props.type !== 'long text' && props.autocomplete) ? 
-            <input
-              type='text'
-              name={props.type === 'email' ? 'email' : `${props.id}-focus`}
-              id={`${props.id}-focus`}
-              placeholder='Your answer goes here'
-              className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
-              onChange={e => setAnswer(e.target.value)}
-              value={props.answer ?? ''}
-              autoComplete={props.autocomplete || 'off'}
-            /> :
-            <TextareaAutosize
-              name={props.type === 'email' ? `email` : `${props.id}-focus`}
-              id={`${props.id}-focus`}
-              placeholder={props.caption}
-              className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
-              maxRows={10}
-              onChange={e => setAnswer(e.target.value)}
-              value={props.answer ?? ''}
-              autoComplete={props.autocomplete || 'off'}
-            />
-          }
+          <input
+            type='date'
+            name={`${props.id}-focus`}
+            id={`${props.id}-focus`}
+            placeholder={props.caption}
+            className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
+            onChange={e => setAnswer(e.target.value)}
+            value={props.answer ?? ''}
+          />
           
           {
             (props.helper && props.helper.visible) ? 
@@ -96,10 +82,3 @@ export default function Text( props: TextQuestion ) {
     </section>
   )
 } 
-
-function isEmail( email: string ) {
-  return email.match(
-    // eslint-disable-next-line no-useless-escape
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  )
-}
