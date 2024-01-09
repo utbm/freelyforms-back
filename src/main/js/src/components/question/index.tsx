@@ -3,6 +3,7 @@ import Final from './final'
 import Text from './text'
 import Select from './select'
 import Date from './date'
+import Number from './number'
 
 export interface Helper {
   value: string | null, visible?: boolean
@@ -68,7 +69,10 @@ export default function Question( props: GenericQuestion ) {
       return <Text {...custom} />
     case 'date':
       return <Date {...custom} />
-    case 'select':
+    case 'integer':
+    case 'float':
+      return <Number {...custom} />
+    case 'selector':
       return <Select {...custom} />
     default: 
       return <></>

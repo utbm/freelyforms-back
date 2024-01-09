@@ -10,9 +10,8 @@ interface Helper {
   value: string | null, visible?: boolean
 }
 
-interface Option {
-  value: string,
-  exclusive?: boolean
+interface TypeRule {
+  value: string
 }
 
 interface SelectQuestion extends Question {
@@ -20,8 +19,10 @@ interface SelectQuestion extends Question {
   setAnswer: (val: string[]) => void,
   helper?: Helper,
   setHelper: (val: Helper) => void,
-  multiple?: boolean,
-  options?: Option[],
+  rules: {
+    selectorValues: string[],
+    typeRules: TypeRule[]
+  },
   letter?: number
 }
 
@@ -30,14 +31,14 @@ export default function Select( props: SelectQuestion ) {
   const [willSkip, setWillSkip] = useState(false)
 
   const largestOption = useMemo(() => {
-    const copy = props.options ? [...props.options] : []
-    return copy.sort((a,b) =>b.value?.length - a.value?.length)[0].value.length
-  }, [props.options])
+    const copy = props.rules.selectorValues ? [...props.rules.selectorValues] : []
+    return copy?.length ? copy.sort((a,b) =>b?.length - a?.length)[0].length : 0
+  }, [props.rules.selectorValues])
 
   useEffect(() => {
     // between A and Z
-    if(props.letter && props.current === props.id && props.letter >= 65 && (props.letter - 65) < (props.options ?? []).length) {
-      handleClick(props.options ? props.options[props.letter - 65] : null)
+    if(props.letter && props.current === props.n && props.letter >= 65 && (props.letter - 65) < (props.rules.selectorValues ?? []).length) {
+      handleClick(props.rules.selectorValues ? props.rules.selectorValues[props.letter - 65] : null)
     }
   }, [props.letter])
 
@@ -61,7 +62,7 @@ export default function Select( props: SelectQuestion ) {
     updateHelper(val)
   }
 
-  const handleClick = (option: Option | null) => {
+  const handleClick = (option: string | null) => {
     let updated = props.answer ? [...props.answer] : []
 
     if(!option) {
@@ -69,23 +70,23 @@ export default function Select( props: SelectQuestion ) {
     }
 
     // avoid multiple select if needed
-    if(!props.multiple || option.exclusive) {
+    if(!props.rules.typeRules.find(rule => rule.value === "MULTIPLE_CHOICE")) {
       updated = []
     }
 
     // if already selected
-    if(props.answer && props.answer.includes(option.value)) {
-      setAnswer(updated.filter(e => e !== option.value))
+    if(props.answer && props.answer.includes(option)) {
+      setAnswer(updated.filter(e => e !== option))
     } else {
-        // remove exclusive answers
-        updated = updated.filter(answer => !(props.options ?? []).find(opt => opt.exclusive && opt.value === answer))
+        // // remove exclusive answers
+        // updated = updated.filter(answer => !(props.rules.selectorValues ?? []).find(opt => opt.exclusive && opt.value === answer))
 
-      updated.push(option.value)
-      setAnswer(updated)
+        updated.push(option)
+        setAnswer(updated)
 
-      if(!props.multiple || option.exclusive) {
-        nextWithDelay()
-      }
+        if(!props.rules.typeRules.find(rule => rule.value === "MULTIPLE_CHOICE")) {
+          nextWithDelay()
+        }
     }
   }
 
@@ -107,16 +108,17 @@ export default function Select( props: SelectQuestion ) {
     <section className='hero min-h-screen p-1 pb-12' id={props.id}>
       <Reveal duration={.2} className='hero-content text-center w-full max-w-xl'>
         <div className='text-left flex flex-col w-full'>
-          <h1 className='text-lg font-bold'>{props.main}</h1>
-          <p className='pt-2 pb-4 text-sm'>{props.desc}</p>
+          <p className='pt-1 pb-2 text-sm opacity-40'>{props.group}</p>
+          <h1 className='text-lg font-bold'>{props.label}</h1>
+          <p className='pt-1 pb-2 text-sm'></p>
           <article className={`grid w-full grid-cols-[repeat(auto-fill,minmax(${largestOption > 20 ? '300' : '200'}px,_1fr))] gap-3 mb-6`}>
             {
-              (props.options ?? []).map((option, index) => (
+              (props.rules.selectorValues ?? []).map((option, index) => (
                 <div
                   className={`
                     relative cursor-pointer border-neutral px-10 flex-1 py-2 flex justify-center items-center border rounded-lg
-                    ${(props.answer && props.answer.includes(option.value)) ? 'bg-neutral' : 'bg-accent'}
-                    ${(props.answer && props.answer.includes(option.value) && willSkip) ? 'animate-pulse-quick' : ''}
+                    ${(props.answer && props.answer.includes(option)) ? 'bg-neutral' : 'bg-accent'}
+                    ${(props.answer && props.answer.includes(option) && willSkip) ? 'animate-pulse-quick' : ''}
                   `}
                   key={index}
                   onClick={handleClick.bind(null, option)}
@@ -124,14 +126,14 @@ export default function Select( props: SelectQuestion ) {
                   <div
                     className={`
                       border border-neutral text-[7px] left-3 absolute rounded-sm w-4 h-4 mr-2 flex justify-center items-center
-                      ${(props.answer && props.answer.includes(option.value)) ? 'bg-neutral text-accent border-accent' : 'border-neutral'}
+                      ${(props.answer && props.answer.includes(option)) ? 'bg-neutral text-accent border-accent' : 'border-neutral'}
                     `}
                   >
                     {(index + 10).toString(36).toUpperCase()}
                   </div>
-                  <p className={`whitespace-nowrap ${(props.answer && props.answer.includes(option.value)) ? 'text-accent' : 'text-neutral'}`} >{option.value}</p>
+                  <p className={`whitespace-nowrap ${(props.answer && props.answer.includes(option)) ? 'text-accent' : 'text-neutral'}`} >{option}</p>
                   {
-                    (props.answer && props.answer.includes(option.value)) &&
+                    (props.answer && props.answer.includes(option)) &&
                     <span className='pl-1.5 absolute right-3'>
                       <FiCheck size={14} className='stroke-accent' />
                     </span>

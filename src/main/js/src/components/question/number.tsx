@@ -1,4 +1,3 @@
-import TextareaAutosize from 'react-textarea-autosize'
 import { useEffect, useMemo } from 'react'
 import MobileDetect from 'mobile-detect'
 
@@ -7,12 +6,12 @@ import Error from './error'
 import Reveal from '../reveal'
 import Action from '../action'
 
-interface DateQuestion extends Question {
+interface NumberQuestion extends Question {
   answer?: string | string[],
   setAnswer: (val: string) => void
 }
 
-export default function Date( props: DateQuestion ) {
+export default function Number( props: NumberQuestion ) {
   
   const updateHelper = (val?: string | null) => {
     if(!props.setHelper) {
@@ -54,7 +53,7 @@ export default function Date( props: DateQuestion ) {
           <h1 className='text-lg font-bold'>{props.label}</h1>
           <p className='pt-1 pb-2 text-sm'></p>
           <input
-            type='date'
+            type='number'
             name={`${props.id}-focus`}
             id={`${props.id}-focus`}
             placeholder={props.caption}

@@ -465,10 +465,6 @@ const PREFAB = {
                           "1.9",
                           "2.0",
                           "2.0 HDI",
-                          "1.8",
-                          "1.9",
-                          "2.0",
-                          "2.0 HDI"
                       ],
                       "fieldType": "SELECTOR"
                   }
@@ -494,7 +490,14 @@ const PREFAB = {
                           }
                       ],
                       "hidden": false,
-                      "selectorValues": [],
+                      "selectorValues": [
+                        "Sièges chauffants",
+                        "Toit ouvrant",
+                        "Caméra de recul",
+                        "Stationnement automatique",
+                        "Éclairage directionnel",
+                        "Suivi de ligne"
+                      ],
                       "fieldType": "SELECTOR"
                   }
               },
