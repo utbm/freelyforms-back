@@ -15,7 +15,17 @@ interface DateQuestion extends Question {
   }
 }
 
-export default function Date( props: DateQuestion ) {
+export default function DateComponent( props: DateQuestion ) {
+
+  var isDate = function(date: string) {
+    let answer = true;
+    try {
+      answer = ((new Date(date)).toString() !== "Invalid Date") && !isNaN((new Date(date))?.valueOf());
+    } catch {
+      answer = false;
+    }
+    return answer
+  }
   
   const updateHelper = (val?: string | null) => {
     if(!props.setHelper) {
@@ -26,13 +36,11 @@ export default function Date( props: DateQuestion ) {
     } else {
       const a = val !== undefined ? val : props.answer
 
-      // if(!a || typeof a !== 'string' || !a.length) {
-      //   props.setHelper({ value: 'Please fill this in' })
-      // } else if(props.type === 'email' && !isEmail(a)) {
-      //   props.setHelper({ value: 'Your email seems invalid' })
-      // } else {
-      //   props.setHelper({ value: null, visible: false })
-      // }
+      if(!a || typeof a !== 'string' || !isDate(a)) {
+        props.setHelper({ value: 'Please fill this in' })
+      } else {
+        props.setHelper({ value: null, visible: false })
+      }
     }
 
   }

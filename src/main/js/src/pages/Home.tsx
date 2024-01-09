@@ -373,7 +373,7 @@ const PREFAB = {
                                   "DATE",
                                   "DATETIME"
                               ],
-                              "value": "5",
+                              "value": "50",
                               "name": "MaximumRule"
                           }
                       ],
