@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.4</version>
+        <version>2.7.18</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fr.utbm.da50</groupId>
@@ -14,7 +14,6 @@
     <name>freelyforms</name>
     <description>freelyforms</description>
     <properties>
-        <spring-boot.version>2.7.4</spring-boot.version>
         <java.version>17</java.version>
         <node.version>v18.18.0</node.version>
         <pnpm.version>8.9.0</pnpm.version>
@@ -74,7 +73,7 @@
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo.spring27x</artifactId>
-            <version>4.9.3</version>
+            <version>4.12.0</version>
         </dependency>
 
     </dependencies>
