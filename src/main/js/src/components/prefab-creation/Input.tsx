@@ -1,4 +1,4 @@
-import { ComponentProps, FC } from "react";
+import { ComponentProps, FC, PropsWithChildren } from "react";
 
 export const Checkbox: FC<{
 	name: string;
@@ -37,23 +37,44 @@ export const Input: FC<{
 	);
 };
 
-type InputWithoutBorderProps = {
+type InputWithoutBorderProps = PropsWithChildren<{
 	onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
 	placeholder?: string;
 	name?: string;
-} & ComponentProps<"input">;
+	tooltipChildren?: string;
+}> &
+	ComponentProps<"input">;
 
 export const InputWithoutBorder: FC<InputWithoutBorderProps> = (props) => {
-	const { onChange, placeholder, name, className, ...rest } = props;
+	const { onChange, placeholder, name, className, children, ...rest } = props;
 	const classNames = ["message", className].join(" ");
+	const inputClassName =
+		"input input-ghost  input-sm w-full max-w-xs border-transparent focus:border-transparent focus:ring-0 focus:outline-none" +
+		(classNames ? " " + classNames : "");
+
+	if (props.children) {
+		return (
+			<div className="flex justify-end items-center">
+				<input
+					{...rest}
+					className={inputClassName}
+					autoComplete="off"
+					required
+					placeholder={props.placeholder}
+					onChange={props.onChange}
+					name={props.name}
+				/>
+				<span className="tooltip" data-tip={rest.tooltipChildren}>
+					{props.children}
+				</span>
+			</div>
+		);
+	}
 
 	return (
 		<input
 			{...rest}
-			className={
-				"input required input-ghost input-sm w-full max-w-xs border-transparent focus:border-transparent focus:ring-0 focus:outline-none" +
-				(classNames ? " " + classNames : "")
-			}
+			className={inputClassName}
 			autoComplete="off"
 			required
 			placeholder={props.placeholder}

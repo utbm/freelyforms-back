@@ -90,7 +90,7 @@ export const PrefabCreation = () => {
 				</div>
 				<div className="flex justify-end">
 					<button className="btn btn-primary btn-success" type="submit">
-						Validate
+						Submit the form
 						<span className={`pt-0.5 pl-1.5 `}>
 							<img src="/icons/check.svg" height={11} width={14} />
 						</span>
