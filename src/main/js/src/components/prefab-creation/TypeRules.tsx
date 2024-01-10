@@ -50,7 +50,7 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 		<div className="flex flex-col">
 			<div className="dropdown">
 				<div tabIndex={0} role="button" className="btn btn-primary btn-success btn-sm">
-					TypeRules
+					Rules
 				</div>
 				<div
 					tabIndex={0}

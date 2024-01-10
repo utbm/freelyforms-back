@@ -4,41 +4,6 @@ import { Group } from "../components/prefab-creation/Group";
 import { useAtom, useAtomValue } from "jotai";
 import { fieldsAtom, groupsAtom, prefabAtom } from "../components/prefab-creation/store";
 import { FiPlus } from "react-icons/fi";
-import Select from "../components/question/select";
-
-const a = {
-	name: "cars",
-	label: "Formulaire sur les voitures",
-	caption: "",
-	groups: [
-		{
-			name: "generalInformation",
-			label: "Informations générales sur la voiture",
-			caption: "caption",
-			fields: [
-				{
-					name: "brand",
-					label: "Quel est la marque de la voiture?",
-					caption: "Citroen",
-					rules: {
-						optional: false,
-						excludes: [],
-						typeRules: [
-							{
-								associatedTypes: ["INTEGER", "FLOAT", "STRING", "DATE", "DATETIME"],
-								value: "50",
-								name: "MaximumRule",
-							},
-						],
-						hidden: false,
-						selectorValues: [],
-						fieldType: "STRING",
-					},
-				},
-			],
-		},
-	],
-};
 
 function removePropertiesRecursively<T extends object>(obj: T, propertiesToRemove: string[]): T {
 	for (const key in obj) {
@@ -67,7 +32,10 @@ export const PrefabCreation = () => {
 				fields: fields.filter((field) => field.groupUUID === group.uuid),
 			})),
 		};
-		const refinedPrefab = removePropertiesRecursively(prefabWithFieldGroups, ["uuid", "groupUUID"]);
+		const clonedPrefab = JSON.parse(JSON.stringify(prefabWithFieldGroups));
+
+		const refinedPrefab = removePropertiesRecursively(clonedPrefab, ["uuid", "groupUUID"]);
+		console.log(refinedPrefab);
 
 		// // create form data
 		// const formData = new FormData(ev.target);
@@ -78,7 +46,7 @@ export const PrefabCreation = () => {
 		// }
 
 		apiclient.post("/api/prefabs", {
-			...a,
+			...refinedPrefab,
 		});
 	};
 

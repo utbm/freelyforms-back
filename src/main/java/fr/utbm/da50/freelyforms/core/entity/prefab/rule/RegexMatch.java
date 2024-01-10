@@ -6,11 +6,13 @@ import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static fr.utbm.da50.freelyforms.core.entity.prefab.Rule.FieldType.STRING;
 
 /**
  * checks whether a string matches a given regular expression
+ * 
  * @author Pourriture
  */
 public class RegexMatch extends TypeRule {
@@ -31,7 +33,13 @@ public class RegexMatch extends TypeRule {
      */
     @Override
     public boolean verifyTypeRuleValidity() {
-        return false;
+        try {
+            Pattern.compile(this.getValue());
+            return true;
+        } catch (PatternSyntaxException exception) {
+            System.err.println(exception.getDescription());
+            return false;
+        }
     }
 
     /**
@@ -42,7 +50,7 @@ public class RegexMatch extends TypeRule {
     @Override
     public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
         Pattern regexPattern = Pattern.compile(this.getValue());
-        if(!regexPattern.matcher(data).find())
+        if (!regexPattern.matcher(data).find())
             throw new TypeRuleFormDataException("Data does not match the regex");
     }
 }
