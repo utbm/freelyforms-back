@@ -180,6 +180,7 @@ public class Prefab {
         try{
             verifyPrefabValidity();
         } catch(InvalidPrefabException exception){
+            System.out.println(exception.getMessage());
             System.out.println("setGroups() failed: Prefab is invalid");
             this.groups = (previousGroups != null ? previousGroups : new ArrayList<>());
         }

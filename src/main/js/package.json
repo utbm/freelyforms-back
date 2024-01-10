@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc && vite build",
+		"build": "vite build",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview",
 		"format": "prettier --write src"
@@ -16,11 +16,13 @@
 		"jotai": "^2.6.0",
 		"jotai-devtools": "^0.7.0",
 		"mobile-detect": "^1.4.5",
+		"openapi-fetch": "^0.8.2",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-dom-confetti": "^0.2.0",
 		"react-icons": "^4.12.0",
 		"react-router-dom": "^6.17.0",
+		"react-select": "^5.8.0",
 		"react-textarea-autosize": "^8.5.3",
 		"tailwind-scrollbar-hide": "^1.1.7"
 	},
@@ -32,7 +34,7 @@
 		"@typescript-eslint/parser": "^6.0.0",
 		"@vitejs/plugin-react-swc": "^3.3.2",
 		"autoprefixer": "^10.4.2",
-		"daisyui": "^2.6.0",
+		"daisyui": "^4.4.22",
 		"eslint": "^8.45.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.3",

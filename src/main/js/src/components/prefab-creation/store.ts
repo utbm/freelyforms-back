@@ -1,13 +1,25 @@
 import { atom } from "jotai";
 import { Schemas } from "../../apiClient/client";
 
-export const prefabAtom = atom<Schemas.Prefab>({
-	_id: {
-		date: "",
-		timestamp: 0,
-	},
+type PrefabWithoutGroups = Omit<Schemas.Prefab, "groups">;
+
+export type GroupType = Schemas.Group & {
+	uuid: string;
+};
+
+export type FieldType = Schemas.Field & {
+	uuid: string;
+	groupUUID: string;
+};
+
+export const prefabAtom = atom<PrefabWithoutGroups>({
 	caption: "",
-	groups: [],
 	label: "",
 	name: "",
 });
+
+export const groupsAtom = atom<GroupType[]>([]);
+export const fieldsAtom = atom<FieldType[]>([]);
+fieldsAtom.debugLabel = "fieldsAtom";
+groupsAtom.debugLabel = "groupsAtom";
+prefabAtom.debugLabel = "prefabAtom";

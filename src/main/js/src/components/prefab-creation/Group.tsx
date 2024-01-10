@@ -1,62 +1,70 @@
 import { FC } from "react";
 import { Field } from "./Field";
 import { BasicComponentInfo } from "./BasicComponentInfo";
-import { useAtom } from "jotai";
-import { prefabAtom } from "./store";
+import { useAtom, useSetAtom } from "jotai";
+import { FieldType, fieldsAtom, groupsAtom } from "./store";
+import { BsXLg } from "react-icons/bs";
+import { ModalInputChoice } from "./ModalInputChoice";
 
 type GroupProps = {
-	index: number;
+	uuid: string;
 };
 
 export const Group: FC<GroupProps> = (props) => {
-	const [prefab, setPrefab] = useAtom(prefabAtom);
-	if (!prefab.groups) {
-		return null;
-	}
-	const group = prefab.groups[props.index];
+	const setGroups = useSetAtom(groupsAtom);
+	const [fields, setFields] = useAtom(fieldsAtom);
 
-	if (!group) {
-		return null;
-	}
+	const groupFields = fields.filter((field) => field.groupUUID === props.uuid);
+
+	const handleAddField = (field: FieldType) => {
+		setFields((fields) => fields.concat(field));
+	};
+
+	const handleRemoveGroup = () => {
+		setGroups((groups) => groups.filter((group) => group.uuid !== props.uuid));
+		setFields((fields) => fields.filter((field) => field.groupUUID !== props.uuid));
+	};
 
 	return (
-		<div className="flex flex-col flex-gap2">
-			<h1 className="text-3xl">Group</h1>
-			<BasicComponentInfo />
-			<h1 className="text-3xl">Fields</h1>
-			{group.fields?.map((field, index) => <Field fieldIndex={index} groupIndex={props.index} />)}
-			<button
-				onClick={() => {
-					setPrefab((prefab) => ({
-						...prefab,
-						groups: prefab.groups?.map((group, groupIndex) => {
-							if (groupIndex === props.index) {
-								return {
-									...group,
-									fields: group.fields?.concat({
-										rules: {
-											typeRules: [{}],
-										},
-									}),
-								};
-							}
-							return group;
-						}),
-					}));
-				}}
-			>
-				Add field
-			</button>
-			<button
-				onClick={() => {
-					setPrefab((prefab) => ({
-						...prefab,
-						groups: prefab.groups?.filter((group, groupIndex) => groupIndex !== props.index),
-					}));
-				}}
-			>
-				Remove group
-			</button>
+		<div className="flex flex-col flex-gap2 border-dashed border-2 p-3 mb-10">
+			<div className="flex flex-wrap justify-between">
+				<BasicComponentInfo
+					type="group"
+					uuid={props.uuid}
+					captionPlaceholder="Type the category of informations contained in this group"
+					labelPlaceholder="Display name of the group"
+				/>
+				<button className="btn btn-sm btn-error" onClick={handleRemoveGroup}>
+					<BsXLg />
+				</button>
+			</div>
+			{/* <h1 className="text-2xl">Fields</h1> */}
+			<div className="divider divider-info"></div>
+
+			{groupFields.map((field) => (
+				<Field key={field.uuid} fieldUUID={field.uuid} groupUUID={field.groupUUID} />
+			))}
+			<div className="flex self-center">
+				<ModalInputChoice
+					onSelect={(fieldType) => {
+						handleAddField({
+							uuid: crypto.randomUUID(),
+							groupUUID: props.uuid,
+							caption: "",
+							label: "",
+							name: "",
+							rules: {
+								fieldType: fieldType,
+								excludes: [],
+								hidden: false,
+								optional: false,
+								selectorValues: [],
+								typeRules: [],
+							},
+						});
+					}}
+				/>
+			</div>
 		</div>
 	);
 };
