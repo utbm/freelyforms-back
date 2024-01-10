@@ -1,9 +1,11 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,11 +63,10 @@ public class AlternativeDisplay extends TypeRule {
     /**
      * @param data      entered form data to validate
      * @param fieldType the actual type of the field
-     * @return true - alternativeDisplay is a display rule and as such is always true
+     * No need to check this
      */
     @Override
-    public void verifyFormData(String data, Rule.FieldType fieldType) {
-        return;
+    public void verifyFormData(Object data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
     }
     // Value is a valid String from a list
 }

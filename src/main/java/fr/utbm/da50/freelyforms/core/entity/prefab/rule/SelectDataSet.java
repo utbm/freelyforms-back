@@ -55,7 +55,7 @@ public class SelectDataSet extends TypeRule {
      * @param fieldType the actual type of the field
      */
     @Override
-    public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
+    public void verifyFormData(Object data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
         if (!verifyTypeRuleValidity()) {
             throw new TypeRuleFormDataException("Type rule is not valid");
         }

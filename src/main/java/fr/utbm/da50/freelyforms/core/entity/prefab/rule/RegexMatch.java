@@ -50,9 +50,9 @@ public class RegexMatch extends TypeRule {
      * @return true if data/fieldtype are valid for this rule
      */
     @Override
-    public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
+    public void verifyFormData(Object data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
         Pattern regexPattern = Pattern.compile(this.getValue());
-        if (!regexPattern.matcher(data).find())
+        if (!regexPattern.matcher((String) data).find())
             throw new TypeRuleFormDataException("Data does not match the regex");
     }
 }

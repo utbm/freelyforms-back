@@ -78,7 +78,7 @@ public class Field {
      * @param data
      * @return true if the data is valid for this field
      */
-    void validFieldValue (String data) throws RuleException {
+    public void validFieldValue (@NonNull Object data) throws RuleException {
         this.rules.checkDataRules(data);
     }
 

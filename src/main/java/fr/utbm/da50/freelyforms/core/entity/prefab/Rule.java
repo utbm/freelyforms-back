@@ -137,7 +137,7 @@ public class Rule {
      * @param data the form data value to verify against the rule
      * @return whether the form data value matches the rule, displays errors in the console if it isn't
      */
-    public void checkDataRules(String data) throws RuleException {
+    public void checkDataRules( Object data) throws RuleException {
 
         // TODO: check excluded field in sent form
         // check non-optional field being absent
@@ -145,26 +145,24 @@ public class Rule {
             throw new RuleException("Non-optional field wasn't filled out");
         }
 
-        // check matching type (data is assumed a string)
         switch (fieldType) {
             case INTEGER:
-                int val = Integer.parseInt(data);
+                int val = (Integer) data;
                 break;
             case STRING:
+                String str = (String) data;
                 break;
             case FLOAT:
-                float fl = Float.parseFloat(data);
+                float fl = (Float) data;
                 break;
             case DATE:
-                LocalDate date = LocalDate.parse(data);
+                LocalDate date = (LocalDate) data;
                 break;
             case DATETIME:
-                LocalDateTime datetime = LocalDateTime.parse(data);
+                LocalDateTime datetime = (LocalDateTime) data;
                 break;
             case BOOLEAN:
-                boolean bool = Boolean.parseBoolean(data);
-                if (!"true".equals(data) && !"false".equals(data))
-                    throw new RuleException("Data not a boolean");
+                boolean bool = (Boolean) data;
                 break;
             case SELECTOR:
                 // split response string?

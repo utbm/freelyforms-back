@@ -30,7 +30,8 @@ public class Field
     @NonNull
     private String name = "";
     /**
-     * Value of the field, entered by a user
+     * Value of the field, entered by a user.
+     * Can be String or Strings list
      */
     @Builder.Default
     @NonNull

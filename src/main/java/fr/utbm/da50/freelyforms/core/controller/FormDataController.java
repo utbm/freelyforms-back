@@ -8,6 +8,7 @@ import fr.utbm.da50.freelyforms.core.exception.formdata.GroupNameNotFoundExcepti
 import fr.utbm.da50.freelyforms.core.exception.formdata.InvalidFormDataException;
 import fr.utbm.da50.freelyforms.core.exception.formdata.NoExistingFormDataException;
 import fr.utbm.da50.freelyforms.core.exception.prefab.NoExistingPrefabException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.RuleException;
 import fr.utbm.da50.freelyforms.core.service.FormDataService;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -84,10 +85,10 @@ public class FormDataController {
     @PostMapping("{prefab}")
     @ResponseBody
     // POST formdata related to a prefab
-    public void postFormData(@NonNull @NotNull @RequestBody FormData formData) {
+    public void postFormData(@NonNull @NotNull @RequestBody FormData formData, @NonNull @PathVariable("prefab") String prefabName) {
         try {
-            service.postFormData(formData);
-        } catch (InvalidFormDataException e) {
+            service.postFormData(formData, prefabName);
+        } catch (InvalidFormDataException | NoExistingPrefabException | GroupNameNotFoundException | FieldNotFoundException | RuleException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }

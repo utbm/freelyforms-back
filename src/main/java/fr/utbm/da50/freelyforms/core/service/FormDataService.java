@@ -3,11 +3,14 @@ package fr.utbm.da50.freelyforms.core.service;
 
 import fr.utbm.da50.freelyforms.core.entity.FormData;
 import fr.utbm.da50.freelyforms.core.entity.Prefab;
+import fr.utbm.da50.freelyforms.core.entity.prefab.Field;
+import fr.utbm.da50.freelyforms.core.entity.prefab.Group;
 import fr.utbm.da50.freelyforms.core.exception.formdata.FieldNotFoundException;
 import fr.utbm.da50.freelyforms.core.exception.formdata.GroupNameNotFoundException;
 import fr.utbm.da50.freelyforms.core.exception.formdata.InvalidFormDataException;
 import fr.utbm.da50.freelyforms.core.exception.formdata.NoExistingFormDataException;
 import fr.utbm.da50.freelyforms.core.exception.prefab.NoExistingPrefabException;
+import fr.utbm.da50.freelyforms.core.exception.prefab.rule.RuleException;
 import fr.utbm.da50.freelyforms.core.repository.FormDataRepository;
 import fr.utbm.da50.freelyforms.core.repository.PrefabRepository;
 import lombok.NonNull;
@@ -83,9 +86,24 @@ public class FormDataService {
      * Save form data in the database if it is valid
      * @param formData the data to save
      */
-    public void postFormData(FormData formData) throws InvalidFormDataException {
-        formData.verifyDataValidity();
+    public void postFormData(@NonNull FormData formData, @NonNull String prefabName) throws InvalidFormDataException, NoExistingPrefabException, GroupNameNotFoundException, FieldNotFoundException, RuleException {
+        Prefab prefab = prefabRepository.findPrefabByName(prefabName);
+        if (prefab == null)
+            throw new NoExistingPrefabException("postFormData : no pefab for this name : " + prefabName);
+        verifyFormDataValidity(formData, prefab);
         formDataRepository.save(formData);
+    }
+
+    private void verifyFormDataValidity(@NonNull FormData formData, @NonNull Prefab prefab) throws GroupNameNotFoundException, FieldNotFoundException, RuleException {
+        List<Group> prefabGroups = prefab.getGroups();
+        for(Group prefabGroup : prefabGroups){
+            fr.utbm.da50.freelyforms.core.entity.formdata.Group formDataGroup = formData.getGroup(prefabGroup.getName());
+            List<Field> prefabFields = prefabGroup.getFields();
+            for(Field prefabField : prefabFields){
+                fr.utbm.da50.freelyforms.core.entity.formdata.Field formDataField = formDataGroup.getField(prefabField.getName());
+                prefabField.validFieldValue(formDataField.getValue());
+            }
+        }
     }
 
 
@@ -99,7 +117,6 @@ public class FormDataService {
         Optional<FormData> existingFormData = formDataRepository.findById(formData.get_id());
         if(existingFormData.isEmpty())
             throw new NoExistingFormDataException("PATCH/PUT formdata: no formdata with this id exists");
-        formData.verifyDataValidity();
         formDataRepository.save(formData);
     }
 

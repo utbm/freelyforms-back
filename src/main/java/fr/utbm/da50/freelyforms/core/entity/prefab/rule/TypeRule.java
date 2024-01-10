@@ -84,7 +84,7 @@ public abstract class TypeRule {
      * @param data entered form data to validate
      * @param fieldType the actual type of the field
      */
-    abstract public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException;
+    abstract public void verifyFormData(Object data, Rule.FieldType fieldType) throws TypeRuleFormDataException;
 
     /**
      * @param fieldType the actual type of the field

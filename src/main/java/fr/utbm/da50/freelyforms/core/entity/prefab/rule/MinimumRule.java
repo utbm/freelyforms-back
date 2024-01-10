@@ -5,8 +5,10 @@ import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataExcep
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 import static fr.utbm.da50.freelyforms.core.entity.prefab.Rule.FieldType.*;
 
 /**
@@ -43,25 +45,35 @@ public class MinimumRule extends TypeRule {
     }
 
     @Override
-    public void verifyFormData(String data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
-            float ruleValue = Float.parseFloat(this.getValue());
+    public void verifyFormData(Object data, Rule.FieldType fieldType) throws TypeRuleFormDataException {
+
             switch (fieldType) {
                 case INTEGER:
+                    int intRuleValue = Integer.parseInt(getValue());
+                    int intValue = (Integer) data;
+                    if (intValue < intRuleValue)
+                        throw new TypeRuleFormDataException("Data value ("+ intValue +") < Rule value (" + intRuleValue + ")");
+                    break;
                 case FLOAT:
-                    float dataValue = Float.parseFloat(data);
-                    if (dataValue < ruleValue)
-                        throw new TypeRuleFormDataException("Data value ("+ dataValue +") < Rule value (" + ruleValue + ")");
-                    // unreachable break statement
+                    float floatRuleValue = Float.parseFloat(this.getValue());
+                    float dataValue = (Float) data;
+                    if (dataValue < floatRuleValue)
+                        throw new TypeRuleFormDataException("Data value ("+ dataValue +") < Rule value (" + floatRuleValue + ")");
+                    break;
                 case STRING:
-                    if (data.length() < ruleValue)
+                    int stringRuleValue = Integer.parseInt(getValue());
+                    String stringValue = (String) data;
+                    if (stringValue.length() < stringRuleValue)
                         throw new TypeRuleFormDataException("Data length < Rule value");
-                    // unreachable break statement
+                    break;
                 case DATE, DATETIME:
-                    // todo: add date, datetime support
-                    return ;
+                    LocalDateTime dateTimeRuleValue = LocalDateTime.parse(getValue());
+                    LocalDateTime dateTimeValue = LocalDateTime.parse((String) data);
+                    if (dateTimeValue.isBefore(dateTimeRuleValue))
+                        throw new TypeRuleFormDataException("Data value (" + dateTimeValue + ") is before Rule value (" + dateTimeRuleValue + ")");
+                    break;
                 default:
-                    // data not in associated types results in failure
-                    return;
+                    throw new TypeRuleFormDataException("Data is not in associated types of the rule");
 
             }
     }
