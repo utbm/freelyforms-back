@@ -38,7 +38,8 @@ import java.util.ArrayList;
         @JsonSubTypes.Type(value = MaximumRule.class, name = "MaximumRule"),
         @JsonSubTypes.Type(value = MinimumRule.class, name = "MinimumRule"),
         @JsonSubTypes.Type(value = RegexMatch.class, name = "RegexMatch"),
-        @JsonSubTypes.Type(value = SelectDataSet.class, name = "SelectDataSet")
+        @JsonSubTypes.Type(value = SelectDataSet.class, name = "SelectDataSet"),
+        @JsonSubTypes.Type(value = EmailRegexMatch.class, name = "EmailRegexMatch")
 })
 public abstract class TypeRule {
 
