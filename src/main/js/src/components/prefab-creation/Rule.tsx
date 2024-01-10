@@ -43,7 +43,7 @@ export const Selector = ({ onChange }: SelectorOrExcludesProps) => {
 		<div>
 			{selectorOptions.map((option, index) => (
 				<OptionButton
-					key={option}
+					key={index}
 					index={index}
 					addableOption={false}
 					name={option}
@@ -54,7 +54,7 @@ export const Selector = ({ onChange }: SelectorOrExcludesProps) => {
 			<OptionButton
 				index={selectorOptions.length}
 				addableOption={true}
-				onClick={() => setSelectorOptions([...selectorOptions, `Option ${selectorOptions.length}`])}
+				onClick={() => setSelectorOptions([...selectorOptions, `Option ${selectorOptions.length + 1}`])}
 			/>
 		</div>
 	);
