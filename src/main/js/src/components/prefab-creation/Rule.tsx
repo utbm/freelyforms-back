@@ -12,11 +12,11 @@ type RuleProps = {
 	onChange: (rule: Schemas.Rule) => void;
 };
 
-type SelectorOrExcludesProps = {
+type SelectorProps = {
 	onChange: (options: string[]) => void;
 };
 
-export const Selector = ({ onChange }: SelectorOrExcludesProps) => {
+export const Selector = ({ onChange }: SelectorProps) => {
 	const [selectorOptions, setSelectorOptions] = useState<string[]>(["Option 1"]);
 
 	const handleOptionButtonChange = (name: string, index: number) => {
