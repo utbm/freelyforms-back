@@ -1,6 +1,7 @@
 package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;

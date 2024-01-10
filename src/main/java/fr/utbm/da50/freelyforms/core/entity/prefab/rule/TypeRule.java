@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
 import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
@@ -41,6 +42,7 @@ import java.util.ArrayList;
         @JsonSubTypes.Type(value = SelectDataSet.class, name = "SelectDataSet"),
         @JsonSubTypes.Type(value = EmailRegexMatch.class, name = "EmailRegexMatch")
 })
+@NoArgsConstructor
 public abstract class TypeRule {
 
     // todo: do not save this in mongodb database as it is added by the constructor every time

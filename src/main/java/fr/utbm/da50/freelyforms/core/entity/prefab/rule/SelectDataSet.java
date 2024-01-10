@@ -6,6 +6,7 @@ import fr.utbm.da50.freelyforms.core.exception.formdata.GroupNameNotFoundExcepti
 import fr.utbm.da50.freelyforms.core.exception.prefab.NoExistingPrefabException;
 import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
 import fr.utbm.da50.freelyforms.core.service.FormDataService;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import static fr.utbm.da50.freelyforms.core.entity.prefab.Rule.FieldType.SELECTO
  *
  * @author Pourriture
  */
+@NoArgsConstructor
 public class SelectDataSet extends TypeRule {
     public SelectDataSet(Object val) {
         super(val);

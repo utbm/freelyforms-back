@@ -2,6 +2,7 @@ package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
 import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import static fr.utbm.da50.freelyforms.core.entity.prefab.Rule.FieldType.*;
  * Sets a minimum value for either a number, a date or a string length
  * @author Pourriture
  */
+@NoArgsConstructor
 public class MinimumRule extends TypeRule {
     public MinimumRule(Object val) {
         super(val);

@@ -2,6 +2,8 @@ package fr.utbm.da50.freelyforms.core.entity.prefab.rule;
 
 import fr.utbm.da50.freelyforms.core.entity.prefab.Rule;
 import fr.utbm.da50.freelyforms.core.exception.prefab.rule.TypeRuleFormDataException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import static fr.utbm.da50.freelyforms.core.entity.prefab.Rule.FieldType.*;
  * Sets a maximum value for either a number, a date or a string length
  * @author Pourriture
  */
+@NoArgsConstructor
 public class MaximumRule extends TypeRule {
 
     public MaximumRule(Object val) {
