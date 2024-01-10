@@ -4,17 +4,7 @@ import { Rule, Selector } from "./Rule";
 import { FieldType, fieldsAtom } from "./store";
 import { useAtom } from "jotai";
 import { BsXLg } from "react-icons/bs";
-import { PossibleTypes } from "../../apiClient/client";
-
-const IconMapToType: Record<PossibleTypes, string> = {
-	STRING: "🔤",
-	FLOAT: "🔢",
-	INTEGER: "🔢",
-	DATE: "📅",
-	SELECTOR: "🔘",
-	BOOLEAN: "✅",
-	DATETIME: "📅",
-};
+import { typeRulesIcons } from "../../shared/TypeRulesIcons";
 
 type FieldProps = {
 	groupUUID: string;
@@ -53,6 +43,10 @@ export const Field: FC<FieldProps> = (props) => {
 		});
 	};
 
+	const typeRulesIcon = typeRulesIcons.find(
+		(item) => item.name === field.rules.fieldType,
+	) as (typeof typeRulesIcons)[number];
+
 	return (
 		<div className="m-1 p-2">
 			<div className="flex flex-row gap-5">
@@ -63,8 +57,9 @@ export const Field: FC<FieldProps> = (props) => {
 						captionPlaceholder={field.rules.fieldType === "SELECTOR" ? "" : "Type placeholder text"}
 						uuid={props.fieldUUID}
 						groupUUID={props.groupUUID}
+						tooltipChildren={typeRulesIcon.label}
 					>
-						{IconMapToType[field.rules.fieldType]}
+						<typeRulesIcon.icon size={20} />
 					</BasicComponentInfo>
 					{field.rules.fieldType === "SELECTOR" && <Selector onChange={handleSelectorChange} />}
 				</div>

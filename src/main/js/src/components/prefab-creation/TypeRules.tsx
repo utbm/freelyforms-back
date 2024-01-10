@@ -42,7 +42,9 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 				typeRules.splice(index, 1);
 			}
 
-			if (toggled) {
+			// I don't want to add the type rule if there is no value
+			// except for EmailRegexMatch because the value is managed by the backend
+			if (toggled && (value || typeRuleName === "EmailRegexMatch")) {
 				typeRules.push({
 					name: typeRuleName,
 					value,
@@ -100,20 +102,13 @@ const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange }) => {
 	if (typeRuleName === "EmailRegexMatch") {
 		input = undefined;
 	} else {
-		let defaultValue = "";
-		let inputType = "text";
-
-		if (typeRuleName === "MaximumRule" || typeRuleName === "MinimumRule") {
-			inputType = "number";
-			typeRuleName === "MaximumRule" ? (defaultValue = "100") : (defaultValue = "0");
-		}
+		const inputType = typeRuleName === "MaximumRule" || typeRuleName === "MinimumRule" ? "number" : "text";
 
 		input = (
 			<Input
 				type={inputType}
 				name="typeRule"
 				placeholder="Type value"
-				defaultValue={defaultValue}
 				onChange={(ev) => handleInputChange(ev.target.value)}
 			/>
 		);

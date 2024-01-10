@@ -17,6 +17,7 @@ type FieldComponent = {
 	type: "field";
 	uuid: string;
 	groupUUID: string;
+	tooltipChildren: string;
 };
 
 type PrefabComponent = {
@@ -72,14 +73,15 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 	if (props.type === "field") {
 		return (
 			<div className="flex flex-col">
-				{props.children}
-
 				<InputWithoutBorder
 					className="text-xl"
 					name="label"
 					placeholder={props.labelPlaceholder}
 					onChange={handleChange}
-				/>
+					tooltipChildren={props.tooltipChildren}
+				>
+					{props.children}
+				</InputWithoutBorder>
 				{props.captionPlaceholder ? (
 					<InputWithoutBorder name="caption" placeholder={props.captionPlaceholder} onChange={handleChange} />
 				) : null}
