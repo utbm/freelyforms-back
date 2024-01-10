@@ -10,6 +10,15 @@ type TypeRulesProps = {
 	fieldUUID: string;
 };
 
+const translationsTypeRules: Record<PossibleTypeRules, string> = {
+	EmailRegexMatch: "Is a email input ?",
+	MaximumRule: "Maximum input length",
+	MinimumRule: "Minimum input length",
+	AlternativeDisplay: "Alternative Display",
+	RegexMatch: "The input must match a regex",
+	SelectDataSet: "Select Data Set",
+};
+
 export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID }) => {
 	const setFieldsAtom = useSetAtom(fieldsAtom);
 
@@ -37,8 +46,7 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 				typeRules.push({
 					name: typeRuleName,
 					value,
-					// @TODO REMOVE
-					associatedTypes: ["INTEGER", "FLOAT", "STRING", "DATE", "DATETIME"],
+					associatedTypes: [],
 				});
 			}
 
@@ -54,7 +62,7 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 				</div>
 				<div
 					tabIndex={0}
-					className="dropdown-content w-fit flex flex-col gap-2 z-[1] menu shadow bg-base-100 rounded-box w-52 p-3"
+					className="dropdown-content w-max flex flex-col gap-2 z-[1] menu shadow bg-base-100 rounded-box w-52 p-3"
 				>
 					{typeRules.map((typeRule) => (
 						<TypeRule key={typeRule} fieldType={fieldType} typeRuleName={typeRule} onChange={handleChange} />
@@ -87,27 +95,34 @@ const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange }) => {
 		onChange({ typeRuleName, toggled, value });
 	};
 
-	const input =
-		typeRuleName === "MaximumRule" || typeRuleName === "MinimumRule" ? (
+	let input: JSX.Element | undefined;
+
+	if (typeRuleName === "EmailRegexMatch") {
+		input = undefined;
+	} else {
+		let defaultValue = "";
+		let inputType = "text";
+
+		if (typeRuleName === "MaximumRule" || typeRuleName === "MinimumRule") {
+			inputType = "number";
+			typeRuleName === "MaximumRule" ? (defaultValue = "100") : (defaultValue = "0");
+		}
+
+		input = (
 			<Input
-				type="number"
+				type={inputType}
 				name="typeRule"
 				placeholder="Type value"
-				onChange={(ev) => handleInputChange(ev.target.value)}
-			/>
-		) : (
-			<Input
-				type="text"
-				name="typeRule"
-				placeholder="Type value"
+				defaultValue={defaultValue}
 				onChange={(ev) => handleInputChange(ev.target.value)}
 			/>
 		);
+	}
 
 	return (
 		<div className="form-control">
 			<label className="label cursor-pointer p-0 pb-2">
-				<span className="label-text mr-2">{typeRuleName}</span>
+				<span className="label-text mr-2">{translationsTypeRules[typeRuleName]}</span>
 				<input type="checkbox" className="toggle toggle-primary" onChange={handleToggle} />
 			</label>
 

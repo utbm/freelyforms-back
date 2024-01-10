@@ -19,12 +19,14 @@ export const Input: FC<{
 	type: React.JSX.IntrinsicElements["input"]["type"];
 	name: string;
 	placeholder?: string;
+	defaultValue?: string;
 	onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ name, type, onChange, placeholder }) => {
+}> = ({ name, type, onChange, placeholder, defaultValue }) => {
 	return (
 		<>
 			<input
 				required
+				defaultValue={defaultValue}
 				type={type}
 				name={name}
 				onChange={onChange}
