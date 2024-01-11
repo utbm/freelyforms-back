@@ -7,12 +7,12 @@ import { BsXLg } from "react-icons/bs";
 import { typeRulesIcons } from "../../shared/TypeRulesIcons";
 
 type FieldProps = {
-	groupUUID: string;
-	fieldUUID: string;
+	groupIndex: number;
+	fieldIndex: number;
 };
 
-const removeField = (fields: FieldType[], fieldUUID: string) => {
-	const field = fields.filter((field) => field.uuid !== fieldUUID);
+const removeField = (fields: FieldType[], fieldIndex: number) => {
+	const field = fields.filter((field) => field.index !== fieldIndex);
 
 	return field;
 };
@@ -20,7 +20,7 @@ const removeField = (fields: FieldType[], fieldUUID: string) => {
 export const Field: FC<FieldProps> = (props) => {
 	const [fields, setFields] = useAtom(fieldsAtom);
 
-	const field = fields.find((field) => field.uuid === props.fieldUUID);
+	const field = fields.find((field) => field.index === props.fieldIndex);
 	if (!field) {
 		return null;
 	}
@@ -29,7 +29,7 @@ export const Field: FC<FieldProps> = (props) => {
 		setFields((fields) => {
 			const newFields = [...fields];
 
-			const fieldIndex = newFields.findIndex((field) => field.uuid === props.fieldUUID);
+			const fieldIndex = newFields.findIndex((field) => field.index === props.fieldIndex);
 
 			newFields[fieldIndex] = {
 				...newFields[fieldIndex],
@@ -55,20 +55,29 @@ export const Field: FC<FieldProps> = (props) => {
 						type="field"
 						labelPlaceholder="Display name"
 						captionPlaceholder={field.rules.fieldType === "SELECTOR" ? "" : "Type placeholder text"}
-						uuid={props.fieldUUID}
-						groupUUID={props.groupUUID}
+						index={props.fieldIndex}
+						groupIndex={props.groupIndex}
 						tooltipChildren={typeRulesIcon.label}
+						defaultCaptionValue={field.caption}
+						defaultLabelValue={field.label}
 					>
 						<typeRulesIcon.icon size={20} />
 					</BasicComponentInfo>
-					{field.rules.fieldType === "SELECTOR" && <Selector onChange={handleSelectorChange} />}
+					{field.rules.fieldType === "SELECTOR" && (
+						<Selector defaultOptions={field.rules.selectorValues} onChange={handleSelectorChange} />
+					)}
 				</div>
 				<Rule field={field} onChange={() => {}} />
 
 				<button
 					className="btn btn-sm btn-error"
 					onClick={() => {
-						setFields((fields) => removeField(fields, field.uuid));
+						setFields((fields) =>
+							removeField(
+								fields,
+								fields.findIndex((field) => field.index === props.fieldIndex),
+							),
+						);
 					}}
 				>
 					<BsXLg />

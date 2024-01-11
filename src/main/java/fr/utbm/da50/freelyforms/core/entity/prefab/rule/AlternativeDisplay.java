@@ -54,7 +54,7 @@ public class AlternativeDisplay extends TypeRule {
     @Override
     public boolean verifyTypeRuleValidity() {
         boolean ans;
-        String[] validDisplays = new String[]{"DROPDOWN", "CHECKBOX", "RADIO", "SLIDER", "CALENDAR"};
+        String[] validDisplays = new String[]{"DROPDOWN", "CHECKBOX", "RADIO", "SLIDER", "CALENDAR", "MULTIPLE_CHOICE"};
         ArrayList<String> valid = new ArrayList<>(List.of(validDisplays));
         ans = valid.contains(this.getValue());
         return ans;

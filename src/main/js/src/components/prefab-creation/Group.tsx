@@ -7,22 +7,23 @@ import { BsXLg } from "react-icons/bs";
 import { ModalInputChoice } from "./ModalInputChoice";
 
 type GroupProps = {
-	uuid: string;
+	index: number;
 };
 
 export const Group: FC<GroupProps> = (props) => {
-	const setGroups = useSetAtom(groupsAtom);
+	const [groups, setGroups] = useAtom(groupsAtom);
 	const [fields, setFields] = useAtom(fieldsAtom);
 
-	const groupFields = fields.filter((field) => field.groupUUID === props.uuid);
+	const group = groups.find((group) => group.index === props.index);
+	const groupFields = fields.filter((field) => field.groupIndex === props.index);
 
 	const handleAddField = (field: FieldType) => {
 		setFields((fields) => fields.concat(field));
 	};
 
 	const handleRemoveGroup = () => {
-		setGroups((groups) => groups.filter((group) => group.uuid !== props.uuid));
-		setFields((fields) => fields.filter((field) => field.groupUUID !== props.uuid));
+		setGroups((groups) => groups.filter((group) => group.index !== props.index));
+		setFields((fields) => fields.filter((field) => field.groupIndex !== props.index));
 	};
 
 	return (
@@ -30,9 +31,11 @@ export const Group: FC<GroupProps> = (props) => {
 			<div className="flex flex-wrap justify-between">
 				<BasicComponentInfo
 					type="group"
-					uuid={props.uuid}
+					index={props.index}
 					captionPlaceholder="Type the category of informations contained in this group"
 					labelPlaceholder="Display name of the group"
+					defaultCaptionValue={group?.caption}
+					defaultLabelValue={group?.label}
 				/>
 				<button className="btn btn-sm btn-error" onClick={handleRemoveGroup}>
 					<BsXLg />
@@ -42,14 +45,14 @@ export const Group: FC<GroupProps> = (props) => {
 			<div className="divider divider-info"></div>
 
 			{groupFields.map((field) => (
-				<Field key={field.uuid} fieldUUID={field.uuid} groupUUID={field.groupUUID} />
+				<Field key={field.index} fieldIndex={field.index} groupIndex={field.groupIndex} />
 			))}
 			<div className="flex self-center">
 				<ModalInputChoice
 					onSelect={(fieldType) => {
 						handleAddField({
-							uuid: crypto.randomUUID(),
-							groupUUID: props.uuid,
+							index: fields.length,
+							groupIndex: props.index,
 							caption: "",
 							label: "",
 							name: "",

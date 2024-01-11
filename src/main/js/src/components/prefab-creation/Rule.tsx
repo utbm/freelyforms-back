@@ -14,10 +14,11 @@ type RuleProps = {
 
 type SelectorProps = {
 	onChange: (options: string[]) => void;
+	defaultOptions?: string[];
 };
 
-export const Selector = ({ onChange }: SelectorProps) => {
-	const [selectorOptions, setSelectorOptions] = useState<string[]>(["Option 1"]);
+export const Selector = ({ onChange, defaultOptions }: SelectorProps) => {
+	const [selectorOptions, setSelectorOptions] = useState<string[]>(defaultOptions ?? ["Option 1"]);
 
 	const handleOptionButtonChange = (name: string, index: number) => {
 		setSelectorOptions((selectorOptions) => {
@@ -47,6 +48,7 @@ export const Selector = ({ onChange }: SelectorProps) => {
 					index={index}
 					addableOption={false}
 					name={option}
+					defaultValue={option}
 					onChange={(name) => handleOptionButtonChange(name, index)}
 					onRemove={handleRemoveOption}
 				/>
@@ -69,6 +71,7 @@ type OptionButtonProps = {
 			name: string;
 			onChange: (name: string) => void;
 			onRemove: (index: number) => void;
+			defaultValue?: string;
 	  }
 	| {
 			addableOption: true;
@@ -95,6 +98,7 @@ export const OptionButton = (props: OptionButtonProps) => {
 						name="option"
 						placeholder={props.name}
 						type="text"
+						defaultValue={props.defaultValue}
 						onChange={(ev) => props.onChange(ev.target.value)}
 					/>
 				)}
@@ -113,7 +117,7 @@ export const Rule: FC<RuleProps> = (props) => {
 		setFields((fields) => {
 			const newFields = [...fields];
 
-			const fieldIndex = newFields.findIndex((field) => field.uuid === props.field.uuid);
+			const fieldIndex = newFields.findIndex((field) => field.index === props.field.index);
 
 			newFields[fieldIndex] = {
 				...newFields[fieldIndex],
@@ -126,8 +130,8 @@ export const Rule: FC<RuleProps> = (props) => {
 	};
 
 	const fieldsExceptCurrent = fields
-		.filter((field) => field.groupUUID === props.field.groupUUID)
-		.filter((field) => field.uuid !== props.field.uuid)
+		.filter((field) => field.groupIndex === props.field.groupIndex)
+		.filter((field) => field.index !== props.field.index)
 		.filter((field) => field.name);
 
 	const goodOne = associatedTypesWithTypeRules.filter((rule) => rule.associatedType === rules.fieldType);
@@ -157,7 +161,12 @@ export const Rule: FC<RuleProps> = (props) => {
 					}}
 				/>
 			</div>
-			<TypeRules typeRules={typeRules} fieldType={props.field.rules.fieldType} fieldUUID={props.field.uuid} />
+			<TypeRules
+				possibleTypeRules={typeRules}
+				selectedTypeRules={props.field.rules.typeRules}
+				fieldType={props.field.rules.fieldType}
+				fieldIndex={props.field.index}
+			/>
 		</div>
 	);
 };

@@ -1,9 +1,13 @@
-import { apiclient } from "../main";
-import { BasicComponentInfo } from "../components/prefab-creation/BasicComponentInfo";
-import { Group } from "../components/prefab-creation/Group";
 import { useAtom, useAtomValue } from "jotai";
-import { fieldsAtom, groupsAtom, prefabAtom } from "../components/prefab-creation/store";
 import { FiPlus } from "react-icons/fi";
+import { apiclient } from "../../main";
+import { BasicComponentInfo } from "./BasicComponentInfo";
+import { Group } from "./Group";
+import { prefabAtom, groupsAtom, fieldsAtom } from "./store";
+import { FC } from "react";
+import { Schemas } from "../../apiClient/client";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function removePropertiesRecursively<T extends object>(obj: T, propertiesToRemove: string[]): T {
 	for (const key in obj) {
@@ -18,10 +22,16 @@ function removePropertiesRecursively<T extends object>(obj: T, propertiesToRemov
 	return obj;
 }
 
-export const PrefabCreation = () => {
+type PrefabCreationProps = {
+	editionMode?: boolean;
+};
+
+export const PrefabCreation: FC<PrefabCreationProps> = ({ editionMode }) => {
+	const navigate = useNavigate();
 	const [prefab, setPrefab] = useAtom(prefabAtom);
 	const [groups, setGroups] = useAtom(groupsAtom);
 	const fields = useAtomValue(fieldsAtom);
+	const { formName } = useParams();
 
 	const handleSendPrefab = (ev: React.FormEvent<HTMLFormElement>) => {
 		ev.preventDefault();
@@ -29,42 +39,54 @@ export const PrefabCreation = () => {
 			...prefab,
 			groups: groups.map((group) => ({
 				...group,
-				fields: fields.filter((field) => field.groupUUID === group.uuid),
+				fields: fields.filter((field) => field.groupIndex === group.index),
 			})),
 		};
 		const clonedPrefab = JSON.parse(JSON.stringify(prefabWithFieldGroups));
 
-		const refinedPrefab = removePropertiesRecursively(clonedPrefab, ["uuid", "groupUUID"]);
+		const refinedPrefab: Schemas.Prefab = removePropertiesRecursively(clonedPrefab, ["index", "groupIndex"]);
+		// @ts-ignore
+		refinedPrefab.name = refinedPrefab.name.toLowerCase().replace(/ /g, "-");
 		console.log(refinedPrefab);
 
-		// // create form data
-		// const formData = new FormData(ev.target);
-		// console.log(formData);
-		// // iterate on form data
-		// for (let [key, value] of formData.entries()) {
-		// 	console.log(key, value);
-		// }
+		if (editionMode) {
+			apiclient.put(`/api/prefabs/${prefab.name}`, {
+				...refinedPrefab,
+			});
+			return;
+		}
 
-		apiclient.post("/api/prefabs", {
-			...refinedPrefab,
-		});
+		apiclient
+			.post("/api/prefabs", {
+				...refinedPrefab,
+			})
+			.then((res) => {
+				if (res.status === 200) {
+					navigate(`/form/${prefab.name}`);
+				}
+			});
 	};
 
 	return (
-		<div data-theme="light" className="w-screen h-screen p-2 lg:p-6">
+		<div data-theme="light" className="w-screen h-screen p-2 lg:p-6 overflow-y-auto">
 			<form className="flex-col gap-2" onSubmit={handleSendPrefab}>
 				<div>
-					<h2 className="text-2xl">Create a form</h2>
+					<h2 className="text-2xl text-primary text-center">
+						{editionMode ? `Edit the form ${formName}` : "Create a form"}
+					</h2>
 					<BasicComponentInfo
 						type="prefab"
 						captionPlaceholder="A description about your form"
 						labelPlaceholder="Display label"
 						namePlaceholder="Technical name"
+						defaultCaptionValue={prefab.caption}
+						defaultLabelValue={prefab.label}
+						defaultNameValue={prefab.name}
 					/>
 				</div>
 				<div>
 					{groups.map((group, index) => (
-						<Group key={group.uuid} uuid={group.uuid} />
+						<Group key={group.index} index={group.index} />
 					))}
 					<div className="flex justify-center">
 						<button
@@ -72,7 +94,7 @@ export const PrefabCreation = () => {
 							onClick={() => {
 								setGroups((groups) =>
 									groups.concat({
-										uuid: crypto.randomUUID(),
+										index: groups.length,
 										fields: [],
 										label: "",
 										caption: "",
@@ -90,7 +112,7 @@ export const PrefabCreation = () => {
 				</div>
 				<div className="flex justify-end">
 					<button className="btn btn-primary btn-success" type="submit">
-						Submit the form
+						{editionMode ? "Update the form" : "Create the form"}
 						<span className={`pt-0.5 pl-1.5 `}>
 							<img src="/icons/check.svg" height={11} width={14} />
 						</span>

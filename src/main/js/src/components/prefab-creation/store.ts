@@ -4,12 +4,12 @@ import { Schemas } from "../../apiClient/client";
 type PrefabWithoutGroups = Omit<Schemas.Prefab, "groups">;
 
 export type GroupType = Schemas.Group & {
-	uuid: string;
+	index: number;
 };
 
 export type FieldType = Schemas.Field & {
-	uuid: string;
-	groupUUID: string;
+	index: number;
+	groupIndex: number;
 };
 
 export const prefabAtom = atom<PrefabWithoutGroups>({

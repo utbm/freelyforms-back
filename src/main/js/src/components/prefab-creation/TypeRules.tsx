@@ -5,9 +5,10 @@ import { fieldsAtom } from "./store";
 import { useSetAtom } from "jotai";
 
 type TypeRulesProps = {
-	typeRules: PossibleTypeRules[];
+	possibleTypeRules: PossibleTypeRules[];
+	selectedTypeRules: Schemas.TypeRule[];
 	fieldType: PossibleTypes;
-	fieldUUID: string;
+	fieldIndex: number;
 };
 
 const translationsTypeRules: Record<PossibleTypeRules, string> = {
@@ -19,7 +20,7 @@ const translationsTypeRules: Record<PossibleTypeRules, string> = {
 	SelectDataSet: "Select Data Set",
 };
 
-export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID }) => {
+export const TypeRules: FC<TypeRulesProps> = ({ possibleTypeRules, fieldType, selectedTypeRules, ...rest }) => {
 	const setFieldsAtom = useSetAtom(fieldsAtom);
 
 	const handleChange = ({
@@ -34,7 +35,7 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 		setFieldsAtom((fields) => {
 			const newFields = [...fields];
 
-			const fieldIndex = newFields.findIndex((field) => field.uuid === fieldUUID);
+			const fieldIndex = newFields.findIndex((field) => field.index === rest.fieldIndex);
 			const typeRules = newFields[fieldIndex].rules.typeRules;
 
 			const index = typeRules.findIndex((typeRule) => typeRule.name === typeRuleName);
@@ -66,8 +67,14 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 					tabIndex={0}
 					className="dropdown-content w-max flex flex-col gap-2 z-[1] menu shadow bg-base-100 rounded-box w-52 p-3"
 				>
-					{typeRules.map((typeRule) => (
-						<TypeRule key={typeRule} fieldType={fieldType} typeRuleName={typeRule} onChange={handleChange} />
+					{possibleTypeRules.map((typeRule) => (
+						<TypeRule
+							key={typeRule}
+							fieldType={fieldType}
+							typeRuleName={typeRule}
+							onChange={handleChange}
+							defaultValue={selectedTypeRules.find((selectedTypeRule) => selectedTypeRule.name === typeRule)?.value}
+						/>
 					))}
 				</div>
 			</div>
@@ -78,11 +85,12 @@ export const TypeRules: FC<TypeRulesProps> = ({ typeRules, fieldType, fieldUUID 
 type TypeRuleProps = {
 	typeRuleName: PossibleTypeRules;
 	fieldType: PossibleTypes;
+	defaultValue?: string;
 	onChange: ({}: { typeRuleName: PossibleTypeRules; toggled: boolean; value: string }) => void;
 };
 
-const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange }) => {
-	const [toggled, setToggled] = useState(false);
+const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange, defaultValue }) => {
+	const [isToggled, setToggled] = useState(defaultValue ? true : false);
 	const [_, setValue] = useState("");
 
 	const handleToggle = () => {
@@ -94,7 +102,7 @@ const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange }) => {
 
 	const handleInputChange = (value: string) => {
 		setValue(value);
-		onChange({ typeRuleName, toggled, value });
+		onChange({ typeRuleName, toggled: isToggled, value });
 	};
 
 	let input: JSX.Element | undefined;
@@ -107,6 +115,7 @@ const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange }) => {
 		input = (
 			<Input
 				type={inputType}
+				defaultValue={defaultValue}
 				name="typeRule"
 				placeholder="Type value"
 				onChange={(ev) => handleInputChange(ev.target.value)}
@@ -118,10 +127,10 @@ const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange }) => {
 		<div className="form-control">
 			<label className="label cursor-pointer p-0 pb-2">
 				<span className="label-text mr-2">{translationsTypeRules[typeRuleName]}</span>
-				<input type="checkbox" className="toggle toggle-primary" onChange={handleToggle} />
+				<input type="checkbox" className="toggle toggle-primary" onChange={handleToggle} defaultChecked={isToggled} />
 			</label>
 
-			{toggled && input}
+			{isToggled && input}
 		</div>
 	);
 };

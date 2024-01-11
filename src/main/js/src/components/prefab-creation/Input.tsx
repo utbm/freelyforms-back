@@ -52,18 +52,22 @@ export const InputWithoutBorder: FC<InputWithoutBorderProps> = (props) => {
 		"input input-ghost  input-sm w-full max-w-xs border-transparent focus:border-transparent focus:ring-0 focus:outline-none" +
 		(classNames ? " " + classNames : "");
 
+	const input = (
+		<input
+			required
+			{...rest}
+			className={inputClassName}
+			autoComplete="off"
+			placeholder={props.placeholder}
+			onChange={props.onChange}
+			name={props.name}
+		/>
+	);
+
 	if (props.children) {
 		return (
 			<div className="flex justify-end items-center">
-				<input
-					{...rest}
-					className={inputClassName}
-					autoComplete="off"
-					required
-					placeholder={props.placeholder}
-					onChange={props.onChange}
-					name={props.name}
-				/>
+				{input}
 				<span className="tooltip" data-tip={rest.tooltipChildren}>
 					{props.children}
 				</span>
@@ -71,15 +75,5 @@ export const InputWithoutBorder: FC<InputWithoutBorderProps> = (props) => {
 		);
 	}
 
-	return (
-		<input
-			{...rest}
-			className={inputClassName}
-			autoComplete="off"
-			required
-			placeholder={props.placeholder}
-			onChange={props.onChange}
-			name={props.name}
-		/>
-	);
+	return <>{input}</>;
 };

@@ -6,23 +6,26 @@ import { FC, PropsWithChildren } from "react";
 type CommonProps = {
 	captionPlaceholder: string;
 	labelPlaceholder: string;
+	defaultCaptionValue?: string;
+	defaultLabelValue?: string;
 };
 
 type GroupComponent = {
 	type: "group";
-	uuid: string;
+	index: number;
 };
 
 type FieldComponent = {
 	type: "field";
-	uuid: string;
-	groupUUID: string;
+	index: number;
+	groupIndex: number;
 	tooltipChildren: string;
 };
 
 type PrefabComponent = {
 	type: "prefab";
 	namePlaceholder: string;
+	defaultNameValue?: string;
 };
 type Props = (GroupComponent | FieldComponent | PrefabComponent) & CommonProps;
 type BasicComponentInfoProps = PropsWithChildren<Props>;
@@ -38,7 +41,7 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 			setGroups((groups) => {
 				const newGroups = [...groups];
 
-				const groupIndex = newGroups.findIndex((group) => group.uuid === props.uuid);
+				const groupIndex = newGroups.findIndex((group) => group.index === props.index);
 
 				newGroups[groupIndex] = {
 					...newGroups[groupIndex],
@@ -52,7 +55,7 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 			setFields((fields) => {
 				const newFields = [...fields];
 
-				const fieldIndex = newFields.findIndex((field) => field.uuid === props.uuid);
+				const fieldIndex = newFields.findIndex((field) => field.index === props.index);
 
 				newFields[fieldIndex] = {
 					...newFields[fieldIndex],
@@ -79,11 +82,18 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 					placeholder={props.labelPlaceholder}
 					onChange={handleChange}
 					tooltipChildren={props.tooltipChildren}
+					defaultValue={props.defaultLabelValue}
 				>
 					{props.children}
 				</InputWithoutBorder>
 				{props.captionPlaceholder ? (
-					<InputWithoutBorder name="caption" placeholder={props.captionPlaceholder} onChange={handleChange} />
+					<InputWithoutBorder
+						required={false}
+						defaultValue={props.defaultCaptionValue}
+						name="caption"
+						placeholder={props.captionPlaceholder}
+						onChange={handleChange}
+					/>
 				) : null}
 			</div>
 		);
@@ -92,6 +102,7 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 	return (
 		<div className="flex flex-col w-10/12">
 			<InputWithoutBorder
+				defaultValue={props.defaultLabelValue}
 				autoFocus
 				className="text-xl"
 				name="label"
@@ -99,9 +110,20 @@ export const BasicComponentInfo: FC<BasicComponentInfoProps> = (props) => {
 				onChange={handleChange}
 			/>
 			{props.type === "prefab" ? (
-				<InputWithoutBorder name="name" placeholder={props.namePlaceholder} onChange={handleChange} />
+				<InputWithoutBorder
+					defaultValue={props.defaultNameValue}
+					name="name"
+					placeholder={props.namePlaceholder}
+					onChange={handleChange}
+				/>
 			) : null}
-			<InputWithoutBorder name="caption" placeholder={props.captionPlaceholder} onChange={handleChange} />
+			<InputWithoutBorder
+				required={false}
+				defaultValue={props.defaultCaptionValue}
+				name="caption"
+				placeholder={props.captionPlaceholder}
+				onChange={handleChange}
+			/>
 			{props.children}
 		</div>
 	);
