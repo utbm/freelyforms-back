@@ -54,7 +54,7 @@ export const Field: FC<FieldProps> = (props) => {
 					<BasicComponentInfo
 						type="field"
 						labelPlaceholder="Display name"
-						captionPlaceholder={field.rules.fieldType === "SELECTOR" ? "" : "Type placeholder text"}
+						captionPlaceholder={field.rules.fieldType === "SELECTOR" ? "" : "Field placeholder"}
 						index={props.fieldIndex}
 						groupIndex={props.groupIndex}
 						tooltipChildren={typeRulesIcon.label}

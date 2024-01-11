@@ -52,8 +52,8 @@ export const Group: FC<GroupProps> = (props) => {
 				<BasicComponentInfo
 					type="group"
 					index={props.index}
-					captionPlaceholder="Type the category of informations contained in this group"
-					labelPlaceholder="Display name of the group"
+					captionPlaceholder="Group description"
+					labelPlaceholder="Group display name"
 					defaultCaptionValue={group?.caption}
 					defaultLabelValue={group?.label}
 				/>

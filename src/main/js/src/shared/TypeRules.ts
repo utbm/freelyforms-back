@@ -70,7 +70,7 @@ export const translationsTypeRules: Record<PossibleTypeRules, string> = {
 	EmailRegexMatch: "Is a email input ?",
 	MaximumRule: "Maximum input length",
 	MinimumRule: "Minimum input length",
-	AlternativeDisplay: "Alternative Display",
+	AlternativeDisplay: "Display type",
 	RegexMatch: "The input must match a regex",
 	// SelectDataSet: "Select Data Set",
 };
