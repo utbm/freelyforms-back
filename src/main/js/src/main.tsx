@@ -37,7 +37,7 @@ const router = createBrowserRouter([
 		errorElement: <FourOFour />,
 	},
 	{
-		path: "/question",
+		path: "/prefabs/:prefabName",
 		element: <Home />,
 		errorElement: <FourOFour />,
 	},

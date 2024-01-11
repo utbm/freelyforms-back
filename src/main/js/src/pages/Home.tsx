@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import MobileDetect from 'mobile-detect';
+import { useParams } from "react-router-dom";
 
 import Question from '../components/question';
 import type { Question as QuestionProps, Helper } from '../components/question';
@@ -49,16 +50,16 @@ export default function Home( ) {
     _questions.current = array as Question[];
   }
 
+  const { prefabName } = useParams();
+
   useEffect(() => {
-    // setSurvey(PREFAB as Schemas.Prefab);
-    
     apiclient
-			.get("/api/prefabs/cars")
+			.get(`/api/prefabs/${prefabName}`)
 			.then((res) => res.json())
       .then(res => {
         console.log(res)
         setSurvey(res)
-      })
+      }).catch(() => {})
   }, [])
 	const [hidden, setHidden] = useState<Record<string | number, boolean>>({})
 
@@ -382,7 +383,7 @@ const PREFAB = {
                                   "DATE",
                                   "DATETIME"
                               ],
-                              "value": "50",
+                              "value": "5",
                               "name": "MaximumRule"
                           }
                       ],
