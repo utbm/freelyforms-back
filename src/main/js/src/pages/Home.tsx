@@ -122,10 +122,19 @@ export default function Home( ) {
         prefabName,
         groups: _survey.current?.groups?.map( group => ({
             name: group.name,
-            fields: group.fields?.map( field => ({
-              name: field.name,
-              value: answers.current[`${group.name}.${field.name}`]
-            }))
+            fields: group.fields?.map( field => {
+              if(field.rules?.fieldType.toLowerCase() === 'date') {
+                return {
+                  name: field.name,
+                  value: Date.parse(answers.current[`${group.name}.${field.name}`]?.toString()).valueOf().toString()
+                }
+              } else {
+                return {
+                  name: field.name,
+                  value: answers.current[`${group.name}.${field.name}`]
+                }
+              }
+            })
             .filter( field => field.value !== null && field.value !== undefined)
           }))
       }
