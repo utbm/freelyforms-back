@@ -125,10 +125,12 @@ public class Generator {
         optionsRules.add(optionsTypeRule);
 
         List<String> optionsSelectorValues = new ArrayList<>();
-        engineSelectorValues.add("1.8");
-        engineSelectorValues.add("1.9");
-        engineSelectorValues.add("2.0");
-        engineSelectorValues.add("2.0 HDI");
+        optionsSelectorValues.add("Sièges chauffants");
+        optionsSelectorValues.add("Toit ouvrant");
+        optionsSelectorValues.add("Caméra de recul");
+        optionsSelectorValues.add("Stationnement automatique");
+        optionsSelectorValues.add("Éclairage directionnel");
+        optionsSelectorValues.add("Suivi de ligne");
 
         TypeRule colorTypeRule = new AlternativeDisplay(AlternativeDisplay.AlternativeDisplays.RADIO);
         List<TypeRule> colorTypeRules = new ArrayList();
