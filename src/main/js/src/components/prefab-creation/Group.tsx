@@ -5,6 +5,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { FieldType, fieldsAtom, groupsAtom } from "./store";
 import { BsXLg } from "react-icons/bs";
 import { ModalInputChoice } from "./ModalInputChoice";
+import { PossibleType } from "../../apiClient/client";
 
 type GroupProps = {
 	index: number;
@@ -17,8 +18,27 @@ export const Group: FC<GroupProps> = (props) => {
 	const group = groups.find((group) => group.index === props.index);
 	const groupFields = fields.filter((field) => field.groupIndex === props.index);
 
-	const handleAddField = (field: FieldType) => {
-		setFields((fields) => fields.concat(field));
+	const handleAddField = (fieldType: PossibleType) => {
+		setFields((fields) =>
+			fields.concat({
+				index: fields.length,
+				groupIndex: props.index,
+				caption: "",
+				label: "",
+				name: "",
+				rules: {
+					fieldType,
+					excludes: [],
+					hidden: false,
+					optional: false,
+					selectorValues: [],
+					typeRules:
+						fieldType === "SELECTOR"
+							? [{ associatedTypes: [], name: "AlternativeDisplay", value: "MULTIPLE_CHOICE" }]
+							: [],
+				},
+			}),
+		);
 	};
 
 	const handleRemoveGroup = () => {
@@ -50,21 +70,7 @@ export const Group: FC<GroupProps> = (props) => {
 			<div className="flex self-center">
 				<ModalInputChoice
 					onSelect={(fieldType) => {
-						handleAddField({
-							index: fields.length,
-							groupIndex: props.index,
-							caption: "",
-							label: "",
-							name: "",
-							rules: {
-								fieldType: fieldType,
-								excludes: [],
-								hidden: false,
-								optional: false,
-								selectorValues: [],
-								typeRules: [],
-							},
-						});
+						handleAddField(fieldType);
 					}}
 				/>
 			</div>

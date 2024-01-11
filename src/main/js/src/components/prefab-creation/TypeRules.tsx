@@ -1,23 +1,15 @@
 import { FC, useState } from "react";
-import { PossibleTypes, PossibleTypeRules, Schemas } from "../../apiClient/client";
+import { PossibleType, PossibleTypeRules, Schemas } from "../../apiClient/client";
 import { Input } from "./Input";
 import { fieldsAtom } from "./store";
 import { useSetAtom } from "jotai";
+import { PossibleAlternativeDisplays, translationsTypeRules } from "../../shared/TypeRules";
 
 type TypeRulesProps = {
 	possibleTypeRules: PossibleTypeRules[];
 	selectedTypeRules: Schemas.TypeRule[];
-	fieldType: PossibleTypes;
+	fieldType: PossibleType;
 	fieldIndex: number;
-};
-
-const translationsTypeRules: Record<PossibleTypeRules, string> = {
-	EmailRegexMatch: "Is a email input ?",
-	MaximumRule: "Maximum input length",
-	MinimumRule: "Minimum input length",
-	AlternativeDisplay: "Alternative Display",
-	RegexMatch: "The input must match a regex",
-	SelectDataSet: "Select Data Set",
 };
 
 export const TypeRules: FC<TypeRulesProps> = ({ possibleTypeRules, fieldType, selectedTypeRules, ...rest }) => {
@@ -84,7 +76,7 @@ export const TypeRules: FC<TypeRulesProps> = ({ possibleTypeRules, fieldType, se
 
 type TypeRuleProps = {
 	typeRuleName: PossibleTypeRules;
-	fieldType: PossibleTypes;
+	fieldType: PossibleType;
 	defaultValue?: string;
 	onChange: ({}: { typeRuleName: PossibleTypeRules; toggled: boolean; value: string }) => void;
 };
@@ -120,6 +112,22 @@ const TypeRule: FC<TypeRuleProps> = ({ fieldType, typeRuleName, onChange, defaul
 				placeholder="Type value"
 				onChange={(ev) => handleInputChange(ev.target.value)}
 			/>
+		);
+	}
+
+	if (typeRuleName === "AlternativeDisplay") {
+		input = (
+			<select
+				className="select select-bordered select-sm select-accent w-full max-w-xs"
+				onChange={(ev) => handleInputChange(ev.target.value)}
+				defaultValue={defaultValue}
+			>
+				{PossibleAlternativeDisplays.map((display) => (
+					<option key={display.value} value={display.value}>
+						{display.label}
+					</option>
+				))}
+			</select>
 		);
 	}
 

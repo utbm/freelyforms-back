@@ -128,10 +128,10 @@ export const Rule: FC<RuleProps> = (props) => {
 		});
 		props.onChange(rule);
 	};
-
-	const fieldsExceptCurrent = fields
+	const currentField = fields.find((field) => field.index === props.field.index);
+	const nextFieldsToCurrent = fields
 		.filter((field) => field.groupIndex === props.field.groupIndex)
-		.filter((field) => field.index !== props.field.index)
+		.filter((field) => field.index > props.field.index)
 		.filter((field) => field.name);
 
 	const goodOne = associatedTypesWithTypeRules.filter((rule) => rule.associatedType === rules.fieldType);
@@ -145,21 +145,26 @@ export const Rule: FC<RuleProps> = (props) => {
 
 	return (
 		<div className="flex flex-row gap-3">
-			<div className="flex flex-col">
+			<div className="flex flex-col w-[230px]">
 				<Checkbox name="optional" label="Optional" onChange={handleCheckboxChange} />
+				{/* why it's need to be hidden, it was made like this last year (2022) but we don't understand why */}
 				<Checkbox name="hidden" label="Hidden" onChange={handleCheckboxChange} />
-				<p className="text-sm">Excludes fields:</p>
-				<Select
-					isMulti
-					placeholder="Select one or more"
-					className="basic-multi-select"
-					classNamePrefix="select"
-					options={fieldsExceptCurrent}
-					styles={{}}
-					onChange={(options) => {
-						handleRuleChange({ ...rules, excludes: options.map((option) => option.name) });
-					}}
-				/>
+				{currentField?.rules.optional && (
+					<>
+						<p className="text-sm">Excludes fields:</p>
+						<Select
+							isMulti
+							placeholder="Select one or more"
+							className="basic-multi-select"
+							classNamePrefix="select"
+							options={nextFieldsToCurrent}
+							styles={{}}
+							onChange={(options) => {
+								handleRuleChange({ ...rules, excludes: options.map((option) => option.name) });
+							}}
+						/>
+					</>
+				)}
 			</div>
 			<TypeRules
 				possibleTypeRules={typeRules}
