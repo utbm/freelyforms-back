@@ -1,30 +1,42 @@
-/* FormPopup.css */
+/* CreateGroupPopup.css */
 .create-group-popup {
-    position: fixed ;
-    transform: translate(-50%, -50%);
-    background-color: rgb(88, 88, 88);
-    padding: 20px;
-    border: 1px solid #000000;
-    border-radius: 15px;
-    color: black;
-    
-  }
-  
-  .group-buttons {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .group-button {
-    margin-bottom: 10px;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.5s; /* Add a smooth transition effect with a 0.3-second duration */
-
-  }
-
-  
-.group-button:hover {
-  background-color: #202099; /* Change the background color on hover */
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  color:black;
 }
-  
+
+.create-group-popup h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.create-group-popup input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.create-group-popup button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.create-group-popup button:hover {
+  background-color: #0056b3;
+}

@@ -86,7 +86,7 @@ const Menu = () => {
       <br />
       <img src="./src/assets/img_map.PNG" alt="Map" className="menu-map" />
       <div className='menu-footer'>
-        DA52 Project - A23 <br/> Matthieu Delisle - Wael Mohana <br/> Sulyvan Durand - Carlo Boscarol - Walid El Faiz
+        DA50 Project - A23 <br/> Matthieu Delisle - Wael Mohana <br/> Sulyvan Durand - Carlo Boscarol - Walid El Faiz
       </div>
       <br />
       <Link to="/exit" className="menu-small-button">
