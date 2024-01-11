@@ -16,7 +16,7 @@ public class EmailRegexMatch extends RegexMatch{
     public EmailRegexMatch(){
         super("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
         associatedTypes.add(STRING);
-        this.setName("RegexMatch");
+        this.setName("EmailRegexMatch");
     }
 
     @PersistenceCreator
