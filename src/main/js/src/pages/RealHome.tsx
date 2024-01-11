@@ -6,9 +6,12 @@ export const RealHome = () => {
 	const [prefabs, setPrefabs] = useState<Schemas.Prefab[]>([]);
 
 	useEffect(() => {
-		apiclient.get("/api/prefabs").then((res) => {
-			setPrefabs(res as Schemas.Prefab[]);
-		});
+		apiclient
+			.get("/api/prefabs")
+			.then((res) => res.json())
+			.then((res) => {
+				setPrefabs(res as Schemas.Prefab[]);
+			});
 	}, []);
 
 	return (
