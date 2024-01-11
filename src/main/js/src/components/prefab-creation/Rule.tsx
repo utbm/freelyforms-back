@@ -129,9 +129,9 @@ export const Rule: FC<RuleProps> = (props) => {
 		props.onChange(rule);
 	};
 	const currentField = fields.find((field) => field.index === props.field.index);
-	const fieldsExceptCurrent = fields
+	const nextFieldsToCurrent = fields
 		.filter((field) => field.groupIndex === props.field.groupIndex)
-		.filter((field) => field.index !== props.field.index)
+		.filter((field) => field.index > props.field.index)
 		.filter((field) => field.name);
 
 	const goodOne = associatedTypesWithTypeRules.filter((rule) => rule.associatedType === rules.fieldType);
@@ -157,7 +157,7 @@ export const Rule: FC<RuleProps> = (props) => {
 							placeholder="Select one or more"
 							className="basic-multi-select"
 							classNamePrefix="select"
-							options={fieldsExceptCurrent}
+							options={nextFieldsToCurrent}
 							styles={{}}
 							onChange={(options) => {
 								handleRuleChange({ ...rules, excludes: options.map((option) => option.name) });
