@@ -1,16 +1,16 @@
 import { FC, useRef } from "react";
-import { PossibleTypes } from "../../apiClient/client";
+import { PossibleType } from "../../apiClient/client";
 import { FiPlus } from "react-icons/fi";
 import { typeRulesIcons } from "../../shared/TypeRules";
 
 type ModalInputChoiceProps = {
-	onSelect: (fieldType: PossibleTypes) => void;
+	onSelect: (fieldType: PossibleType) => void;
 };
 
 export const ModalInputChoice: FC<ModalInputChoiceProps> = (props) => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const handleSelect = (fieldType: PossibleTypes) => {
+	const handleSelect = (fieldType: PossibleType) => {
 		props.onSelect(fieldType);
 
 		dropdownRef.current?.blur();
@@ -41,7 +41,7 @@ export const ModalInputChoice: FC<ModalInputChoiceProps> = (props) => {
 
 const ModalItem: FC<{
 	item: (typeof typeRulesIcons)[number];
-	onSelect?: (fieldType: PossibleTypes) => void;
+	onSelect?: (fieldType: PossibleType) => void;
 }> = (props) => {
 	return (
 		<div

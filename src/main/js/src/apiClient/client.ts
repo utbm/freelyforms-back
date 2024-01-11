@@ -1,16 +1,16 @@
 /* eslint-disable */
 
-export type PossibleTypes = "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
+export type PossibleType = "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
 export namespace Schemas {
 	// <Schemas>
 	export type TypeRule = Partial<{
-		associatedTypes: Array<PossibleTypes>;
+		associatedTypes: Array<PossibleType>;
 		name: string;
 		value: string;
 	}>;
 	export type Rule = {
 		excludes: Array<string>;
-		fieldType: PossibleTypes;
+		fieldType: PossibleType;
 		hidden: boolean;
 		optional: boolean;
 		selectorValues: Array<string>;

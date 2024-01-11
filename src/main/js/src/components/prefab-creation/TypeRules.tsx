@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { PossibleTypes, PossibleTypeRules, Schemas } from "../../apiClient/client";
+import { PossibleType, PossibleTypeRules, Schemas } from "../../apiClient/client";
 import { Input } from "./Input";
 import { fieldsAtom } from "./store";
 import { useSetAtom } from "jotai";
@@ -8,7 +8,7 @@ import { PossibleAlternativeDisplays, translationsTypeRules } from "../../shared
 type TypeRulesProps = {
 	possibleTypeRules: PossibleTypeRules[];
 	selectedTypeRules: Schemas.TypeRule[];
-	fieldType: PossibleTypes;
+	fieldType: PossibleType;
 	fieldIndex: number;
 };
 
@@ -76,7 +76,7 @@ export const TypeRules: FC<TypeRulesProps> = ({ possibleTypeRules, fieldType, se
 
 type TypeRuleProps = {
 	typeRuleName: PossibleTypeRules;
-	fieldType: PossibleTypes;
+	fieldType: PossibleType;
 	defaultValue?: string;
 	onChange: ({}: { typeRuleName: PossibleTypeRules; toggled: boolean; value: string }) => void;
 };
