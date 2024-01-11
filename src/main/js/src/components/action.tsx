@@ -12,7 +12,7 @@ interface Props {
 
 export default function Action( props: Props ) {
   return <button
-    className={`btn btn-primary self-end ${props.hidden ? 'opacity-0 pointer-events-none' : ''}`}
+    className={`btn btn-primary text-white self-end ${props.hidden ? 'opacity-0 pointer-events-none' : ''}`}
     onClick={props.next}
   >
     { (!props.answer && props.rules?.optional) ? 'Skip' : props.action ? props.action : 'Done' }

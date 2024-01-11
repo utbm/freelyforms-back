@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export type PossibleTypes = "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR";
+export type PossibleTypes = "INTEGER" | "STRING" | "FLOAT" | "DATE" | "DATETIME" | "BOOLEAN" | "SELECTOR" | "FINAL";
 export namespace Schemas {
 	// <Schemas>
 	export type TypeRule = Partial<{

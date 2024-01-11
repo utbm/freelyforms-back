@@ -5,6 +5,7 @@ import Question from '../components/question';
 import type { Question as QuestionProps, Helper } from '../components/question';
 import { useControls } from '../hooks/controls';
 import type { Schemas } from '../apiClient/client';
+import { apiclient } from '../main';
 
 
 export default function Home( ) {
@@ -49,7 +50,15 @@ export default function Home( ) {
   }
 
   useEffect(() => {
-    setSurvey(PREFAB as Schemas.Prefab);
+    // setSurvey(PREFAB as Schemas.Prefab);
+    
+    apiclient
+			.get("/api/prefabs/cars")
+			.then((res) => res.json())
+      .then(res => {
+        console.log(res)
+        setSurvey(res)
+      })
   }, [])
 	const [hidden, setHidden] = useState<Record<string | number, boolean>>({})
 
