@@ -35,7 +35,7 @@ export default function Text( props: TextQuestion ) {
 
       if(!a || typeof a !== 'string' || !a.length) {
         props.setHelper({ value: 'Please fill this in' })
-      } else if(props.type === 'email' && !isEmail(a)) {
+      } else if(props.rules?.typeRules.find(rule => rule.name === "EmailRegexMatch") && !isEmail(a)) {
         props.setHelper({ value: 'Your email seems invalid' })
       } else if(props.rules?.typeRules.find(rule => rule.name === "MaximumRule" && /^[0-9]*$/.test(rule.value))) {
         const maxLength = Number(props.rules?.typeRules.find(rule => rule.name === "MaximumRule" && /^[0-9]*$/.test(rule.value))?.value)
@@ -74,7 +74,7 @@ export default function Text( props: TextQuestion ) {
             (props.type !== 'long text' && props.autocomplete) ? 
             <input
               type='text'
-              name={props.type === 'email' ? 'email' : `${props.id}-focus`}
+              name={props.rules?.typeRules.find(rule => rule.name === "EmailRegexMatch") ? 'email' : `${props.id}-focus`}
               id={`${props.id}-focus`}
               placeholder='Your answer goes here'
               className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
@@ -83,7 +83,7 @@ export default function Text( props: TextQuestion ) {
               autoComplete={props.autocomplete || 'off'}
             /> :
             <TextareaAutosize
-              name={props.type === 'email' ? `email` : `${props.id}-focus`}
+              name={props.rules?.typeRules.find(rule => rule.name === "EmailRegexMatch") ? `email` : `${props.id}-focus`}
               id={`${props.id}-focus`}
               placeholder={props.caption}
               className='input resize-none text-lg mb-6 py-2 bg-accent border-neutral whitespace-nowrap'
