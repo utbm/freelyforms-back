@@ -497,7 +497,10 @@ export const associatedTypesWithTypeRules = [
 	},
 	{
 		associatedType: "SELECTOR",
-		typeRules: ["AlternativeDisplay", "SelectDataSet"],
+		typeRules: [
+			"AlternativeDisplay",
+			// "SelectDataSet"
+		],
 	},
 ] as const;
 

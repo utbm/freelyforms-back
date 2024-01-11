@@ -4,7 +4,7 @@ import { Rule, Selector } from "./Rule";
 import { FieldType, fieldsAtom } from "./store";
 import { useAtom } from "jotai";
 import { BsXLg } from "react-icons/bs";
-import { typeRulesIcons } from "../../shared/TypeRulesIcons";
+import { typeRulesIcons } from "../../shared/TypeRules";
 
 type FieldProps = {
 	groupIndex: number;

@@ -1,7 +1,7 @@
 import { FC, useRef } from "react";
 import { PossibleTypes } from "../../apiClient/client";
 import { FiPlus } from "react-icons/fi";
-import { typeRulesIcons } from "../../shared/TypeRulesIcons";
+import { typeRulesIcons } from "../../shared/TypeRules";
 
 type ModalInputChoiceProps = {
 	onSelect: (fieldType: PossibleTypes) => void;
