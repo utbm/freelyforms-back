@@ -145,31 +145,6 @@ public class Rule {
             throw new RuleException("Non-optional field wasn't filled out");
         }
 
-        switch (fieldType) {
-            case INTEGER:
-                int val = (Integer) data;
-                break;
-            case STRING:
-                String str = (String) data;
-                break;
-            case FLOAT:
-                float fl = (Float) data;
-                break;
-            case DATE:
-                LocalDate date = (LocalDate) data;
-                break;
-            case DATETIME:
-                LocalDateTime datetime = (LocalDateTime) data;
-                break;
-            case BOOLEAN:
-                boolean bool = (Boolean) data;
-                break;
-            case SELECTOR:
-                // split response string?
-                break;
-
-        }
-
         for (TypeRule rule : typeRules) {
             try {
                 rule.verifyFormData(data, fieldType);

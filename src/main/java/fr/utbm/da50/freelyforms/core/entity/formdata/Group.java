@@ -71,7 +71,7 @@ public class Group {
      *              Note that all values are converted to strings in the JSON and BSON formats,
      *              so it will be up to the verification methods to attempt to convert the values in their expected types
      */
-    public void addField(String name, String value) {
+    public void addField(String name, Object value) {
         this.fields.add(new Field(name, value));
     }
 
