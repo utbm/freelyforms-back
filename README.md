@@ -12,29 +12,34 @@ consultez le code (format Javadoc) ou la documentation générée automatiquemen
 
 - Requis pour l'installation : Java 17, Spring Boot 2.7, Apache Maven 3.8, Node v18 et pnpm v8
 
-Installation du package :
 
-`mvn clean`
+## LANCEMENT DU BACK-END : 
 
-`mvn package`
+Sur un terminal 
+
+`mvn clean package`
 
 Exécution du jar résultant :
 
-`java -jar target/freelyforms-dev-0.1.0.jar`
+`java -jar .\target\freelyforms-1.0.0.jar`
 
-Le service sera disponible sur `localhost:8080`. Attention, il s'agit d'un service **statique** :
-contrairement au fonctionnement habituel d'une application react/node, la modification du code source n'entraînera
-**pas** de modification immédiate de l'application, il vous faudra recompiler (et redéployer le cas échéant).
+## LANCEMENT DU FRONT-END :
 
-_Ce comportement est établi pour fournir un package de production dont le serveur d'pplication frontend est optimisé et lançable en même temps que l'application backend dans un backage unique._  
-_Consultez le fichier pom.xml pour la description des plugins utilisés pour effectuer cette action._
+Sur un nouveau terminal
 
-## Exécution - Dev
+Allez sur le bon dossier :
 
-Il est possible de faire tourner un serveur front (dossier /src/main/js/ -> `pnpm run dev`) en parallèle à un serveur back fonctionnel.
-Il faut alors s'assurer de lancer aussi le serveur back
+`cd src/main/js`
 
-Le serveur front de développement (qui lui, pourra changer dynamiquement suivant le contenu des fichiers) sera consultable par `localhost:5173` et devrait pouvoir consulter l'API normalement (à tester ! potentiellement à paramétrer pour que le front aille chercher sur le port correspondant au serveur back que ce soit en dev ou en prod !)
+Mettez à jour les packages : 
+
+`npm i`
+
+Lancer le front-end : 
+
+`npm run dev`
+
+
 
 ## Base de données
 
