@@ -12,24 +12,30 @@ import { Prefab } from "./pages/Prefab";
 import { PrefabCreation } from "./components/prefab-creation/PrefabCreation";
 import { FormAnswers } from "./pages/FormAnswers";
 
-export const apiclient = createApiClient((method, url, params) => {
-	if (method === "get" || method === "head") {
+const isDevMode = window.origin.includes("localhost");
+
+export const apiclient = createApiClient(
+	(method, url, params) => {
+		if (method === "get" || method === "head") {
+			return fetch(url, {
+				method,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		}
+
 		return fetch(url, {
 			method,
 			headers: {
 				"Content-Type": "application/json",
 			},
+			body: JSON.stringify(params),
 		});
-	}
+	},
+	isDevMode ? "http://localhost:8080" : window.origin,
+);
 
-	return fetch(url, {
-		method,
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(params),
-	});
-}, window.origin);
 const router = createBrowserRouter([
 	{
 		path: "/",
