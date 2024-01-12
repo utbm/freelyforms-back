@@ -5,9 +5,9 @@ import { createApiClient } from "./apiClient/client";
 import { DevTools } from "jotai-devtools";
 
 import "./index.css";
-import Home from "./pages/Home";
+import FormAnswer from "./pages/FormAnswer";
 import FourOFour from "./pages/404";
-import { RealHome } from "./pages/RealHome";
+import { Home } from "./pages/Home";
 import { Prefab } from "./pages/Prefab";
 import { PrefabCreation } from "./components/prefab-creation/PrefabCreation";
 import { FormAnswers } from "./pages/FormAnswers";
@@ -39,11 +39,6 @@ export const apiclient = createApiClient(
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <RealHome />,
-		errorElement: <FourOFour />,
-	},
-	{
-		path: "/prefabs/:prefabName",
 		element: <Home />,
 		errorElement: <FourOFour />,
 	},
@@ -60,6 +55,11 @@ const router = createBrowserRouter([
 	{
 		path: "/form/:formName/answers",
 		element: <FormAnswers />,
+		errorElement: <FourOFour />,
+	},
+	{
+		path: "/form/:prefabName/answer",
+		element: <FormAnswer />,
 		errorElement: <FourOFour />,
 	},
 ]);

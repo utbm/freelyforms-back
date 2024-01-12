@@ -31,16 +31,16 @@ export const typeRulesIcons = [
 		label: "Date",
 		icon: BsCalendarDate,
 	},
-	{
-		name: "DATETIME",
-		label: "Date and time",
-		icon: BsCalendarDate,
-	},
-	{
-		name: "BOOLEAN",
-		label: "Boolean",
-		icon: BsToggles,
-	},
+	// {
+	// 	name: "DATETIME",
+	// 	label: "Date and time",
+	// 	icon: BsCalendarDate,
+	// },
+	// {
+	// 	name: "BOOLEAN",
+	// 	label: "Boolean",
+	// 	icon: BsToggles,
+	// },
 ] as const;
 
 export const PossibleAlternativeDisplays = [

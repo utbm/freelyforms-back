@@ -6,7 +6,7 @@ import { Group } from "./Group";
 import { prefabAtom, groupsAtom, fieldsAtom } from "./store";
 import { FC } from "react";
 import { Schemas } from "../../apiClient/client";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function removePropertiesRecursively<T extends object>(obj: T, propertiesToRemove: string[]): T {
@@ -74,6 +74,9 @@ export const PrefabCreation: FC<PrefabCreationProps> = ({ editionMode }) => {
 					<h2 className="text-2xl text-primary text-center">
 						{editionMode ? `Edit the form ${formName}` : "Create a form"}
 					</h2>
+					<Link to={`/form/${formName}/answers`} className="btn btn-primary mb-4 text-center">
+						See answers
+					</Link>
 					<BasicComponentInfo
 						type="prefab"
 						captionPlaceholder="A description about your form"

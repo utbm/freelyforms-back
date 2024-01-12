@@ -45,7 +45,7 @@ public class Generator {
         ArrayList<Group> groups = new ArrayList<>();
         groups.add(Group.builder().name("streetFields").label("Rue").caption("Données de rue").fields(streetFields).build());
         groups.add(Group.builder().name("cityFields").label("Ville").caption("Données de ville").fields(streetFields).build());
-        return new Prefab("streets", "Rues","", groups);
+        return new Prefab("streets", "Rues","Rues", groups);
     }
 
     /**
@@ -173,7 +173,7 @@ public class Generator {
         groups.add(technicalInformation);
         groups.add(feedbackInformation);
 
-        return Prefab.builder().name("cars").label("Formulaire sur les voitures").groups(groups).build();
+        return Prefab.builder().name("cars").label("Formulaire sur les voitures").caption("Formulaire sur les voitures").groups(groups).build();
 
     }
 

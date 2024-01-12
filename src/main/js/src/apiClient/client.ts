@@ -491,10 +491,10 @@ export const associatedTypesWithTypeRules = [
 		associatedType: "DATETIME",
 		typeRules: ["MaximumRule", "MinimumRule"],
 	},
-	{
-		associatedType: "BOOLEAN",
-		typeRules: [],
-	},
+	// {
+	// 	associatedType: "BOOLEAN",
+	// 	typeRules: [],
+	// },
 	{
 		associatedType: "SELECTOR",
 		typeRules: [
