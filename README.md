@@ -21,7 +21,7 @@ Sur un terminal
 
 Exécution du jar résultant :
 
-`java -jar .\target\freelyforms-1.0.0.jar`
+`java -jar target/freelyforms-1.0.0.jar`
 
 ## LANCEMENT DU FRONT-END :
 
