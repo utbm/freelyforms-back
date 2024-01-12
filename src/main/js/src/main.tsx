@@ -29,7 +29,7 @@ export const apiclient = createApiClient((method, url, params) => {
 		},
 		body: JSON.stringify(params),
 	});
-}, "http://localhost:8080");
+}, window.origin);
 const router = createBrowserRouter([
 	{
 		path: "/",

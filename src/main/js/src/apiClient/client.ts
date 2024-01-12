@@ -493,7 +493,7 @@ export const associatedTypesWithTypeRules = [
 	},
 	{
 		associatedType: "BOOLEAN",
-		typeRules: ["AlternativeDisplay"],
+		typeRules: [],
 	},
 	{
 		associatedType: "SELECTOR",
