@@ -54,4 +54,4 @@ La majeure partie du code front-end se trouve dans le dossier src/main/js/src/pa
 Le front-end fonctionne avec le back-end en local, car l'URL des requêtes est http://localhost:8080/.
 Si toutefois vous souhaitez utiliser codespace pour ce projet, il faudra changer l'URL des requêtes. 
 L'installation et configuration du projet peut s'avérer fastidieuse au début, l'utilisation de codespace 
-peut donc s'avérer pratique. Le lancement du back-end et front-end ne change pas avec codespace. 
+peut donc être pratique. Le lancement du back-end et front-end ne change pas avec codespace. 
