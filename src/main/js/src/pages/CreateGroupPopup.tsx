@@ -20,7 +20,7 @@ const CreateGroupPopup = ({ onSave, buttonRef }) => {
 
   const handleSave = () => {
     onSave(groupName);
-    // Reset the group name after saving 
+    // Reset the group name after  saving 
     setGroupName('');
   };
 
