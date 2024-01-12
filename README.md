@@ -1,4 +1,4 @@
-## Documentation minimale oooo
+## Documentation minimale
 
 - BACK_API_ROUTES.md - routes disponibles sur l'API
 - HELP.md - documents d'aide pour Spring Boot
@@ -8,12 +8,12 @@ Les classes et interfaces Java sont documentées ;
 consultez le code (format Javadoc) ou la documentation générée automatiquement
 (dossier doc).
 
-## Installation - Prod
+## Installation
 
 - Requis pour l'installation : Java 17, Spring Boot 2.7, Apache Maven 3.8, Node v18 et pnpm v8
 
 
-## LANCEMENT DU BACK-END : 
+## LANCEMENT DU BACK-END  
 
 Sur un terminal 
 
@@ -23,7 +23,7 @@ Exécution du jar résultant :
 
 `java -jar target/freelyforms-1.0.0.jar`
 
-## LANCEMENT DU FRONT-END :
+## LANCEMENT DU FRONT-END
 
 Sur un nouveau terminal
 
@@ -39,16 +39,19 @@ Lancer le front-end :
 
 `npm run dev`
 
+Ouvrir la page sur http://localhost:5173/
 
 
-## Base de données
+## Documentation A23
 
-Pour le développement vous pouvez utiliser une base de données locale ou une base de données partagées Atlas.
+Notre rapport et notre PPT sont consultables dans le dossier "doc-2023-geo" de ce repo.
 
-### Initialisation de la base de données
+Le rapport et les autres différents documents du précédent groupe sont dans le dossier "doc". 
 
-Consultez la classe Generator (fr.utbm.da50.freelyforms.core.service.Generator) pour créer des fichiers de configuration et des données de formulaire de test à insérer dans la base de donnée.
+## Remarques A23
 
-## Repository précédent
-
-le repository précédent est https://gitlab.com/freelyforms/freelyforms ; si vous en avez besoin (si vous voulez lire l'hsitorique des commits, des tâches, ou juste réutiliser le repo) n'hésitez surtout pas à demander l'accès. bon courage à vous :)
+La majeure partie du code front-end se trouve dans le dossier src/main/js/src/pages.
+Le front-end fonctionne avec le back-end quand on a installé le projet en local, car l'URL des requêtes est http://localhost:8080/.
+Si toutefois vous souhaitez utiliser codespace pour ce projet, il faudra changer l'URL des requêtes. 
+L'installation et configuration du projet peut s'avérer fastidieuse au début, l'utilisation de codespace 
+peut donc s'avérer pratique. Le lancement du back-end et front-end ne change pas avec codespace. 
