@@ -14,18 +14,18 @@
 ### **Points forts de React :**
 
 1. **Modèle de composants :**
-    - **Réutilisabilité :** La structure de composants de React permet une réutilisation facile du code.
-    - **Facilité de maintenance :** Les composants modulaires simplifient la maintenance et les mises à jour.
-    - **JSX :** Le HTML est déclaré dans le JS. Tout est du JS, rien est réapprendre
+   - **Réutilisabilité :** La structure de composants de React permet une réutilisation facile du code.
+   - **Facilité de maintenance :** Les composants modulaires simplifient la maintenance et les mises à jour.
+   - **JSX :** Le HTML est déclaré dans le JS. Tout est du JS, rien est réapprendre
 2. **Large communauté et écosystème :**
-    - **Support communautaire :** Une communauté active, offrant de nombreuses ressources, bibliothèques et outils pour faciliter le développement.
+   - **Support communautaire :** Une communauté active, offrant de nombreuses ressources, bibliothèques et outils pour faciliter le développement.
 
 ### **Points faibles de React :**
 
 1. **Taille de l'écosystème :**
-    - **Surabondance d'options :** La grande quantité de bibliothèques et d'outils peut parfois rendre difficile le choix de la meilleure solution pour un besoin spécifique. Angular propose par exemple directement des solutions out of the box.
-    - Le développeur est laissé dans la jungle de ces librairies et doit faire le choix lui-même où utiliser un meta-framework comme Next (qui présente lui aussi beaucoup de points négatifs)
-    - Le fait que tout soit du Javascript permet une trop grande liberté et peut laisser les débutants développer des composants qui sont des anti-patterns. (à expliquer ptetre)
+   - **Surabondance d'options :** La grande quantité de bibliothèques et d'outils peut parfois rendre difficile le choix de la meilleure solution pour un besoin spécifique. Angular propose par exemple directement des solutions out of the box.
+   - Le développeur est laissé dans la jungle de ces librairies et doit faire le choix lui-même où utiliser un meta-framework comme Next (qui présente lui aussi beaucoup de points négatifs)
+   - Le fait que tout soit du Javascript permet une trop grande liberté et peut laisser les débutants développer des composants qui sont des anti-patterns. (à expliquer ptetre)
 
 ### **Argumentation du choix :**
 
