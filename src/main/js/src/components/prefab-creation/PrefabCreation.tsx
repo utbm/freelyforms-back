@@ -74,12 +74,16 @@ export const PrefabCreation: FC<PrefabCreationProps> = ({ editionMode }) => {
 					<h2 className="text-2xl text-primary text-center">
 						{editionMode ? `Edit the form ${formName}` : "Create a form"}
 					</h2>
-					<Link to={`/form/${formName}/answers`} className="btn btn-primary mb-4 text-center mr-2">
-						See answers
-					</Link>
-					<Link to={`/form/${formName}/answer`} className="btn btn-primary mb-4 text-center">
-						Answer to form
-					</Link>
+					{editionMode && (
+						<>
+							<Link to={`/form/${formName}/answers`} className="btn btn-primary mb-4 text-center mr-2">
+								See answers
+							</Link>
+							<Link to={`/form/${formName}/answer`} className="btn btn-primary mb-4 text-center">
+								Answer to form
+							</Link>
+						</>
+					)}
 					<BasicComponentInfo
 						type="prefab"
 						captionPlaceholder="A description about your form"
