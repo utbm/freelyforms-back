@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "ea7985d2-11b1-4a23-a91e-0bf93d1dbbd2",
+		"name": "freelyforms-back",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "prefabs",
+			"item": [
+				{
+					"name": "all prefabs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/prefabs/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get streets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/prefabs/streets",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs",
+								"streets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch streets",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"_id\": {\n        \"timestamp\": 1672658810,\n        \"date\": \"2023-01-02T11:26:50.000+00:00\"\n    },\n    \"name\": \"streets\",\n    \"caption\": \"\",\n    \"label\": \"Rues\",\n    \"groups\": [\n        {\n            \"name\": \"streetFields\",\n            \"label\": \"Rue\",\n            \"caption\": \"Données dgzesdvgbzerqg dscgdsfgcd fxcerdf credcfcsdfcsdxe rue\",\n            \"fields\": [\n                {\n                    \"name\": \"number\",\n                    \"label\": \"Numéro\",\n                    \"caption\": \"16\",\n                    \"rules\": {\n                        \"optional\": false,\n                        \"excludes\": [],\n                        \"typeRules\": [\n                            {\n                                \"name\": \"fr.utbm.da50.freelyforms.core.entity.prefab.rule.MinimumRule\",\n                                \"associatedTypes\": [\n                                    \"INTEGER\",\n                                    \"FLOAT\",\n                                    \"STRING\",\n                                    \"DATE\",\n                                    \"DATETIME\"\n                                ],\n                                \"value\": \"0\",\n                                \"name\": \"MinimumRule\"\n                            }\n                        ],\n                        \"hidden\": false,\n                        \"selectorValues\": [],\n                        \"fieldType\": \"INTEGER\"\n                    }\n                },\n                {\n                    \"name\": \"streetName\",\n                    \"label\": \"Rue\",\n                    \"caption\": \"Allée des maraîchers\",\n                    \"rules\": {\n                        \"optional\": false,\n                        \"excludes\": [],\n                        \"typeRules\": [\n                            {\n                                \"name\": \"fr.utbm.da50.freelyforms.core.entity.prefab.rule.MaximumRule\",\n                                \"associatedTypes\": [\n                                    \"INTEGER\",\n                                    \"FLOAT\",\n                                    \"STRING\",\n                                    \"DATE\",\n                                    \"DATETIME\"\n                                ],\n                                \"value\": \"30\",\n                                \"name\": \"MaximumRule\"\n                            }\n                        ],\n                        \"hidden\": false,\n                        \"selectorValues\": [],\n                        \"fieldType\": \"STRING\"\n                    }\n                }\n            ]\n        },\n        {\n            \"name\": \"cityFields\",\n            \"label\": \"Ville\",\n            \"caption\": \"Données de ville\",\n            \"fields\": [\n                {\n                    \"name\": \"number\",\n                    \"label\": \"Numéro\",\n                    \"caption\": \"16\",\n                    \"rules\": {\n                        \"optional\": false,\n                        \"excludes\": [],\n                        \"typeRules\": [\n                            {\n                                \"name\": \"fr.utbm.da50.freelyforms.core.entity.prefab.rule.MinimumRule\",\n                                \"associatedTypes\": [\n                                    \"INTEGER\",\n                                    \"FLOAT\",\n                                    \"STRING\",\n                                    \"DATE\",\n                                    \"DATETIME\"\n                                ],\n                                \"value\": \"0\",\n                                \"name\": \"MinimumRule\"\n                            }\n                        ],\n                        \"hidden\": false,\n                        \"selectorValues\": [],\n                        \"fieldType\": \"INTEGER\"\n                    }\n                },\n                {\n                    \"name\": \"streetName\",\n                    \"label\": \"Rue\",\n                    \"caption\": \"Allée des maraîchers\",\n                    \"rules\": {\n                        \"optional\": false,\n                        \"excludes\": [],\n                        \"typeRules\": [\n                            {\n                                \"name\": \"fr.utbm.da50.freelyforms.core.entity.prefab.rule.MaximumRule\",\n                                \"associatedTypes\": [\n                                    \"INTEGER\",\n                                    \"FLOAT\",\n                                    \"STRING\",\n                                    \"DATE\",\n                                    \"DATETIME\"\n                                ],\n                                \"value\": \"30\",\n                                \"name\": \"MaximumRule\"\n                            }\n                        ],\n                        \"hidden\": false,\n                        \"selectorValues\": [],\n                        \"fieldType\": \"STRING\"\n                    }\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/prefabs/streets",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs",
+								"streets"
+							],
+							"query": [
+								{
+									"key": "prefab",
+									"value": "%7B%22prefab%22%3A%7B%0A%20%20%20%20%22name%22%3A%20%22cows%22%2C%0A%20%20%20%20%22label%22%3A%20%22Cows%22%2C%0A%20%20%20%20%22caption%22%3A%20%22cowscowscows%22%2C%0A%20%20%20%20%22groups%22%3A%20%5B%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22group1%22%2C%0A%20%20%20%20%20%20%20%20%22label%22%3A%20%22Main%20field%20croup%22%2C%0A%20%20%20%20%20%20%20%20%22fields%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%3A%20%22field1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22label%22%3A%20%22field1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22optional%22%3A%20%22true%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rules%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22fieldType%22%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22optional%22%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%3A%20%22field2%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22label%22%3A%20%22field2%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rules%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22fieldType%22%3A%20%22SELECT%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22hidden%22%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%20%20%7D%0A%7D",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get users (prefab)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/prefabs/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post users (prefab)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"name\": \"users\",\n  \"caption\": \"\",\n  \"label\": \"Utilisateurs\",\n  \"groups\": [\n    {\n      \"name\": \"identitygroup\",\n      \"label\": \"Utilisateur\",\n      \"caption\": \"Données d'utilisateur\",\n      \"fields\": [\n        {\n          \"name\": \"age\",\n          \"label\": \"Âge\",\n          \"caption\": \"16\",\n          \"rules\": {\n            \"selectorValues\": [],\n            \"fieldType\": \"INTEGER\"\n          }\n        },\n        {\n          \"name\": \"firstname\",\n          \"label\": \"Prénom\",\n          \"caption\": \"Line\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"STRING\"\n          }\n        },\n        {\n          \"name\": \"lastname\",\n          \"label\": \"Nom\",\n          \"caption\": \"Enil\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"STRING\"\n          }\n        },\n        {\n          \"name\": \"companyname\",\n          \"label\": \"Nom d'entreprise\",\n          \"caption\": \"SuperEntreprise\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"STRING\"\n          }\n        }\n      ]\n    },\n    {\n      \"name\": \"rolegroup\",\n      \"label\": \"Rôle\",\n      \"caption\": \"\",\n      \"fields\": [\n        {\n          \"name\": \"verified\",\n          \"label\": \"Vérifié\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"BOOLEAN\"\n          }\n        },\n        {\n          \"name\": \"hiringDate\",\n          \"label\": \"Date d'embauche\",\n          \"caption\": \"yyyy/mm/dd\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"DATE\"\n          }\n        },\n        {\n          \"name\": \"role\",\n          \"label\": \"Rôle\",\n          \"caption\": \"UI/UX Designer\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"selectorValues\": [\n              \"LEADER\", \"HR MANAGER\", \"UI/UX DESIGNER\", \"PROJECT MANAGER\", \"BACKEND DEVELOPER\", \"FRONTEND DEVELOPER\", \"FULL STACK DESIGNER\"\n            ],\n            \"fieldType\": \"SELECTOR\"\n          }\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/prefabs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs"
+							],
+							"query": [
+								{
+									"key": "prefab",
+									"value": "%7B%22prefab%22%3A%7B%0A%20%20%20%20%22name%22%3A%20%22cows%22%2C%0A%20%20%20%20%22label%22%3A%20%22Cows%22%2C%0A%20%20%20%20%22caption%22%3A%20%22cowscowscows%22%2C%0A%20%20%20%20%22groups%22%3A%20%5B%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22group1%22%2C%0A%20%20%20%20%20%20%20%20%22label%22%3A%20%22Main%20field%20croup%22%2C%0A%20%20%20%20%20%20%20%20%22fields%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%3A%20%22field1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22label%22%3A%20%22field1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22optional%22%3A%20%22true%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rules%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22fieldType%22%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22optional%22%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%3A%20%22field2%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22label%22%3A%20%22field2%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rules%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22fieldType%22%3A%20%22SELECT%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22hidden%22%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%20%20%7D%0A%7D",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch users (prefab)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"name\": \"users\",\n  \"caption\": \"\",\n  \"label\": \"Utilisateurs\",\n  \"groups\": [\n    {\n      \"name\": \"identitygroup\",\n      \"label\": \"Utilisateur\",\n      \"caption\": \"Données cd'utilisateur 2\",\n      \"fields\": [\n        {\n          \"name\": \"age\",\n          \"label\": \"Âge\",\n          \"caption\": \"16\",\n          \"rules\": {\n            \"selectorValues\": [],\n            \"fieldType\": \"INTEGER\"\n          }\n        },\n        {\n          \"name\": \"firstname\",\n          \"label\": \"Prénom\",\n          \"caption\": \"Line\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"STRING\"\n          }\n        },\n        {\n          \"name\": \"lastname\",\n          \"label\": \"Nom\",\n          \"caption\": \"Enil\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"STRING\"\n          }\n        },\n        {\n          \"name\": \"companyname\",\n          \"label\": \"Nom d'entreprise\",\n          \"caption\": \"SuperEntreprise\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"STRING\"\n          }\n        }\n      ]\n    },\n    {\n      \"name\": \"rolegroup\",\n      \"label\": \"Rôle\",\n      \"caption\": \"\",\n      \"fields\": [\n        {\n          \"name\": \"verified\",\n          \"label\": \"Vérifié\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"BOOLEAN\"\n          }\n        },\n        {\n          \"name\": \"hiringDate\",\n          \"label\": \"Date d'embauche\",\n          \"caption\": \"yyyy/mm/dd\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"fieldType\": \"DATE\"\n          }\n        },\n        {\n          \"name\": \"role\",\n          \"label\": \"Rôle\",\n          \"caption\": \"UI/UX Designer\",\n          \"rules\": {\n            \"optional\": false,\n            \"hidden\": false,\n            \"selectorValues\": [\n              \"LEADER\", \"HR MANAGER\", \"UI/UX DESIGNER\", \"PROJECT MANAGER\", \"BACKEND DEVELOPER\", \"FRONTEND DEVELOPER\", \"FULL STACK DESIGNER\"\n            ],\n            \"fieldType\": \"SELECTOR\"\n          }\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/prefabs/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs",
+								"users"
+							],
+							"query": [
+								{
+									"key": "prefab",
+									"value": "%7B%22prefab%22%3A%7B%0A%20%20%20%20%22name%22%3A%20%22cows%22%2C%0A%20%20%20%20%22label%22%3A%20%22Cows%22%2C%0A%20%20%20%20%22caption%22%3A%20%22cowscowscows%22%2C%0A%20%20%20%20%22groups%22%3A%20%5B%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22group1%22%2C%0A%20%20%20%20%20%20%20%20%22label%22%3A%20%22Main%20field%20croup%22%2C%0A%20%20%20%20%20%20%20%20%22fields%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%3A%20%22field1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22label%22%3A%20%22field1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22optional%22%3A%20%22true%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rules%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22fieldType%22%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22optional%22%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%3A%20%22field2%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22label%22%3A%20%22field2%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22rules%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22fieldType%22%3A%20%22SELECT%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22hidden%22%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%20%20%7D%0A%7D",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete users (prefab)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/prefabs/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prefabs",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "formdata",
+			"item": [
+				{
+					"name": "Get Streets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/formdata/streets",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"formdata",
+								"streets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
