@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-FreelyFormsApplication<freelyforms>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "fr.utbm.da50.freelyforms.core.FreelyFormsApplication",
+            "projectName": "freelyforms",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

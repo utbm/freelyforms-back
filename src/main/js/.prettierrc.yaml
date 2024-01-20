@@ -1,0 +1,8 @@
+trailingComma: "all"
+semi: true
+printWidth: 120
+singleQuote: false
+tabWidth: 2
+useTabs: true
+endOfLine: "auto"
+arrowParens: "always"

@@ -1,0 +1,8 @@
+fr.utbm.da50.freelyforms.core
+fr.utbm.da50.freelyforms.core.controller
+fr.utbm.da50.freelyforms.core.entity
+fr.utbm.da50.freelyforms.core.entity.formdata
+fr.utbm.da50.freelyforms.core.entity.prefab
+fr.utbm.da50.freelyforms.core.entity.prefab.rule
+fr.utbm.da50.freelyforms.core.repository
+fr.utbm.da50.freelyforms.core.service
