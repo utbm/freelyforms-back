@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: springboot_app
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - ~/.m2:/root/.m2 # Cache Maven dependencies
+    environment:
+      - SPRING_DEVTOOLS_REMOTE_ENABLED=true
+      - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
+    command: "./mvnw spring-boot:run"
