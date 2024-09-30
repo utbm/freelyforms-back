@@ -8,6 +8,7 @@ class FreelyformApplicationTests {
 
 	@Test
 	void contextLoads() {
+		assert "pedro".equals("pedro");
 	}
 
 }
