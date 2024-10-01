@@ -43,5 +43,15 @@ Want to check or manipulate the data in your MongoDB instance? No problem! Simpl
 
 This provides an easy-to-use interface for your database operations. 🗃️
 
+---
+
+## 📚 **API Documentation**
+
+Dive into the API and interact with its endpoints seamlessly through **Swagger UI**! Explore, test, and experiment:
+
+🔗 **[Swagger UI - API Documentation](http://localhost:8080/swagger-ui/index.html)**
+
+Click the link to access the interactive documentation and start making requests directly from your browser! 🚀
+
 
 
