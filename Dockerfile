@@ -1,6 +1,10 @@
 #Official OpenJDK runtime as a parent image
 FROM openjdk:21-jdk-slim
-WORKDIR /app
+
+ENV HOME=/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
 
 # Copy the project's build files (for Maven)
 COPY ./pom.xml ./
