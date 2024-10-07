@@ -2,7 +2,8 @@
   "name": "Spring Boot & MongoDB",
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "app",
-  "workspaceFolder": "/workspaces/freelyforms-back/",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "image": "ubuntu:focal",
   "extensions": [
     "vscjava.vscode-java-pack",
     "ms-azuretools.vscode-docker"
