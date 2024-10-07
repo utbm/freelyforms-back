@@ -8,11 +8,7 @@
 
 Get the project up and running in just a few steps:
 
-1. Set up the environment variables by copying the example file:
-   ```bash
-   cp .env.example .env
-    ```
-2. Start the Dockerized application : 
+1. Start the Dockerized application : 
     ```bash
    docker compose up
    ```
