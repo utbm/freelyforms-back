@@ -7,6 +7,9 @@
     "vscjava.vscode-java-pack",
     "ms-azuretools.vscode-docker"
   ],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {}
+  },
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"
   },
