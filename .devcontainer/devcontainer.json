@@ -2,7 +2,7 @@
   "name": "Spring Boot & MongoDB",
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "app",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "${containerWorkspaceFolder}",
   "extensions": [
     "vscjava.vscode-java-pack",
     "ms-azuretools.vscode-docker"
