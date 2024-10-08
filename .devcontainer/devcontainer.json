@@ -1,20 +1,17 @@
 {
-  "name": "Spring Boot & MongoDB",
+  "name": "Spring Boot with MongoDB",
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "app",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "image": "ubuntu:focal",
-  "extensions": [
-    "vscjava.vscode-java-pack",
-    "ms-azuretools.vscode-docker"
-  ],
-  "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:1": {}
-  },
+  "workspaceFolder": "/app",
+  "forwardPorts": [8080, 8081, 27017],
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"
   },
-  "forwardPorts": [8080, 8081, 27017],
-  "postCreateCommand": "docker-compose up --build",
-  "shutdownAction": "stopCompose"
+  "extensions": [
+    "vscjava.vscode-spring-boot",
+    "mongodb.mongodb-vscode",
+    "ms-azuretools.vscode-docker"
+  ],
+  "postCreateCommand": "mvn clean install",
+  "remoteUser": "vscode"
 }
