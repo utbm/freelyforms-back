@@ -1,8 +1,8 @@
 {
   "name": "Spring Boot with MongoDB",
-  "dockerComposeFile": ["../docker-compose.yml"],
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
-  "workspaceFolder": "/app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "forwardPorts": [8080, 8081, 27017],
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"
@@ -12,6 +12,7 @@
     "mongodb.mongodb-vscode",
     "ms-azuretools.vscode-docker"
   ],
-  "postCreateCommand": "mvn clean install",
+  "postCreateCommand": "docker-compose up --build",
+  "shutdownAction": "stopCompose",
   "remoteUser": "vscode"
 }
