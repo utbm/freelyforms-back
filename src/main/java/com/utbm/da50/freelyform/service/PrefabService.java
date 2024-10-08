@@ -18,4 +18,21 @@ public class PrefabService {
     public Prefab createPrefab(Prefab newPrefab) {
         return repository.save(newPrefab);
     }
+
+    public Prefab updatePrefab(String id, Prefab prefab) {
+        Prefab existingPrefab = repository.findById(id).orElse(null);
+        assert existingPrefab != null;
+        existingPrefab.setName(prefab.getName());
+        existingPrefab.setDescription(prefab.getDescription());
+        existingPrefab.setTags(prefab.getTags());
+        return repository.save(existingPrefab);
+    }
+
+    public void deletePrefab(String id) {
+        repository.deleteById(id);
+    }
+
+    public Prefab getPrefab(String id) {
+        return repository.findById(id).orElse(null);
+    }
 }

@@ -23,13 +23,45 @@ public class PrefabController {
         return service.getAllPrefabs().stream().map(Prefab::toRest).collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public PrefabInput getPrefab(@PathVariable String id) {
+        try {
+            return service.getPrefab(id).toRest();
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
+    }
+
     @PostMapping("")
     @ResponseBody
-    public PrefabInput createPrefab(@RequestBody PrefabInput newPrefab){
+    public PrefabInput createPrefab(@RequestBody PrefabInput newPrefab){// todo remove from prefabInput, groups
         try {
             return service.createPrefab(newPrefab.toPrefab()).toRest();
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public PrefabInput updatePrefab(@PathVariable String id, @RequestBody PrefabInput prefabInput) {
+        try {
+            return service.updatePrefab(id, prefabInput.toPrefab()).toRest();
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deletePrefab(@PathVariable String id) {
+        try {
+            service.deletePrefab(id);
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
+    }
+
+    
 }
