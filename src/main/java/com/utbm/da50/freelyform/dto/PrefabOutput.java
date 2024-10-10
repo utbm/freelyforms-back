@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,9 +13,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PrefabOutput extends PrefabInput{
-    String id;
-    public PrefabOutput(String id, String name, String description, String[] tags, List<GroupInput> groups) {
+    private String id;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public PrefabOutput(String id, String name, String description,
+                        LocalDateTime createdAt, LocalDateTime updatedAt,
+                        String[] tags, List<GroupInput> groups) {
         super(name, description, tags, groups);
         this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
