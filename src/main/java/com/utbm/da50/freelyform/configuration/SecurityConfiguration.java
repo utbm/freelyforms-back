@@ -26,7 +26,7 @@ public class SecurityConfiguration {
                 .headers().frameOptions().disable() // Disable X-Frame-Options
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/**","/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/v1/**","/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
