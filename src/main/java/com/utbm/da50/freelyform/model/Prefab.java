@@ -30,10 +30,11 @@ public class Prefab {
     private List<Group> groups;
 
     @CreatedDate
-    private LocalDateTime creationDate;
+    @Setter
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updateDate;
+    private LocalDateTime updatedAt;
 
     @Builder
     public Prefab(String name, String description, String[] tags, List<Group> groups) {
@@ -48,6 +49,8 @@ public class Prefab {
                 id,
                 name,
                 description,
+                createdAt,
+                updatedAt,
                 tags,
                 groups.stream().map(Group::toRest).collect(Collectors.toList())
         );
