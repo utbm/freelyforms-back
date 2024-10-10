@@ -21,10 +21,13 @@ public class PrefabService {
 
     public Prefab updatePrefab(String id, Prefab prefab) {
         Prefab existingPrefab = repository.findById(id).orElse(null);
-        assert existingPrefab != null;
+        if (existingPrefab == null) {
+            throw new IllegalArgumentException("Prefab not found");
+        }
         existingPrefab.setName(prefab.getName());
         existingPrefab.setDescription(prefab.getDescription());
         existingPrefab.setTags(prefab.getTags());
+        existingPrefab.setGroups(prefab.getGroups());
         return repository.save(existingPrefab);
     }
 
