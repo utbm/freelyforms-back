@@ -25,6 +25,14 @@ public class JwtTokenService {
     private static final int TOKEN_DURATION = 1000*60*60*48; // 48 hours
 
 
+    public String getKey() {
+        return SECRET_KEY;
+    }
+
+    public void setKey(String SECRET_KEY) {
+        this.SECRET_KEY = SECRET_KEY;
+    }
+
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -76,7 +84,7 @@ public class JwtTokenService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwt));
     }
 
-    private boolean isTokenExpired(String jwt) {
+    public boolean isTokenExpired(String jwt) {
         return extractExpiration(jwt).before(new Date());
     }
 

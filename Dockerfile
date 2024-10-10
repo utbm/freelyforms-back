@@ -15,8 +15,8 @@ COPY .mvn/ .mvn
 COPY mvnw ./
 RUN chmod +x mvnw
 
-# Package the application (this will also run tests)
-RUN ./mvnw package -DskipTests
+# Package the application
+RUN ./mvnw package
 
 # Run the app
 CMD ["./mvnw", "spring-boot:run"]
