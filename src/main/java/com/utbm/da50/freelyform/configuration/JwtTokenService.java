@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,9 @@ import java.util.function.Function;
 @Service
 public class JwtTokenService {
 
-    // Get secret key from .env file
-    private static final String SECRET_KEY = System.getenv("JWT_SECRET");
+    // Get secret key from properties file
+    @Value("${jwt_secret}")
+    private String SECRET_KEY;
     private static final int TOKEN_DURATION = 1000*60*60*48; // 48 hours
 
 
