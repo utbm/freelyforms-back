@@ -1,31 +1,39 @@
 package com.utbm.da50.freelyform.model;
 
+import com.utbm.da50.freelyform.dto.PrefabOutput;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import com.utbm.da50.freelyform.dto.PrefabInput;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // Make the all-args constructor private
 @NoArgsConstructor
-@Document("prefabs")
+@Document(collection = "prefabs")
 @Builder
 public class Prefab {
     @Id
-    @Getter
     private String id;
-    @Getter
     @Setter
     private String name;
-    @Getter
     @Setter
     private String description;
-    @Getter
     @Setter
     private String[] tags;
+
+    @Setter
     private List<Group> groups;
+
+    @CreatedDate
+    private LocalDateTime creationDate;
+
+    @LastModifiedDate
+    private LocalDateTime updateDate;
 
     @Builder
     public Prefab(String name, String description, String[] tags, List<Group> groups) {
@@ -35,8 +43,8 @@ public class Prefab {
         this.groups = groups;
     }
 
-    public PrefabInput toRest() {
-        return new PrefabInput(
+    public PrefabOutput toRest() {
+        return new PrefabOutput(
                 id,
                 name,
                 description,

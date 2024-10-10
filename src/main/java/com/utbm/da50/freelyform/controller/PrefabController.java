@@ -1,10 +1,12 @@
 package com.utbm.da50.freelyform.controller;
 
 import com.utbm.da50.freelyform.dto.PrefabInput;
+import com.utbm.da50.freelyform.dto.PrefabOutput;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.service.PrefabService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,15 +21,15 @@ public class PrefabController {
 
     @GetMapping("")
     @ResponseBody
-    public List<PrefabInput> getAllPrefabs() {
-        return service.getAllPrefabs().stream().map(Prefab::toRest).collect(Collectors.toList());
+    public ResponseEntity<List<PrefabOutput>> getAllPrefabs() {
+        return ResponseEntity.ok(service.getAllPrefabs().stream().map(Prefab::toRest).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public PrefabInput getPrefab(@PathVariable String id) {
+    public ResponseEntity<PrefabOutput> getPrefab(@PathVariable String id) {
         try {
-            return service.getPrefab(id).toRest();
+            return ResponseEntity.ok(service.getPrefab(id).toRest());
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
@@ -35,9 +37,9 @@ public class PrefabController {
 
     @PostMapping("")
     @ResponseBody
-    public PrefabInput createPrefab(@RequestBody PrefabInput newPrefab){// todo remove from prefabInput, groups
+    public ResponseEntity<PrefabInput> createPrefab(@RequestBody PrefabInput newPrefab){
         try {
-            return service.createPrefab(newPrefab.toPrefab()).toRest();
+            return ResponseEntity.ok(service.createPrefab(newPrefab.toPrefab()).toRest());
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
@@ -45,9 +47,9 @@ public class PrefabController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public PrefabInput updatePrefab(@PathVariable String id, @RequestBody PrefabInput prefabInput) {
+    public ResponseEntity<PrefabInput> updatePrefab(@PathVariable String id, @RequestBody PrefabInput pref) {
         try {
-            return service.updatePrefab(id, prefabInput.toPrefab()).toRest();
+            return ResponseEntity.ok(service.updatePrefab(id, pref.toPrefab()).toRest());
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
@@ -55,9 +57,9 @@ public class PrefabController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public void deletePrefab(@PathVariable String id) {
+    public ResponseEntity<PrefabOutput> deletePrefab(@PathVariable String id) {
         try {
-            service.deletePrefab(id);
+            return ResponseEntity.ok(service.deletePrefab(id).toRest());
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }

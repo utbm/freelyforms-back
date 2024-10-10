@@ -28,8 +28,13 @@ public class PrefabService {
         return repository.save(existingPrefab);
     }
 
-    public void deletePrefab(String id) {
+    public Prefab deletePrefab(String id) {
+        Prefab prefabToDelete = repository.findById(id).orElse(null);
+        if (prefabToDelete == null) {
+            throw new IllegalArgumentException("Prefab not found");
+        }
         repository.deleteById(id);
+        return prefabToDelete;
     }
 
     public Prefab getPrefab(String id) {
