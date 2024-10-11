@@ -23,10 +23,10 @@ public class SecurityConfiguration {
 
         http
                 .csrf().disable()
-                .headers().frameOptions().disable()
+                .headers().frameOptions().disable() // Disable X-Frame-Options
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/**", "/v1/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll() // Include "/v1/**"
+                .requestMatchers("/v1/**","/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
