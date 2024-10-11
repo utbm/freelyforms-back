@@ -1,6 +1,5 @@
 package com.utbm.da50.freelyform.dto.answer;
 
-import com.utbm.da50.freelyform.enums.UserStatus;
 import com.utbm.da50.freelyform.model.AnswerQuestion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnswerRequest {
-    private UserStatus userStatus;
     private String userName;
     private List<AnswerQuestion> questions;
 }

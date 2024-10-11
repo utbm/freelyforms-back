@@ -1,7 +1,6 @@
 package com.utbm.da50.freelyform.model;
 
 import com.mongodb.lang.NonNull;
-import com.utbm.da50.freelyform.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,6 @@ import java.util.List;
 public class AnswerGroup {
     @NonNull
     private String prefabId;
-    @NonNull
-    private UserStatus userStatus;
     private String userName;
     private List<AnswerQuestion> questions;
 }

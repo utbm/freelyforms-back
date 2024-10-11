@@ -9,8 +9,8 @@ public class AnswerQuestion {
     private String question;
     private Object answer;
 
-    public AnswerQuestion(Object answer, String question) {
-        this.answer = answer;
+    public AnswerQuestion(@NonNull String question, Object answer) {
         this.question = question;
+        this.answer = answer;
     }
 }
