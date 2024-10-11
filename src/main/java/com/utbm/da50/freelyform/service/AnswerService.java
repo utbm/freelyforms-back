@@ -29,11 +29,11 @@ public class AnswerService {
         answerRepository.save(answerGroup);
     }
 
-    public AnswerGroup getAnswerGroup(String prefabId, String userName) {
-        return answerRepository.findByPrefabIdAndUserName(prefabId, userName)
+    public AnswerGroup getAnswerGroup(String prefabId, String answerId) {
+        return answerRepository.findByPrefabIdAndId(prefabId, answerId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("No response found for prefabId '%s' and username '%s'.", prefabId, userName)
+                        String.format("No response found for prefabId '%s' and answerId '%s'.", prefabId, answerId)
                 ));
     }
 
@@ -41,7 +41,7 @@ public class AnswerService {
         if(StringUtils.isNotBlank(userName) && answerRepository.existsByPrefabIdAndUserName(prefabId, userName)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    String.format("A response with prefabId '%s' and username '%s' already exists.",
+                    String.format("A response with prefabId '%s' and userName '%s' already exists.",
                             prefabId, userName)
             );
         }

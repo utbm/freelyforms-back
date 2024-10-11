@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface AnswerRepository extends MongoRepository<AnswerGroup, String> {
     boolean existsByPrefabIdAndUserName(String prefabId, String userName);
 
-    Optional<AnswerGroup> findByPrefabIdAndUserName(String prefabId, String userName);
+    Optional<AnswerGroup> findByPrefabIdAndId(String prefabId, String answerId);
 }

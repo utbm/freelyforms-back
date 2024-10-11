@@ -19,8 +19,8 @@ public class AnswerController {
         answerService.processAnswer(prefab_id, request);
     }
 
-    @GetMapping("/{prefab_id}/{username}")
-    public AnswerGroup getAnswer(@PathVariable String prefab_id, @PathVariable String username) {
-        return answerService.getAnswerGroup(prefab_id, username);
+    @GetMapping("/{prefab_id}/{answer_id}")
+    public AnswerGroup getAnswer(@PathVariable String prefab_id, @PathVariable String answer_id) {
+        return answerService.getAnswerGroup(prefab_id, answer_id);
     }
 }
