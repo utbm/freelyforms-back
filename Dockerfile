@@ -5,7 +5,6 @@ ENV HOME=/app
 RUN mkdir -p $HOME
 WORKDIR $HOME
 
-
 # Copy the project's build files (for Maven)
 COPY ./pom.xml ./
 COPY ./src ./src
