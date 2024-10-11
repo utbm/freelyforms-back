@@ -2,6 +2,7 @@ package com.utbm.da50.freelyform.controller;
 
 import com.utbm.da50.freelyform.dto.PrefabInput;
 import com.utbm.da50.freelyform.dto.PrefabOutput;
+import com.utbm.da50.freelyform.exceptions.ValidationFieldException;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.service.PrefabService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class PrefabController {
     private final PrefabService service;
 
     @Autowired
-    public PrefabController( PrefabService service) {
+    public PrefabController(PrefabService service) {
         this.service = service;
     }
 
@@ -63,7 +64,7 @@ public class PrefabController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @ResponseBody
-    public ResponseEntity<PrefabOutput> createPrefab(@RequestBody PrefabInput newPrefab){
+    public ResponseEntity<PrefabOutput> createPrefab(@RequestBody PrefabInput newPrefab) throws ValidationFieldException {
         try {
             return ResponseEntity.ok(service.createPrefab(newPrefab.toPrefab()).toRest());
         } catch (NoSuchElementException exception) {
@@ -79,7 +80,7 @@ public class PrefabController {
     })
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<PrefabOutput> updatePrefab(@PathVariable String id, @RequestBody PrefabInput pref) {
+    public ResponseEntity<PrefabOutput> updatePrefab(@PathVariable String id, @RequestBody PrefabInput pref) throws ValidationFieldException{
         try {
             return ResponseEntity.ok(service.updatePrefab(id, pref.toPrefab()).toRest());
         } catch (NoSuchElementException exception) {

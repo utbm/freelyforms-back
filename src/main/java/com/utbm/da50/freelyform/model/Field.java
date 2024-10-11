@@ -29,7 +29,7 @@ public class Field {
     @Setter
     private List<Rule> validationRules;
     @Setter
-    private Object options;
+    private Option options;
 
     public FieldInput toRest() {
         return new FieldInput(

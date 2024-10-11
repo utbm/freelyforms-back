@@ -2,6 +2,7 @@ package com.utbm.da50.freelyform.dto;
 
 import com.utbm.da50.freelyform.enums.TypeField;
 import com.utbm.da50.freelyform.model.Field;
+import com.utbm.da50.freelyform.model.Option;
 import lombok.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class FieldInput {
     private boolean optional;
     private boolean hidden;
     private List<ValidationRuleInput> validationRules;
-    private Object options;
+    private Option options;
 
     public Field toField() {
         return new Field(
