@@ -2,26 +2,25 @@ version: '3.8'
 
 services:
 
-  # Backend
   app:
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile
-    container_name: springboot_app
     env_file: ./.env
+    container_name: springboot_app
+    volumes:
+      - ./:/app
+      - ./.m2:/root/.m2
+    working_dir: /app
+    command: sh run.sh
     ports:
       - "8080:8080"
-    volumes:
-      - .:/app
-      - ~/.m2:/root/.m2 # Cache Maven dependencies
+      - "35729:35729"
+      - "5005:5005"
     environment:
       SPRING_APPLICATION_JSON: '{
-                "spring.data.mongodb.uri" : "mongodb://$MONGODB_USER:$MONGODB_PASSWORD@mongodb:$MONGODB_DOCKER_PORT/$MONGODB_DATABASE?authSource=admin"
-              }'
-
-    command: "./mvnw spring-boot:run"
-    stdin_open: true
-    tty: true
+                      "spring.data.mongodb.uri" : "mongodb://$MONGODB_USER:$MONGODB_PASSWORD@mongodb:$MONGODB_DOCKER_PORT/$MONGODB_DATABASE?authSource=admin"
+            }'
     depends_on:
       - mongodb
 
