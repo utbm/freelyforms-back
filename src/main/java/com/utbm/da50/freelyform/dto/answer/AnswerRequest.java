@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnswerRequest {
-    private String userName;
+    private String token;
     private List<AnswerQuestion> questions;
 }

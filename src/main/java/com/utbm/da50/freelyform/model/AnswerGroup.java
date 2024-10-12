@@ -20,6 +20,6 @@ public class AnswerGroup {
 
     @NonNull
     private String prefabId;
-    private String userName;
+    private String token;
     private List<AnswerQuestion> questions;
 }

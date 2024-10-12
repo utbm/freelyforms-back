@@ -18,12 +18,12 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
 
     public void processAnswer(String prefabId, @NonNull AnswerRequest request) {
-        String userName = request.getUserName();
-        validateUniqueUserResponse(prefabId, userName);
+        String token = request.getToken();
+        validateUniqueUserResponse(prefabId, token);
 
         AnswerGroup answerGroup = new AnswerGroup();
         answerGroup.setPrefabId(prefabId);
-        answerGroup.setUserName(userName);
+        answerGroup.setToken(token);
         answerGroup.setQuestions(request.getQuestions());
 
         answerRepository.save(answerGroup);
@@ -37,12 +37,12 @@ public class AnswerService {
                 ));
     }
 
-    public void validateUniqueUserResponse(String prefabId, String userName) {
-        if(StringUtils.isNotBlank(userName) && answerRepository.existsByPrefabIdAndUserName(prefabId, userName)) {
+    public void validateUniqueUserResponse(String prefabId, String token) {
+        if(StringUtils.isNotBlank(token) && answerRepository.existsByPrefabIdAndToken(prefabId, token)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    String.format("A response with prefabId '%s' and userName '%s' already exists.",
-                            prefabId, userName)
+                    String.format("A response with prefabId '%s' and token '%s' already exists.",
+                            prefabId, token)
             );
         }
     }
