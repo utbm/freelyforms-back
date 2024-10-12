@@ -6,6 +6,7 @@ import com.utbm.da50.freelyform.exceptions.ValidationFieldException;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.service.PrefabService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,9 +50,12 @@ public class PrefabController {
             @ApiResponse(responseCode = "404", description = "Prefab not found"),
     })
     @ResponseBody
-    public ResponseEntity<PrefabOutput> getPrefabById(@PathVariable String id) {
+    public ResponseEntity<PrefabOutput> getPrefabById(
+            @PathVariable String id,
+            @Parameter(description = "Include hidden fields in the response")
+            @RequestParam(value = "withHidden", defaultValue = "false") boolean withHidden) {
         try {
-            return ResponseEntity.ok(service.getPrefabById(id).toRest());
+            return ResponseEntity.ok(service.getPrefabById(id, withHidden).toRest());
         } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
