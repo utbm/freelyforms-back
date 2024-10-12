@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PrefabInput {
+    @NonNull
     private String name;
     private String description;
     private String[] tags;

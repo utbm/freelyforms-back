@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupInput {
-    @Setter(AccessLevel.NONE)
+    @NonNull
     private String id;
+    @NonNull
     private String name;
     private List<FieldInput> fields;
 

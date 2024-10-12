@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
 @Data
 @AllArgsConstructor
 @Document
@@ -18,17 +17,11 @@ import java.util.stream.Collectors;
 public class Field {
     @Id
     private String id;
-    @Setter
     private String label;
-    @Setter
     private TypeField type;
-    @Setter
     private Boolean optional;
-    @Setter
     private Boolean hidden;
-    @Setter
     private List<Rule> validationRules;
-    @Setter
     private Option options;
 
     public FieldInput toRest() {

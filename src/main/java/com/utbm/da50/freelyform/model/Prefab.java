@@ -25,7 +25,6 @@ public class Prefab {
     private String description;
     @Setter
     private String[] tags;
-
     @Setter
     private List<Group> groups;
 

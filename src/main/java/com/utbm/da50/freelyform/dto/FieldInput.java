@@ -13,9 +13,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FieldInput {
-    @Setter(AccessLevel.NONE)
+    @NonNull
     private String id;
     private String label;
+    @NonNull
     private TypeField type;
     private boolean optional;
     private boolean hidden;
