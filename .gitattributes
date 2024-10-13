@@ -1,0 +1,3 @@
+# Ensure that mvnw and mvnw.cmd use LF line endings
+mvnw text eol=lf
+mvnw.cmd text eol=lf
