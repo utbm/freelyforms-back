@@ -1,12 +1,15 @@
 package com.utbm.da50.freelyform.service;
 
+import com.utbm.da50.freelyform.dto.PrefabFilter;
 import com.utbm.da50.freelyform.exceptions.ValidationFieldException;
 import com.utbm.da50.freelyform.model.Field;
 import com.utbm.da50.freelyform.model.Group;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.repository.PrefabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,8 +26,40 @@ public class PrefabService {
     }
 
     public List<Prefab> getAllPrefabs() {
-        return repository.findAll();
+        return getFilteredPrefabs(new PrefabFilter());
     }
+
+    public List<Prefab> getFilteredPrefabs(PrefabFilter filter) {
+        List<Prefab> prefabs = repository.findAll();
+
+        if (filter.getIds() != null) {
+            prefabs = prefabs.stream()
+                    .filter(prefab -> filter.getIds().contains(prefab.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        if (filter.getTags() != null) {
+            prefabs = prefabs.stream()
+                    .filter(prefab -> filter.getTags().stream().anyMatch(tag -> List.of(prefab.getTags()).contains(tag)))
+                    .collect(Collectors.toList());
+        }
+
+        // Filter hidden fields
+        if (Boolean.FALSE.equals(filter.getWithHidden())) {
+            prefabs.forEach(prefab -> prefab.getGroups().forEach(group ->
+                    group.setFields(group.getFields().stream()
+                            .filter(field -> !field.getHidden())
+                            .collect(Collectors.toList()))
+            ));
+        }
+
+        // Paginate
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), prefabs.size());
+        return prefabs.subList(start, end);
+    }
+
 
     public Prefab createPrefab(Prefab newPrefab) throws ValidationFieldException {
         // check if every field are valid

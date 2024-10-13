@@ -1,5 +1,6 @@
 package com.utbm.da50.freelyform.controller;
 
+import com.utbm.da50.freelyform.dto.PrefabFilter;
 import com.utbm.da50.freelyform.dto.PrefabInput;
 import com.utbm.da50.freelyform.dto.PrefabOutput;
 import com.utbm.da50.freelyform.exceptions.ValidationFieldException;
@@ -32,14 +33,37 @@ public class PrefabController {
         this.service = service;
     }
 
-    @Operation(summary = "Get a list of all prefabs")
+    @Operation(summary = "Get filtered Prefabs", description = "Fetch prefabs with optional filters for ID, tags, visibility of hidden fields, and pagination.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of prefabs returned")
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of prefabs")
     })
     @GetMapping("")
-    @ResponseBody
-    public ResponseEntity<List<PrefabOutput>> getAllPrefabs() {
-        return ResponseEntity.ok(service.getAllPrefabs().stream().map(Prefab::toRest).collect(Collectors.toList()));
+    public ResponseEntity<List<PrefabOutput>> getAllPrefabs(
+            @Parameter(description = "List of prefab IDs to filter by")
+            @RequestParam(required = false) List<String> ids,
+
+            @Parameter(description = "Include hidden fields in the response", example = "true")
+            @RequestParam(required = false, defaultValue = "false") Boolean withHidden,
+
+            @Parameter(description = "List of tags to filter by")
+            @RequestParam(required = false) List<String> tags,
+
+            @Parameter(description = "Page number for pagination", example = "0")
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+
+            @Parameter(description = "Page size for pagination", example = "10")
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
+
+        // Create the PrefabFilter manually and pass it to the service
+        PrefabFilter filter = new PrefabFilter();
+        filter.setIds(ids);
+        filter.setWithHidden(withHidden);
+        filter.setTags(tags);
+        filter.setPage(page);
+        filter.setSize(size);
+
+        List<Prefab> filteredPrefabs = service.getFilteredPrefabs(filter);
+        return ResponseEntity.ok(filteredPrefabs.stream().map(Prefab::toRest).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
