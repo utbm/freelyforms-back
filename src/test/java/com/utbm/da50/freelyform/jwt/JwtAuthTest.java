@@ -1,7 +1,6 @@
-package com.utbm.da50.freelyform;
+package com.utbm.da50.freelyform.jwt;
 
 import com.utbm.da50.freelyform.configuration.JwtTokenService;
-import com.utbm.da50.freelyform.configuration.SecurityConfiguration;
 import com.utbm.da50.freelyform.controller.AuthenticationController;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.enums.UserRole;

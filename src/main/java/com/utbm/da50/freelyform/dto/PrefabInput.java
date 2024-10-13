@@ -20,11 +20,11 @@ public class PrefabInput {
     private List<GroupInput> groups;
 
     public Prefab toPrefab() {
-        return new Prefab(
-                name,
-                description,
-                tags,
-                groups.stream().map(GroupInput::toGroup).collect(Collectors.toList())
-        );
+        return Prefab.builder()
+                .name(name)
+                .description(description)
+                .tags(tags)
+                .groups(groups.stream().map(GroupInput::toGroup).collect(Collectors.toList()))
+                .build();
     }
 }

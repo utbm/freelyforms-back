@@ -1,4 +1,4 @@
-package com.utbm.da50.freelyform;
+package com.utbm.da50.freelyform.jwt;
 
 import com.utbm.da50.freelyform.configuration.JwtAuthenticationFilter;
 import com.utbm.da50.freelyform.configuration.JwtTokenService;

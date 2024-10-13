@@ -75,6 +75,7 @@ public class PrefabService {
         existingPrefab.setGroups(prefab.getGroups());
         // check if every field are valid
         existingPrefab.getGroups().forEach(group -> fieldService.validateFields(group.getFields()));
+        existingPrefab.setUserId(prefab.getUserId());
         return repository.save(existingPrefab);
     }
 
@@ -111,9 +112,14 @@ public class PrefabService {
                     )
                     .createdAt(p.getCreatedAt())
                     .updatedAt(p.getUpdatedAt())
+                    .userId(p.getUserId())
                     .build();
         }
 
         return p;
+    }
+
+    public List<Prefab> getPrefabsByUser(String userId) {
+        return repository.findByUserId(userId);
     }
 }

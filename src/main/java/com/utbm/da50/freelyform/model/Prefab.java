@@ -1,9 +1,10 @@
 package com.utbm.da50.freelyform.model;
 
-import com.utbm.da50.freelyform.dto.PrefabOutput;
+import com.utbm.da50.freelyform.dto.PrefabOutputDetailled;
+import com.utbm.da50.freelyform.dto.PrefabOutputSimple;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,12 +20,16 @@ import java.util.stream.Collectors;
 public class Prefab {
     @Id
     private String id;
+
     @Setter
     private String name;
+
     @Setter
     private String description;
+
     @Setter
     private String[] tags;
+
     @Setter
     private List<Group> groups;
 
@@ -35,16 +40,20 @@ public class Prefab {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @Setter
+    private String userId;
+
     @Builder
-    public Prefab(String name, String description, String[] tags, List<Group> groups) {
+    public Prefab(String name, String description, String[] tags, List<Group> groups, String userId) {
         this.name = name;
         this.description = description;
         this.tags = tags;
         this.groups = groups;
+        this.userId = userId;
     }
 
-    public PrefabOutput toRest() {
-        return new PrefabOutput(
+    public PrefabOutputDetailled toRest() {
+        return new PrefabOutputDetailled(
                 id,
                 name,
                 description,
@@ -52,6 +61,17 @@ public class Prefab {
                 updatedAt,
                 tags,
                 groups.stream().map(Group::toRest).collect(Collectors.toList())
+        );
+    }
+
+    public PrefabOutputSimple toRestSimple() {
+        return new PrefabOutputSimple(
+                id,
+                name,
+                description,
+                tags,
+                createdAt,
+                updatedAt
         );
     }
 }
