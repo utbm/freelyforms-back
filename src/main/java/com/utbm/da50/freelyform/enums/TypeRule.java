@@ -9,6 +9,12 @@ public enum TypeRule {
         @JsonProperty("min_length")
         MIN_LENGTH,
 
+        @JsonProperty("max_value")
+        MAX_VALUE,
+
+        @JsonProperty("min_value")
+        MIN_VALUE,
+
         @JsonProperty("is_radio")
         IS_RADIO,
 
