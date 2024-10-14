@@ -26,12 +26,13 @@ public class SecurityConfiguration {
                 .headers().frameOptions().disable() // Disable X-Frame-Options
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/v1/prefabs/{prefab_id}",
+                .requestMatchers("/v1/prefabs").authenticated()
+                .requestMatchers(
+                        "/v1/prefabs/{prefab_id}",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
                         "/v1/auth/**").permitAll()
-                .requestMatchers("/v1/prefabs/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
