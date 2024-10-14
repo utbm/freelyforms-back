@@ -1,6 +1,8 @@
 package com.utbm.da50.freelyform.controller;
 
 import com.utbm.da50.freelyform.dto.PrefabOutput;
+import com.utbm.da50.freelyform.dto.PrefabOutputDetailled;
+import com.utbm.da50.freelyform.dto.PrefabOutputSimple;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.dto.PrefabInput;
@@ -42,12 +44,12 @@ public class PrefabController {
             @ApiResponse(responseCode = "403", description = "Forbidden: not authenticated")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<List<PrefabOutput>> getAllPrefabs(
+    public ResponseEntity<List<PrefabOutputSimple>> getAllPrefabs(
             @AuthenticationPrincipal User user) {
         if (user == null) {
             return ResponseEntity.status(403).build();
         }
-        List<PrefabOutput> prefabs = prefabService.getPrefabsByUser(user.getId()).stream()
+        List<PrefabOutputSimple> prefabs = prefabService.getPrefabsByUser(user.getId()).stream()
                 .map(Prefab::toRestSimple)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(prefabs);
@@ -59,7 +61,7 @@ public class PrefabController {
             @ApiResponse(responseCode = "200", description = "Prefab details retrieved"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
-    public ResponseEntity<PrefabOutput> getPrefabById(
+    public ResponseEntity<PrefabOutputDetailled> getPrefabById(
             @PathVariable String id,
             @Parameter(description = "Include hidden fields in the response")
             @RequestParam(value = "withHidden", defaultValue = "false") boolean withHidden)
