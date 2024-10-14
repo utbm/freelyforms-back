@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -23,15 +25,18 @@ public class SecurityConfiguration {
 
         http
                 .csrf().disable()
+                .cors() // Enable CORS
+                .and()
                 .headers().frameOptions().disable() // Disable X-Frame-Options
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/v1/prefabs/{prefab_id}",
+                .requestMatchers("/v1/prefabs").authenticated()
+                .requestMatchers(
+                        "/v1/prefabs/{prefab_id}",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
                         "/v1/auth/**").permitAll()
-                .requestMatchers("/v1/prefabs/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -40,5 +45,20 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // Global CORS configuration
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Allow CORS on all endpoints
+                        .allowedOrigins("http://localhost:3000") // Allow requests from frontend on port 3000
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
     }
 }

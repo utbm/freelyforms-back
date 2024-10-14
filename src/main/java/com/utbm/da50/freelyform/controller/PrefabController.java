@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,6 +45,7 @@ public class PrefabController {
             @ApiResponse(responseCode = "403", description = "Forbidden: not authenticated")
     })
     @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PrefabOutputSimple>> getAllPrefabs(
             @AuthenticationPrincipal User user) {
         if (user == null) {
@@ -79,6 +81,8 @@ public class PrefabController {
             @ApiResponse(responseCode = "201", description = "Prefab created"),
             @ApiResponse(responseCode = "403", description = "Forbidden: not authenticated")
     })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PrefabOutput> createPrefab(
             @AuthenticationPrincipal User user,
             @RequestBody PrefabInput prefabInput) {
@@ -96,6 +100,8 @@ public class PrefabController {
             @ApiResponse(responseCode = "403", description = "Forbidden: not authorized"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PrefabOutput> updatePrefab(
             @PathVariable String id,
             @AuthenticationPrincipal User user,
@@ -117,6 +123,8 @@ public class PrefabController {
             @ApiResponse(responseCode = "403", description = "Forbidden: not authorized"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PrefabOutput> deletePrefab(
             @PathVariable String id,
             @AuthenticationPrincipal User user) throws NoSuchElementException {
