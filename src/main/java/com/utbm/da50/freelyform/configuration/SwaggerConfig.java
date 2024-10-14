@@ -17,8 +17,8 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
-                .info(new Info().title("Authentication Service")
-                        .description("This is auth service use for validate the user.")
+                .info(new Info().title("FreelyForm doc API")
+                        .description("FreelyForm est une application permettant de crée des formulaire rapidement.")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
