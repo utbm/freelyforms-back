@@ -1,152 +1,169 @@
 package com.utbm.da50.freelyform.controller;
 
+import com.utbm.da50.freelyform.dto.*;
+import com.utbm.da50.freelyform.model.Prefab;
+import com.utbm.da50.freelyform.model.User;
+import com.utbm.da50.freelyform.service.PrefabService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 public class PrefabControllerTest {
-/*
+
     @Mock
-    private PrefabService service;
+    private PrefabService prefabService;
 
     @InjectMocks
-    private PrefabController controller;
+    private PrefabController prefabController;
 
-    private Group groupTest;
+    private User mockUser;
+    private Prefab mockPrefab;
+    private PrefabInput prefabInput;
+    private PrefabOutputDetailled prefabOutput;
 
     @BeforeEach
-    public void setup() {
-        groupTest = new Group();
-        groupTest.setId("1");
-        groupTest.setName("Test Group");
-        Field field = new Field();
-        field.setId("1");
-        field.setLabel("Test Field");
-        groupTest.setFields(Collections.singletonList(field));
-        MockitoAnnotations.openMocks(this);
-    }
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
 
-    // Helper method to create Prefab with a builder pattern
-    private Prefab createPrefab(String id) {
-        return Prefab.builder()
-                .id(id)
-                .name("Prefab Name")
-                .description("Prefab Description")
-                .build();
+        mockUser = new User();
+        mockUser.setId("user123");
+
+        mockPrefab = mock(Prefab.class);
+        mockPrefab.setUserId(mockUser.getId());
+
+        prefabInput = new PrefabInput();
+        prefabInput.setName("Test Prefab");
+        prefabInput.setDescription("Test Description");
+        prefabInput.setGroups(Arrays.asList());
+        prefabInput.setTags(Arrays.asList("tag1", "tag2").toArray(new String[0]));
+
+        prefabOutput = mock(PrefabOutputDetailled.class);
+
+        when(mockPrefab.toRest()).thenReturn(prefabOutput);
+        when(mockPrefab.getId()).thenReturn("prefab123");
+        when(mockPrefab.getUserId()).thenReturn(mockUser.getId());
     }
 
     @Test
-    public void testGetAllPrefabs() {
-        Prefab prefab = createPrefab("1");
-        Group group = Mockito.mock(Group.class);
-        prefab.setGroups(Collections.singletonList(group));
-        List<Prefab> prefabList = Collections.singletonList(prefab);
+    public void testGetAllPrefabs_Success() {
+        List<Prefab> mockPrefabs = Arrays.asList(mockPrefab);
+        when(prefabService.getPrefabsByUser(mockUser.getId())).thenReturn(mockPrefabs);
 
-        when(service.getFilteredPrefabs(any(PrefabFilter.class))).thenReturn(prefabList);
+        ResponseEntity<List<PrefabOutputSimple>> response = prefabController.getAllPrefabs(mockUser);
 
-        ResponseEntity<List<PrefabOutput>> response = controller.getAllPrefabs(
-                null, false, null, 0, 10);
-
-        assertThat(response.getBody(), hasSize(1));
-        assertThat(response.getBody().get(0).getId(), is(equalTo("1")));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), is(notNullValue()));
+        verify(prefabService, times(1)).getPrefabsByUser(mockUser.getId());
     }
 
     @Test
     public void testGetPrefabById_Success() {
-        Prefab prefab = createPrefab("1");
-        Group group = Mockito.mock(Group.class);
-        prefab.setGroups(Collections.singletonList(group));
+        when(prefabService.getPrefabById(mockPrefab.getId(), false)).thenReturn(mockPrefab);
+        when(mockPrefab.toRest()).thenReturn(prefabOutput);
 
-        when(service.getPrefabById("1", false)).thenReturn(prefab);
+        ResponseEntity<PrefabOutputDetailled> response = prefabController.getPrefabById(mockPrefab.getId(), false);
 
-        ResponseEntity<PrefabOutput> response = controller.getPrefabById("1", false);
-
-        assertThat(response.getBody().getId(), is(equalTo("1")));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), is(notNullValue()));
+        verify(prefabService, times(1)).getPrefabById(mockPrefab.getId(), false);
     }
 
     @Test
     public void testGetPrefabById_NotFound() {
-        when(service.getPrefabById("1", false)).thenThrow(new NoSuchElementException("Prefab not found"));
+        when(prefabService.getPrefabById(anyString(), anyBoolean())).thenThrow(new NoSuchElementException());
 
-        ResponseStatusException exception = assertThrows(
-                ResponseStatusException.class,
-                () -> controller.getPrefabById("1", false)
-        );
+        assertThrows(ResponseStatusException.class, () -> {
+            prefabController.getPrefabById("invalid_id", false);
+        });
 
-        assertThat(exception.getMessage(), is(equalTo("404 NOT_FOUND \"Prefab not found\"")));
-
+        verify(prefabService, times(1)).getPrefabById(anyString(), anyBoolean());
     }
 
     @Test
-    public void testCreatePrefab_Success() throws ValidationFieldException {
-        Prefab prefab = createPrefab("1");
+    public void testCreatePrefab_Success() {
+        when(prefabService.createPrefab(Mockito.any(Prefab.class))).thenReturn(mockPrefab);
 
-        prefab.setGroups(Collections.singletonList(groupTest));
+        ResponseEntity<PrefabOutput> response = prefabController.createPrefab(mockUser, prefabInput);
 
-        when(service.createPrefab(any(Prefab.class))).thenReturn(prefab);
-
-        PrefabInput newPrefab = new PrefabInput();
-        newPrefab.setName("Test Prefab");
-        List<GroupInput> groups = Collections.singletonList(new GroupInput());
-        newPrefab.setGroups(groups);
-
-
-        ResponseEntity<PrefabOutput> response = controller.createPrefab(newPrefab);
-
-        assertThat(response.getBody().getId(), is(equalTo("1")));
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        assertThat(response.getBody(), is(notNullValue()));
+        verify(prefabService, times(1)).createPrefab(Mockito.any(Prefab.class));
     }
 
     @Test
-    public void testCreatePrefab_ValidationException() throws ValidationFieldException {
-        when(service.createPrefab(any(Prefab.class))).thenThrow(new ValidationFieldException("Validation failed"));
+    public void testUpdatePrefab_Success() {
+        when(prefabService.getPrefabById(mockPrefab.getId())).thenReturn(mockPrefab);
+        when(prefabService.updatePrefab(eq(mockPrefab.getId()), Mockito.any(Prefab.class))).thenReturn(mockPrefab);
 
-        PrefabInput newPrefab = new PrefabInput();
-        newPrefab.setName("Invalid Prefab");
+        ResponseEntity<PrefabOutput> response = prefabController.updatePrefab(mockPrefab.getId(), mockUser, prefabInput);
 
-        ValidationFieldException exception = assertThrows(
-                ValidationFieldException.class,
-                () -> controller.createPrefab(newPrefab)
-        );
-
-        assertThat(exception.getMessage(), is(equalTo("Validation failed")));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody(), is(notNullValue()));
+        verify(prefabService, times(1)).updatePrefab(eq(mockPrefab.getId()), Mockito.any(Prefab.class));
     }
 
     @Test
-    public void testUpdatePrefab_Success() throws ValidationFieldException {
-        Prefab prefab = createPrefab("1");
+    public void testUpdatePrefab_Forbidden() {
+        Prefab prefabOwnedByAnotherUser = new Prefab();
+        prefabOwnedByAnotherUser.setUserId("anotherUser");
 
-        when(service.updatePrefab(any(String.class), any(Prefab.class))).thenReturn(prefab);
+        when(prefabService.getPrefabById(mockPrefab.getId())).thenReturn(prefabOwnedByAnotherUser);
 
-        PrefabInput updatedPrefab = new PrefabInput();
-        updatedPrefab.setName("Updated Prefab");
+        ResponseEntity<PrefabOutput> response = prefabController.updatePrefab(mockPrefab.getId(), mockUser, prefabInput);
 
-        ResponseEntity<PrefabOutput> response = controller.updatePrefab("1", updatedPrefab);
-
-        assertThat(response.getBody().getId(), is(equalTo("1")));
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        verify(prefabService, times(1)).getPrefabById(mockPrefab.getId());
+        verify(prefabService, never()).updatePrefab(anyString(), Mockito.any(Prefab.class));
     }
 
     @Test
     public void testDeletePrefab_Success() {
-        Prefab prefab = createPrefab("1");
+        when(prefabService.getPrefabById(mockPrefab.getId())).thenReturn(mockPrefab);
+        when(prefabService.deletePrefab(mockPrefab.getId())).thenReturn(mockPrefab);
 
-        when(service.deletePrefab("1")).thenReturn(prefab);
+        ResponseEntity<PrefabOutput> response = prefabController.deletePrefab(mockPrefab.getId(), mockUser);
 
-        ResponseEntity<PrefabOutput> response = controller.deletePrefab("1");
+        assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        verify(prefabService, times(1)).deletePrefab(mockPrefab.getId());
+    }
 
-        assertThat(response.getBody().getId(), is(equalTo("1")));
+    @Test
+    public void testDeletePrefab_Forbidden() {
+        Prefab prefabOwnedByAnotherUser = new Prefab();
+        prefabOwnedByAnotherUser.setUserId("anotherUser");
+
+        when(prefabService.getPrefabById(mockPrefab.getId())).thenReturn(prefabOwnedByAnotherUser);
+
+        ResponseEntity<PrefabOutput> response = prefabController.deletePrefab(mockPrefab.getId(), mockUser);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        verify(prefabService, times(1)).getPrefabById(mockPrefab.getId());
+        verify(prefabService, never()).deletePrefab(mockPrefab.getId());
     }
 
     @Test
     public void testDeletePrefab_NotFound() {
-        when(service.deletePrefab("1")).thenThrow(new NoSuchElementException("Prefab not found"));
+        when(prefabService.getPrefabById("invalid_id")).thenThrow(new NoSuchElementException());
 
-        NoSuchElementException exception = assertThrows(
-                NoSuchElementException.class,
-                () -> controller.deletePrefab("1")
-        );
+        ResponseEntity<PrefabOutput> response = prefabController.deletePrefab("invalid_id", mockUser);
 
-        assertThat(exception.getMessage(), is(equalTo("Prefab not found")));
-    }*/
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+        verify(prefabService, times(1)).getPrefabById("invalid_id");
+    }
 }
