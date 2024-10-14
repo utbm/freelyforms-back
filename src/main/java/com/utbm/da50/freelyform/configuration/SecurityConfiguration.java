@@ -9,8 +9,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -21,44 +27,48 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors()
+                .and()
                 .csrf().disable()
-                .cors() // Enable CORS
-                .and()
-                .headers().frameOptions().disable() // Disable X-Frame-Options
-                .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/v1/prefabs").authenticated()
                 .requestMatchers(
-                        "/v1/prefabs/{prefab_id}",
+                        "/v1/auth/**",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
-                        "/v1/auth/**").permitAll()
-                .anyRequest().authenticated()
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                ).permitAll() // Permit Swagger UI and Auth endpoints
+                .anyRequest().authenticated() // Secure all other endpoints
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
+                // Ensure that the JWT filter is registered after the built-in filters
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Global CORS configuration
+    // Define the CORS configuration source
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Allow CORS on all endpoints
-                        .allowedOrigins("http://localhost:3000") // Allow requests from frontend on port 3000
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
-        };
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*")); // Allow all origins
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true); // If you need to allow credentials
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Disposition"));
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Apply CORS configuration to all endpoints
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }
