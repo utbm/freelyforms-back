@@ -4,6 +4,7 @@ import com.utbm.da50.freelyform.exceptions.ValidationFieldException;
 import com.utbm.da50.freelyform.model.Field;
 import com.utbm.da50.freelyform.model.Group;
 import com.utbm.da50.freelyform.model.Prefab;
+import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.repository.PrefabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,6 @@ public class PrefabService {
         existingPrefab.setGroups(prefab.getGroups());
         // check if every field are valid
         existingPrefab.getGroups().forEach(group -> fieldService.validateFields(group.getFields()));
-        existingPrefab.setUserId(prefab.getUserId());
         return repository.save(existingPrefab);
     }
 
