@@ -42,17 +42,18 @@ public class SecurityConfiguration {
                         "/swagger-resources/**",
                         "/webjars/**"
                 ).permitAll() // Permit Swagger UI and Auth endpoints
+                .requestMatchers("/v1/prefabs/{id}").permitAll() // Allow optional access to getPrefabById
                 .anyRequest().authenticated() // Secure all other endpoints
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-                // Ensure that the JWT filter is registered after the built-in filters
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     // Define the CORS configuration source
     @Bean
