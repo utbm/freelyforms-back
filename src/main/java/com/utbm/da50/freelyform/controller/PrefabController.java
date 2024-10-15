@@ -69,11 +69,13 @@ public class PrefabController {
             @RequestParam(value = "withHidden", defaultValue = "false") boolean withHidden)
     {
         try {
+            // Fetch the prefab and return the response
             return ResponseEntity.ok(prefabService.getPrefabById(id, withHidden).toRest());
         } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
     }
+
 
     @PostMapping("")
     @Operation(summary = "Create a new prefab")
