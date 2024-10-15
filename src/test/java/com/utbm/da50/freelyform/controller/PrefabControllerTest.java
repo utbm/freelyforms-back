@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -39,7 +40,7 @@ public class PrefabControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         mockUser = new User();
         mockUser.setId("user123");
@@ -50,7 +51,7 @@ public class PrefabControllerTest {
         prefabInput = new PrefabInput();
         prefabInput.setName("Test Prefab");
         prefabInput.setDescription("Test Description");
-        prefabInput.setGroups(Arrays.asList());
+        prefabInput.setGroups(List.of());
         prefabInput.setTags(Arrays.asList("tag1", "tag2").toArray(new String[0]));
 
         prefabOutput = mock(PrefabOutputDetailled.class);
@@ -62,7 +63,7 @@ public class PrefabControllerTest {
 
     @Test
     public void testGetAllPrefabs_Success() {
-        List<Prefab> mockPrefabs = Arrays.asList(mockPrefab);
+        List<Prefab> mockPrefabs = Collections.singletonList(mockPrefab);
         when(prefabService.getPrefabsByUser(mockUser.getId())).thenReturn(mockPrefabs);
 
         ResponseEntity<List<PrefabOutputSimple>> response = prefabController.getAllPrefabs(mockUser);

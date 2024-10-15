@@ -11,10 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,20 +35,20 @@ public class PrefabServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         Field mockField = new Field();
         mockField.setHidden(false);
 
         mockGroup = new Group();
         mockGroup.setId("group123");
-        mockGroup.setFields(Arrays.asList(mockField));
+        mockGroup.setFields(List.of(mockField));
 
         mockPrefab = Prefab.builder()
                 .id("prefab123")
                 .name("Test Prefab")
                 .description("Test Description")
-                .groups(Arrays.asList(mockGroup))
+                .groups(Collections.singletonList(mockGroup))
                 .userId("user123")
                 .build();
     }
@@ -86,7 +83,7 @@ public class PrefabServiceTest {
                 .id("prefab123")
                 .name("Updated Name")
                 .description("Updated Description")
-                .groups(Arrays.asList(mockGroup))
+                .groups(Collections.singletonList(mockGroup))
                 .userId("user123")
                 .tags(new String[]{"tag1", "tag2"})
                 .build();
@@ -173,7 +170,7 @@ public class PrefabServiceTest {
                 .id("prefab123")
                 .name("Test Prefab")
                 .description("Test Description")
-                .groups(Arrays.asList(groupWithHiddenField))
+                .groups(List.of(groupWithHiddenField))
                 .userId("user123")
                 .build();
 
@@ -181,20 +178,20 @@ public class PrefabServiceTest {
 
         Prefab resultPrefab = prefabService.getPrefabById("prefab123", false);
 
-        assertThat(resultPrefab.getGroups().get(0).getFields(), hasSize(1));
-        assertThat(resultPrefab.getGroups().get(0).getFields().get(0).getHidden(), is(false));
+        assertThat(resultPrefab.getGroups().getFirst().getFields(), hasSize(1));
+        assertThat(resultPrefab.getGroups().getFirst().getFields().getFirst().getHidden(), is(false));
         verify(prefabRepository, times(1)).findById("prefab123");
     }
 
     @Test
     public void testGetPrefabsByUser_Success() {
-        when(prefabRepository.findByUserId("user123")).thenReturn(Arrays.asList(mockPrefab));
+        when(prefabRepository.findByUserId("user123")).thenReturn(Collections.singletonList(mockPrefab));
 
         List<Prefab> prefabs = prefabService.getPrefabsByUser("user123");
 
         assertThat(prefabs, is(not(empty())));
         assertThat(prefabs, hasSize(1));
-        assertThat(prefabs.get(0).getUserId(), is("user123"));
+        assertThat(prefabs.getFirst().getUserId(), is("user123"));
         verify(prefabRepository, times(1)).findByUserId("user123");
     }
 }
