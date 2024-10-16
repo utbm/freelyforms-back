@@ -1,11 +1,8 @@
 package com.utbm.da50.freelyform.controller;
 
-import com.utbm.da50.freelyform.dto.PrefabOutput;
-import com.utbm.da50.freelyform.dto.PrefabOutputDetailled;
-import com.utbm.da50.freelyform.dto.PrefabOutputSimple;
+import com.utbm.da50.freelyform.dto.*;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.model.User;
-import com.utbm.da50.freelyform.dto.PrefabInput;
 import com.utbm.da50.freelyform.service.PrefabService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -115,6 +112,29 @@ public class PrefabController {
         }
 
         Prefab updatedPrefab = prefabService.updatePrefab(id, prefabInput.toPrefab());
+        return ResponseEntity.ok(updatedPrefab.toRest());
+    }
+
+    @PatchMapping("/{id}/activation")
+    @Operation(summary = "Update an existing prefab status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Prefab updated"),
+            @ApiResponse(responseCode = "403", description = "Forbidden: not authorized"),
+            @ApiResponse(responseCode = "404", description = "Prefab not found")
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<PrefabOutput> updatePrefabStatus(
+            @PathVariable String id,
+            @AuthenticationPrincipal User user,
+            @RequestBody PrefabStatusInput prefabStatusInput) {
+
+        Prefab prefab = prefabService.getPrefabById(id);
+        if (user==null || !prefab.getUserId().equals(user.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        Prefab updatedPrefab = prefabService.updatePrefabStatus(prefab, prefabStatusInput.getActive());
         return ResponseEntity.ok(updatedPrefab.toRest());
     }
 
