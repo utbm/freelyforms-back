@@ -19,8 +19,8 @@ public class PrefabOutputDetailled extends PrefabInput implements PrefabOutput{
 
     public PrefabOutputDetailled(String id, String name, String description,
                                  LocalDateTime createdAt, LocalDateTime updatedAt,
-                                 String[] tags, List<GroupInput> groups) {
-        super(name, description, tags, groups);
+                                 String[] tags, List<GroupInput> groups, Boolean isActive) {
+        super(name, description, tags, isActive, groups);
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;

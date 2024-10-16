@@ -31,6 +31,9 @@ public class Prefab {
     private String[] tags;
 
     @Setter
+    private Boolean isActive = true;
+
+    @Setter
     private List<Group> groups;
 
     @CreatedDate
@@ -44,12 +47,13 @@ public class Prefab {
     private String userId;
 
     @Builder
-    public Prefab(String name, String description, String[] tags, List<Group> groups, String userId) {
+    public Prefab(String name, String description, String[] tags, List<Group> groups, String userId, Boolean isActive) {
         this.name = name;
         this.description = description;
         this.tags = tags;
         this.groups = groups;
         this.userId = userId;
+        this.isActive = isActive;
     }
 
     public PrefabOutputDetailled toRest() {
@@ -60,7 +64,8 @@ public class Prefab {
                 createdAt,
                 updatedAt,
                 tags,
-                groups.stream().map(Group::toRest).collect(Collectors.toList())
+                groups.stream().map(Group::toRest).collect(Collectors.toList()
+                ), isActive
         );
     }
 
@@ -70,6 +75,7 @@ public class Prefab {
                 name,
                 description,
                 tags,
+                isActive,
                 createdAt,
                 updatedAt
         );

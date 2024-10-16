@@ -17,6 +17,7 @@ public class PrefabInput {
     private String name;
     private String description;
     private String[] tags;
+    private Boolean isActive = true;
     private List<GroupInput> groups;
 
     public Prefab toPrefab() {
@@ -24,6 +25,7 @@ public class PrefabInput {
                 .name(name)
                 .description(description)
                 .tags(tags)
+                .isActive(isActive)
                 .groups(groups.stream().map(GroupInput::toGroup).collect(Collectors.toList()))
                 .build();
     }
