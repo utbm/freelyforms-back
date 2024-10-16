@@ -129,7 +129,7 @@ public class PrefabController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PrefabOutput> deletePrefab(
             @PathVariable String id,
-            @AuthenticationPrincipal User user) throws NoSuchElementException {
+            @AuthenticationPrincipal User user) {
         try{
             Prefab prefab = prefabService.getPrefabById(id);
             if (user==null || !prefab.getUserId().equals(user.getId())) {
