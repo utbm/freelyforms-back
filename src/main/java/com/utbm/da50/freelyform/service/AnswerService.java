@@ -3,12 +3,15 @@ package com.utbm.da50.freelyform.service;
 import com.mongodb.lang.NonNull;
 import com.utbm.da50.freelyform.dto.answer.AnswerRequest;
 import com.utbm.da50.freelyform.model.AnswerGroup;
+import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.repository.AnswerRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
 
 
 @Service
@@ -17,14 +20,18 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
 
-    public void processAnswer(String prefabId, @NonNull AnswerRequest request) {
-        String token = request.getToken();
-        validateUniqueUserResponse(prefabId, token);
+    public void processAnswer(String prefabId, User user, @NonNull AnswerRequest request) {
+        String userId = "";
+        if(user != null){
+            userId = user.getId();
+            validateUniqueUserResponse(prefabId, userId);
+        }
 
         AnswerGroup answerGroup = new AnswerGroup();
         answerGroup.setPrefabId(prefabId);
-        answerGroup.setToken(token);
-        answerGroup.setQuestions(request.getQuestions());
+        answerGroup.setCreatedAt(LocalDate.now());
+        answerGroup.setUserId(userId);
+        answerGroup.setAnswers(request.getAnswers());
 
         answerRepository.save(answerGroup);
     }
@@ -37,12 +44,12 @@ public class AnswerService {
                 ));
     }
 
-    public void validateUniqueUserResponse(String prefabId, String token) {
-        if(StringUtils.isNotBlank(token) && answerRepository.existsByPrefabIdAndToken(prefabId, token)) {
+    public void validateUniqueUserResponse(String prefabId, String userId) {
+        if(StringUtils.isNotBlank(userId) && answerRepository.existsByPrefabIdAndUserId(prefabId, userId)) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    String.format("A response with prefabId '%s' and token '%s' already exists.",
-                            prefabId, token)
+                    HttpStatus.BAD_REQUEST,
+                    String.format("A response with prefabId '%s' and userId '%s' already exists.",
+                            prefabId, userId)
             );
         }
     }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Document
@@ -20,6 +21,8 @@ public class AnswerGroup {
 
     @NonNull
     private String prefabId;
-    private String token;
-    private List<AnswerQuestion> questions;
+    private String userId;
+    @NonNull
+    private LocalDate createdAt;
+    private List<AnswerSubGroup> answers;
 }

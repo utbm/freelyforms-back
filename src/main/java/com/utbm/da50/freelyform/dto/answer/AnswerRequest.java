@@ -1,6 +1,6 @@
 package com.utbm.da50.freelyform.dto.answer;
 
-import com.utbm.da50.freelyform.model.AnswerQuestion;
+import com.utbm.da50.freelyform.model.AnswerSubGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnswerRequest {
-    private String token;
-    private List<AnswerQuestion> questions;
+    private List<AnswerSubGroup> answers;
 }
