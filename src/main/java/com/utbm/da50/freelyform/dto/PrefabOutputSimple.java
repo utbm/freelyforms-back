@@ -13,6 +13,7 @@ public class PrefabOutputSimple implements PrefabOutput{
     private String name;
     private String description;
     private String[] tags;
+    private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updateAd;
 }

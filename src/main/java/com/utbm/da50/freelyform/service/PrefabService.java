@@ -40,6 +40,11 @@ public class PrefabService {
         return repository.save(existingPrefab);
     }
 
+    public Prefab updatePrefabStatus(Prefab existingPrefab, Boolean toState) throws NoSuchElementException, ValidationFieldException {
+        existingPrefab.setIsActive(toState);
+        return repository.save(existingPrefab);
+    }
+
     public Prefab deletePrefab(String id) throws NoSuchElementException{
         Prefab prefabToDelete = getPrefabById(id);
         repository.deleteById(id);
