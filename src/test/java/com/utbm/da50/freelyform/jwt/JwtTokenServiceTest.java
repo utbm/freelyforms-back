@@ -1,4 +1,4 @@
-package com.utbm.da50.freelyform;
+package com.utbm.da50.freelyform.jwt;
 
 import com.utbm.da50.freelyform.configuration.JwtTokenService;
 import com.utbm.da50.freelyform.model.User;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

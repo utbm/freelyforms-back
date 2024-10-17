@@ -24,11 +24,6 @@ public class JwtTokenService {
     private String SECRET_KEY;
     private static final int TOKEN_DURATION = 1000*60*60*48; // 48 hours
 
-
-    public String getKey() {
-        return SECRET_KEY;
-    }
-
     public void setKey(String SECRET_KEY) {
         this.SECRET_KEY = SECRET_KEY;
     }

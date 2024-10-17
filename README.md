@@ -12,6 +12,11 @@ Get the project up and running in just a few steps:
     ```bash
    docker compose up
    ```
+3. Use debuging mode or start the application locally:
+    ```bash
+   docker compose up mongodb 
+   ```
+   Then run the application from your IDE.
 
 ## 👩‍💻 **For Developers**
 

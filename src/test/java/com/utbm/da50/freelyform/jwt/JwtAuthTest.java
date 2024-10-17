@@ -1,39 +1,26 @@
-package com.utbm.da50.freelyform;
+package com.utbm.da50.freelyform.jwt;
 
 import com.utbm.da50.freelyform.configuration.JwtTokenService;
-import com.utbm.da50.freelyform.configuration.SecurityConfiguration;
 import com.utbm.da50.freelyform.controller.AuthenticationController;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.enums.UserRole;
 import com.utbm.da50.freelyform.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import io.jsonwebtoken.Claims;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.*;
 
@@ -42,9 +29,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -67,9 +51,6 @@ public class JwtAuthTest {
 
     @Mock
     private AuthenticationController jwtAuthenticationEntryPoint;
-
-    @Autowired
-    private SecurityConfiguration securityConfig; // Autowire the SecurityConfiguration
 
     private UserDetails userDetails;
 
