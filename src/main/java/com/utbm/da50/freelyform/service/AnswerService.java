@@ -1,5 +1,7 @@
 package com.utbm.da50.freelyform.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.lang.NonNull;
 import com.utbm.da50.freelyform.dto.answer.AnswerRequest;
 import com.utbm.da50.freelyform.enums.TypeField;
@@ -10,13 +12,15 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +30,8 @@ public class AnswerService {
     private final PrefabService prefabService;
 
     public void processAnswer(String prefabId, User user, @NonNull AnswerRequest request) {
-        String userId = "";
-        if(user != null){
-            userId = user.getId();
-            validateUniqueUserResponse(prefabId, userId);
-        }
-
+        String userId = Optional.ofNullable(user).map(User::getId).orElse("");
+        validateUniqueUserResponse(prefabId, userId);
         checkFormPrefab(prefabId, request);
 
         AnswerGroup answerGroup = new AnswerGroup();
@@ -63,149 +63,220 @@ public class AnswerService {
         List<Group> prefabGroups = prefab.getGroups();
         List<AnswerSubGroup> answerGroups = request.getAnswers();
 
-        int prefabGroupSize = prefabGroups.size();
-        if (prefabGroupSize != answerGroups.size())
+        if (prefabGroups.size() != answerGroups.size()) {
             throw new RuntimeException("Number of groups in the prefab does not match the number of answer groups.");
+        }
 
-        for (int i = 0; i < prefabGroupSize; i++)
+        for (int i = 0; i < prefabGroups.size(); i++) {
             checkAnswerGroup(prefabGroups.get(i), answerGroups.get(i), Integer.toString(i));
+        }
     }
 
-    public void checkAnswerGroup(Group g, AnswerSubGroup a, String index) {
-        String prefabGroupName = g.getName();
-        String answerGroupName = a.getGroup();
-
-        if (!prefabGroupName.equals(answerGroupName)){
+    public void checkAnswerGroup(Group prefabGroup, AnswerSubGroup answerGroup, String index) {
+        if (!prefabGroup.getName().equals(answerGroup.getGroup())) {
             throw new RuntimeException(
-                    String.format("Group index '%s': Prefab and Answer names don't match." +
-                            "\nPrefab: '%s', Answer: '%s'", index, prefabGroupName, answerGroupName)
+                    String.format("Group index '%s': Prefab and Answer names don't match.\nPrefab: '%s', Answer: '%s'",
+                            index, prefabGroup.getName(), answerGroup.getGroup())
             );
         }
 
-        List<Field> fields = g.getFields();
-        List<AnswerQuestion> questions = a.getQuestions();
+        List<Field> fields = prefabGroup.getFields();
+        List<AnswerQuestion> questions = answerGroup.getQuestions();
 
         if (fields.size() != questions.size()) {
-            throw new RuntimeException(
-                    String.format("Group index '%s': Mismatch in number of fields and questions.", index)
-            );
+            throw new RuntimeException(String.format("Group index '%s': Mismatch in number of fields and questions.",
+                    index));
         }
 
-        for (int i = 0; i < fields.size(); i++)
+        for (int i = 0; i < fields.size(); i++) {
             checkAnswerField(fields.get(i), questions.get(i));
+        }
     }
 
-    public void checkAnswerField(Field f, AnswerQuestion q) {
-       String field = f.getLabel();
-       String question = q.getQuestion();
-       if(!Objects.equals(field, question)){
-           throw new RuntimeException(
-                   String.format("Field index '%s': Mismatch in question '%s'.", field, question)
-           );
-       }
+    public void checkAnswerField(Field field, AnswerQuestion question) {
+        validateFieldAndQuestion(field.getLabel(), question.getQuestion());
 
-       TypeField type = f.getType();
-       Object answer = q.getAnswer();
+        TypeField type = field.getType();
+        Object answer = question.getAnswer();
 
-       if(answer == null && !f.getOptional()){
-           throw new RuntimeException(
-                   String.format("Answer at the question is empty '%s'", question)
-           );
-       }
-       if(type == TypeField.TEXT && !(answer instanceof String)){
-           throw new IllegalArgumentException(String.format("Answer '%s' is not a string", answer));
-       } else if(type == TypeField.NUMBER && !(answer instanceof Integer)){
-           throw new IllegalArgumentException(String.format("Answer '%s' is not an integer", answer));
-       } else if(type == TypeField.DATE && !(answer instanceof LocalDate)){
-           throw new IllegalArgumentException(String.format("Answer '%s' is not a date", answer));
-       } else if(type == TypeField.GEOLOCATION && !(answer instanceof Point)) {
-           throw new IllegalArgumentException(String.format("Answer '%s' is not a point", answer));
-       } else if(type == TypeField.MULTIPLE_CHOICE && !(answer instanceof List)){
-           throw new IllegalArgumentException(String.format("Answer '%s' is not a list", answer));
-       }
-
-       List<Rule> rules = f.getValidationRules();
-       for (Rule rule : rules) checkAnswerRule(answer, rule, f);
-    }
-
-    public void checkAnswerRule(Object answer, Rule r, Field f) {
-        Option options = f.getOptions();
-        TypeRule type = r.getType();
-        String value = r.getValue();
-
-        if(type == TypeRule.IS_EMAIL || type == TypeRule.REGEX_MATCH){
-            String regex = value;
-            if(type == TypeRule.IS_EMAIL)
-                regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher((CharSequence) answer);
-            if(!matcher.matches()){
-                if(type == TypeRule.IS_EMAIL)
-                    throw new RuntimeException(String.format("Answer '%s' is not a valid email address", answer));
-                else
-                    throw new RuntimeException(String.format("Answer '%s' doesn't match with the regex", answer));
+        if (answer instanceof LinkedHashMap<?, ?> mapAnswer) {
+            if (mapAnswer.isEmpty() && !field.getOptional()) {
+                throw new RuntimeException(String.format("Answer at the question '%s' is empty.",
+                        question.getQuestion()));
             }
-        }
-
-        else if(type == TypeRule.IS_RADIO || type == TypeRule.IS_MULTIPLE_CHOICE){
-            if(!(answer instanceof List))
-                throw new RuntimeException(String.format("Answer '%s' is not a list", answer));
-
-            List<String> list_answer = (List<String>) answer;
-
-            if(type == TypeRule.IS_RADIO && list_answer.size() != 1)
-                throw new RuntimeException(String.format("Must contain one single answer: '%s'", answer));
-
-            List<String> list = options.getChoices();
-
-            boolean found = false;
-            for (String s : list_answer) {
-                for (String choice : list) {
-                    if (Objects.equals(choice, s)) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-
-            if(!found)
-                throw new RuntimeException(
-                        String.format("Answer '%s' is not an option of the list '%s'", answer, list)
-                );
-        }
-
-        else if(type == TypeRule.MAX_LENGTH || type == TypeRule.MIN_LENGTH
-            || type == TypeRule.MAX_VALUE || type == TypeRule.MIN_VALUE){
-            if(value == null)
+            if(mapAnswer.isEmpty())
                 return;
+        }
 
-            int l = Integer.parseInt(value);
+        validateAnswerType(answer, type);
+        field.getValidationRules().forEach(rule -> checkAnswerRule(answer, rule, field));
+    }
 
-            if(type == TypeRule.MIN_LENGTH || type == TypeRule.MAX_LENGTH){
-                String answer_str;
-                if(answer instanceof String)
-                    answer_str = (String) answer;
-                else
-                    throw new RuntimeException(String.format("Answer '%s' is not an string", answer));
+    private void validateFieldAndQuestion(String field, String question) {
+        if (!Objects.equals(field, question)) {
+            throw new RuntimeException(String.format("Field mismatch: Field '%s' does not match question '%s'.",
+                    field, question));
+        }
+    }
 
-                if(type == TypeRule.MIN_LENGTH && answer_str.length() < l)
-                    throw new RuntimeException(String.format("Answer '%s' is too short", answer));
-                else if(type == TypeRule.MAX_LENGTH && answer_str.length() > l)
-                    throw new RuntimeException(String.format("Answer '%s' is too long", answer));
+    private void validateAnswerType(Object answer, TypeField type) {
+        switch (type) {
+            case TEXT:
+                if (!(answer instanceof String)) {
+                    throw new IllegalArgumentException(String.format("Answer '%s' is not a string", answer));
+                }
+                break;
+            case NUMBER:
+                validateNumericAnswer(answer);
+                break;
+            case DATE:
+                validateDateAnswer(answer);
+                break;
+            case GEOLOCATION:
+                validateGeolocationAnswer(answer);
+                break;
+            case MULTIPLE_CHOICE:
+                if (!(answer instanceof List)) {
+                    throw new IllegalArgumentException(String.format("Answer '%s' is not a list", answer));
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported TypeField: " + type);
+        }
+    }
+
+    private void validateNumericAnswer(Object answer) {
+        try {
+            Float.parseFloat((String) answer);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(String.format("Answer '%s' is not a valid number", answer));
+        }
+    }
+
+    private void validateDateAnswer(Object answer) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate.parse((String) answer, formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(String.format("Answer '%s' is not a valid date", answer));
+        }
+    }
+
+    private void validateGeolocationAnswer(Object answer) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            JsonNode jsonNode;
+
+            if (answer instanceof String) {
+                jsonNode = objectMapper.readTree((String) answer);
+            } else {
+                String jsonString = objectMapper.writeValueAsString(answer);
+                jsonNode = objectMapper.readTree(jsonString);
             }
-            else{
-                int answer_int;
-                if(answer instanceof Integer)
-                    answer_int = (Integer) answer;
-                else
-                    throw new RuntimeException(String.format("Answer '%s' is not an integer", answer));
 
-                if(type == TypeRule.MIN_VALUE && answer_int < l)
-                    throw new RuntimeException(String.format("Answer '%s' is too short", answer));
-                else if(type == TypeRule.MAX_VALUE && answer_int > l)
-                    throw new RuntimeException(String.format("Answer '%s' is too long", answer));
+            if (jsonNode.has("lat") && jsonNode.has("lng")) {
+                double lat = jsonNode.get("lat").asDouble();
+                double lng = jsonNode.get("lng").asDouble();
+
+                System.out.println("Latitude: " + lat);
+                System.out.println("Longitude: " + lng);
+            } else {
+                throw new IllegalArgumentException("Geolocation answer must contain both 'lat' and 'lng' fields.");
             }
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException(String.format("Answer '%s' is not a valid geolocation", answer), e);
+        }
+    }
+
+    public void checkAnswerRule(Object answer, Rule rule, Field field) {
+        Option options = field.getOptions();
+        TypeRule type = rule.getType();
+        String value = rule.getValue();
+
+        switch (type) {
+            case IS_EMAIL:
+                checkRegex(value, answer, "email");
+                break;
+            case REGEX_MATCH:
+                checkRegex(value, answer, "regex");
+                break;
+            case IS_RADIO:
+            case IS_MULTIPLE_CHOICE:
+                checkMultiChoice(answer, type, options);
+                break;
+            case MAX_LENGTH:
+            case MIN_LENGTH:
+            case MAX_VALUE:
+            case MIN_VALUE:
+                checkIntervalValues(value, type, answer);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported TypeRule: " + type);
+        }
+    }
+
+    private void checkRegex(String regex, Object answer, String type) {
+        if (!(answer instanceof String)) {
+            throw new IllegalArgumentException(String.format("Answer '%s' is not a valid %s", answer, type));
+        }
+
+        Matcher matcher = Pattern.compile(type.equals("email") ? "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$" : regex)
+                .matcher((String) answer);
+        if (!matcher.matches()) {
+            throw new RuntimeException(String.format("Answer '%s' is not a valid %s", answer, type));
+        }
+    }
+
+    public void checkMultiChoice(Object answer, TypeRule type, Option options) {
+        if (!(answer instanceof List)) {
+            throw new RuntimeException(String.format("Answer '%s' is not a list", answer));
+        }
+
+        List<String> answers = (List<String>) answer;
+        if (type == TypeRule.IS_RADIO && answers.size() != 1) {
+            throw new RuntimeException(String.format("Must contain one single answer: '%s'", answer));
+        }
+
+        List<String> choices = options.getChoices();
+        boolean found = answers.stream().anyMatch(choices::contains);
+
+        if (!found) {
+            throw new RuntimeException(String.format("Answer '%s' is not an option of the list '%s'", answer, choices));
+        }
+    }
+
+    public void checkIntervalValues(String value, TypeRule type, Object answer) {
+        if (value.isEmpty()) {
+            return;
+        }
+
+        int limit = Integer.parseInt(value);
+        if (type == TypeRule.MIN_LENGTH || type == TypeRule.MAX_LENGTH) {
+            validateStringLength(answer, limit, type);
+        } else {
+            validateNumericValue(answer, limit, type);
+        }
+    }
+
+    private void validateStringLength(Object answer, int limit, TypeRule type) {
+        if (!(answer instanceof String answerStr)) {
+            throw new RuntimeException(String.format("Answer '%s' is not a string", answer));
+        }
+        if ((type == TypeRule.MIN_LENGTH && answerStr.length() < limit) ||
+                (type == TypeRule.MAX_LENGTH && answerStr.length() > limit)) {
+            throw new RuntimeException(String.format("Answer '%s' does not meet the length requirement for '%s'",
+                    answer, type));
+        }
+    }
+
+    private void validateNumericValue(Object answer, int limit, TypeRule type) {
+        float answerValue = Float.parseFloat((String) answer);
+        if ((type == TypeRule.MIN_VALUE && answerValue < limit) ||
+                (type == TypeRule.MAX_VALUE && answerValue > limit)) {
+            throw new RuntimeException(String.format("Answer '%s' does not meet the value requirement for '%s'",
+                    answer, type));
         }
     }
 }
