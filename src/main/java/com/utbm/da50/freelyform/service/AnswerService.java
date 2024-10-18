@@ -22,6 +22,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Service class for processing and validating answers submitted by users.
+ */
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -29,6 +32,14 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final PrefabService prefabService;
 
+    /**
+     * Processes a user's answer by validating it and saving it to the repository.
+     *
+     * @param prefabId the ID of the prefab associated with the answer
+     * @param user     the user submitting the answer
+     * @param request  the answer request containing the answers
+     * @throws RuntimeException if a unique response exists or validation fails
+     */
     public void processAnswer(String prefabId, User user, @NonNull AnswerRequest request) {
         String userId = Optional.ofNullable(user).map(User::getId).orElse("");
         validateUniqueUserResponse(prefabId, userId);
@@ -43,6 +54,14 @@ public class AnswerService {
         answerRepository.save(answerGroup);
     }
 
+    /**
+     * Retrieves an answer group by prefab ID and answer ID.
+     *
+     * @param prefabId the ID of the prefab
+     * @param answerId the ID of the answer
+     * @return the found AnswerGroup
+     * @throws RuntimeException if no response is found for the provided IDs
+     */
     public AnswerGroup getAnswerGroup(String prefabId, String answerId) {
         return answerRepository.findByPrefabIdAndId(prefabId, answerId)
                 .orElseThrow(() -> new RuntimeException(
@@ -50,6 +69,13 @@ public class AnswerService {
                 ));
     }
 
+    /**
+     * Validates that a user has not already responded to the specified prefab.
+     *
+     * @param prefabId the ID of the prefab
+     * @param userId   the ID of the user
+     * @throws RuntimeException if a response with the same prefab ID and user ID already exists
+     */
     public void validateUniqueUserResponse(String prefabId, String userId) {
         if (StringUtils.isNotBlank(userId) && answerRepository.existsByPrefabIdAndUserId(prefabId, userId)) {
             throw new RuntimeException(
@@ -58,6 +84,13 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Checks that the number of answer groups matches the prefab's groups.
+     *
+     * @param prefabId the ID of the prefab
+     * @param request  the answer request containing the answers
+     * @throws RuntimeException if the number of groups does not match
+     */
     public void checkFormPrefab(String prefabId, AnswerRequest request) {
         Prefab prefab = prefabService.getPrefabById(prefabId, false);
         List<Group> prefabGroups = prefab.getGroups();
@@ -72,6 +105,14 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Checks that the answer group matches the prefab group.
+     *
+     * @param prefabGroup the prefab group to check against
+     * @param answerGroup the answer group to validate
+     * @param index      the index of the group in the list
+     * @throws RuntimeException if the groups do not match
+     */
     public void checkAnswerGroup(Group prefabGroup, AnswerSubGroup answerGroup, String index) {
         if (!prefabGroup.getName().equals(answerGroup.getGroup())) {
             throw new RuntimeException(
@@ -93,6 +134,13 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates the answer for a specific field.
+     *
+     * @param field    the field to validate against
+     * @param question the answer question to validate
+     * @throws RuntimeException if validation fails
+     */
     public void checkAnswerField(Field field, AnswerQuestion question) {
         validateFieldAndQuestion(field.getLabel(), question.getQuestion());
 
@@ -112,6 +160,13 @@ public class AnswerService {
         field.getValidationRules().forEach(rule -> checkAnswerRule(answer, rule, field));
     }
 
+    /**
+     * Validates that the field matches the question.
+     *
+     * @param field   the field name
+     * @param question the question text
+     * @throws RuntimeException if the field and question do not match
+     */
     private void validateFieldAndQuestion(String field, String question) {
         if (!Objects.equals(field, question)) {
             throw new RuntimeException(String.format("Field mismatch: Field '%s' does not match question '%s'.",
@@ -119,6 +174,14 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates the type of the answer against the expected type.
+     *
+     * @param answer the answer object to validate
+     * @param type   the expected type of the field
+     * @throws IllegalArgumentException if the answer does not match the expected type
+     * @throws UnsupportedOperationException if the type is unsupported
+     */
     private void validateAnswerType(Object answer, TypeField type) {
         switch (type) {
             case TEXT:
@@ -145,6 +208,12 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates a numeric answer.
+     *
+     * @param answer the answer object to validate
+     * @throws IllegalArgumentException if the answer is not a valid number
+     */
     private void validateNumericAnswer(Object answer) {
         try {
             Float.parseFloat((String) answer);
@@ -153,6 +222,12 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates a date answer.
+     *
+     * @param answer the answer object to validate
+     * @throws IllegalArgumentException if the answer is not a valid date
+     */
     private void validateDateAnswer(Object answer) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -162,6 +237,12 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates a geolocation answer.
+     *
+     * @param answer the answer object to validate
+     * @throws IllegalArgumentException if the answer is not a valid geolocation
+     */
     private void validateGeolocationAnswer(Object answer) {
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -190,6 +271,14 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Checks the answer rule against the provided answer.
+     *
+     * @param answer the answer to validate
+     * @param rule   the validation rule to apply
+     * @param field  the field associated with the rule
+     * @throws RuntimeException if the rule validation fails
+     */
     public void checkAnswerRule(Object answer, Rule rule, Field field) {
         Option options = field.getOptions();
         TypeRule type = rule.getType();
@@ -217,6 +306,15 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Checks if the given answer matches the specified regex pattern.
+     *
+     * @param regex the regex pattern to match against
+     * @param answer the answer to validate
+     * @param type   the type of the answer (e.g., "email")
+     * @throws IllegalArgumentException if the answer is not a valid string
+     * @throws RuntimeException if the answer does not match the regex pattern
+     */
     private void checkRegex(String regex, Object answer, String type) {
         if (!(answer instanceof String)) {
             throw new IllegalArgumentException(String.format("Answer '%s' is not a valid %s", answer, type));
@@ -229,6 +327,14 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates the answer against multiple-choice options.
+     *
+     * @param answer the answer to validate
+     * @param type   the type of rule for validation (e.g., IS_RADIO)
+     * @param options the options containing valid choices
+     * @throws RuntimeException if the answer is not a list or does not meet the validation criteria
+     */
     public void checkMultiChoice(Object answer, TypeRule type, Option options) {
         if (!(answer instanceof List)) {
             throw new RuntimeException(String.format("Answer '%s' is not a list", answer));
@@ -247,6 +353,13 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Checks the interval values for the given answer based on the type rule.
+     *
+     * @param value the string value to check
+     * @param type  the type of rule (e.g., MIN_LENGTH, MAX_LENGTH)
+     * @param answer the answer to validate
+     */
     public void checkIntervalValues(String value, TypeRule type, Object answer) {
         if (value.isEmpty()) {
             return;
@@ -260,6 +373,14 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates the length of the given answer against specified limits.
+     *
+     * @param answer the answer to validate
+     * @param limit  the length limit for validation
+     * @param type   the type of rule for length validation (e.g., MIN_LENGTH, MAX_LENGTH)
+     * @throws RuntimeException if the answer is not a string or does not meet the length requirement
+     */
     private void validateStringLength(Object answer, int limit, TypeRule type) {
         if (!(answer instanceof String answerStr)) {
             throw new RuntimeException(String.format("Answer '%s' is not a string", answer));
@@ -271,6 +392,14 @@ public class AnswerService {
         }
     }
 
+    /**
+     * Validates the numeric value of the answer against a specified limit.
+     *
+     * @param answer the answer to validate
+     * @param limit  the numeric limit for validation
+     * @param type   the type of rule for numeric validation (e.g., MIN_VALUE, MAX_VALUE)
+     * @throws RuntimeException if the answer does not meet the value requirement
+     */
     private void validateNumericValue(Object answer, int limit, TypeRule type) {
         float answerValue = Float.parseFloat((String) answer);
         if ((type == TypeRule.MIN_VALUE && answerValue < limit) ||
