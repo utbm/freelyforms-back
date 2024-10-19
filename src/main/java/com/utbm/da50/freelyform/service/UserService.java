@@ -2,6 +2,7 @@ package com.utbm.da50.freelyform.service;
 
 
 import com.utbm.da50.freelyform.dto.user.UpdateUserRequest;
+import com.utbm.da50.freelyform.dto.user.UserSimpleResponse;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,44 +29,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> findAll(Optional<Integer> limit, Optional<Integer> offset) {
-        return userRepository.findAll();
+
+    // Returns all the users
+    public List<UserSimpleResponse> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(User::toUserSimpleResponse)
+                .toList();
     }
 
-    public User getUserById(@NonNull Integer userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));
-    }
-
-    public User updateUser(@NonNull Integer userId, UpdateUserRequest user) {
-        User userToUpdate = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));
-
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-
-        return userRepository.save(userToUpdate);
-    }
-
-    public void deleteUser(@NonNull Integer userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User with ID '" + userId + "' doesn't exist");
-        }
-
-        userRepository.deleteById(userId);
-    }
-
-    public int count() {
-        return (int) userRepository.count();
-    }
-
-    public List<User> getUsersByIds(List<Integer> ids) {
-        List<User> users = new ArrayList<>();
-        for (Integer id : ids) {
-            users.add(userRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("User with ID '" + id + "' doesn't exist")));
-        }
-        return users;
-    }
 
 }
