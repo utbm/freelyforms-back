@@ -5,7 +5,9 @@ import com.utbm.da50.freelyform.model.AnswerGroup;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,8 @@ public class AnswerController {
      */
     @GetMapping("/{prefab_id}/{answer_id}")
     @Operation(summary = "Get the specified answer")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public AnswerGroup getAnswer(@PathVariable String prefab_id, @PathVariable String answer_id) {
         return answerService.getAnswerGroup(prefab_id, answer_id);
     }
