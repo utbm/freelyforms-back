@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +36,23 @@ public class UserService {
                 .map(User::toUserSimpleResponse)
                 .toList();
     }
+
+    // Get user by id
+    public UserSimpleResponse findById(String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        return user.get().toUserSimpleResponse();
+    }
+
+
+    // Delete user by id
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
+    }
+
+
 
 
 }
