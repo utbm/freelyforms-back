@@ -66,6 +66,7 @@ public class PrefabService {
                     .name(p.getName())
                     .description(p.getDescription())
                     .tags(p.getTags())
+                    .isActive(p.getIsActive())
                     .groups(
                             p.getGroups().stream()
                                     .map(group -> {
