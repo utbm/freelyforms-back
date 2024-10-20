@@ -9,4 +9,6 @@ public interface AnswerRepository extends MongoRepository<AnswerGroup, String> {
     boolean existsByPrefabIdAndUserId(String prefabId, String token);
 
     Optional<AnswerGroup> findByPrefabIdAndId(String prefabId, String answerId);
+
+    Optional<AnswerGroup> findByPrefabId(String prefabId);
 }

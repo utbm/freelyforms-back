@@ -73,6 +73,20 @@ public class AnswerService {
     }
 
     /**
+     * Retrieves answer groups by prefab ID
+     *
+     * @param prefabId the ID of the prefab
+     * @return the found AnswerGroup
+     * @throws ResourceNotFoundException if no response is found for the provided IDs
+     */
+    public AnswerGroup getAnswerGroupByPrefabId(String prefabId){
+        return answerRepository.findByPrefabId(prefabId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("No response found for prefabId '%s'", prefabId)
+                ));
+    }
+
+    /**
      * Validates that a user has not already responded to the specified prefab.
      *
      * @param prefabId the ID of the prefab

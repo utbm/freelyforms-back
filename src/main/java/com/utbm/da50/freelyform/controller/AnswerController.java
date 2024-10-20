@@ -5,6 +5,8 @@ import com.utbm.da50.freelyform.model.AnswerGroup;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +32,9 @@ public class AnswerController {
      */
     @PostMapping("/{prefab_id}")
     @Operation(summary = "Create an answer to the prefab")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Answer created"),
+    })
     public void submitAnswer(@AuthenticationPrincipal User user,
                              @PathVariable String prefab_id, @RequestBody AnswerRequest request) {
         answerService.processAnswer(prefab_id, user, request);
@@ -44,9 +49,31 @@ public class AnswerController {
      */
     @GetMapping("/{prefab_id}/{answer_id}")
     @Operation(summary = "Get the specified answer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Answer details retrieved"),
+            @ApiResponse(responseCode = "404", description = "Answer not found")
+    })
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("isAuthenticated()")
     public AnswerGroup getAnswer(@PathVariable String prefab_id, @PathVariable String answer_id) {
         return answerService.getAnswerGroup(prefab_id, answer_id);
+    }
+
+    /**
+     * Retrieves all answers for a given prefab.
+     *
+     * @param prefab_id the ID of the prefab
+     * @return the answer groups associated with the specified prefab
+     */
+    @GetMapping("/{prefab_id}")
+    @Operation(summary = "Get all the answers for the specified prefab")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Answer details retrieved"),
+            @ApiResponse(responseCode = "404", description = "Answer not found")
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
+    public AnswerGroup getAnswers(@PathVariable String prefab_id) {
+        return answerService.getAnswerGroupByPrefabId(prefab_id);
     }
 }
