@@ -1,11 +1,14 @@
 package com.utbm.da50.freelyform.controller;
 
 import com.utbm.da50.freelyform.dto.*;
+import com.utbm.da50.freelyform.exceptions.ValidationException;
 import com.utbm.da50.freelyform.model.Prefab;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.service.PrefabService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -57,8 +60,9 @@ public class PrefabController {
     @GetMapping("/{id}")
     @Operation(summary = "Get prefab details by its unique id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Prefab details retrieved"),
-            @ApiResponse(responseCode = "404", description = "Prefab not found")
+            @ApiResponse(responseCode = "200", description = "Answer submitted successfully"),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(schema = @Schema(implementation = ValidationException.class))),
     })
     public ResponseEntity<PrefabOutputDetailled> getPrefabById(
             @PathVariable String id,

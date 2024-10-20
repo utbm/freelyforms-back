@@ -26,6 +26,11 @@ class AnswerServiceTest {
     }
 
     @Test
+    void getAnswerGroupByPrefabId() {
+
+    }
+
+    @Test
     void validateUniqueUserResponse() {
     }
 

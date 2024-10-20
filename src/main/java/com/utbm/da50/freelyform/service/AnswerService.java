@@ -111,8 +111,8 @@ public class AnswerService {
     public void checkFormPrefab(String prefabId, AnswerRequest request) {
         Prefab prefab = prefabService.getPrefabById(prefabId, false);
 
-//        if(!prefab.getIsActive())
-//            throw new ValidationException("The prefab is inactive.");
+        if(!prefab.getIsActive())
+            throw new ValidationException("The prefab is inactive.");
 
         List<Group> prefabGroups = prefab.getGroups();
         List<AnswerSubGroup> answerGroups = request.getAnswers();

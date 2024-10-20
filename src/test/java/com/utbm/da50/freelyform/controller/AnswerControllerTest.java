@@ -26,6 +26,10 @@ class AnswerControllerTest {
     }
 
     @Test
-    void getAnswer() {
+    void getSpecificAnswer() {
+    }
+
+    @Test
+    void getAnswersByPrefabId() {
     }
 }
