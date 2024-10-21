@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 /**
  * Controller for handling answer-related requests.
@@ -116,7 +117,10 @@ public class AnswerController {
             if (user == null)
                 return ResponseEntity.status(403).build();
 
-            List<AnswerOutputSimple> answers = answerService.getAnswerGroupByPrefabId(prefab_id);
+            List<AnswerOutputSimple> answers = answerService.getAnswerGroupByPrefabId(prefab_id)
+                    .stream()
+                    .map(AnswerGroup::toRestSimple)
+                    .toList();
             return ResponseEntity.ok(answers);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

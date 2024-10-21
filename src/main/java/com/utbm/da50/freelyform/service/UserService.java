@@ -37,6 +37,11 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));
     }
 
+    public User getUserById(@NonNull String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));
+    }
+
     public User updateUser(@NonNull Integer userId, UpdateUserRequest user) {
         User userToUpdate = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));

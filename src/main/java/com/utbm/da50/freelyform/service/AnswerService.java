@@ -32,6 +32,7 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final PrefabService prefabService;
+    private final UserService userService;
 
     /**
      * Processes a user's answer by validating it and saving it to the repository.
@@ -73,6 +74,8 @@ public class AnswerService {
                         String.format("No response found for prefabId '%s' and answerId '%s'", prefabId, answerId)
                 ));
 
+        userId = answerGroup.getUserId();
+
         AnswerUser answerUser = new AnswerUser("Guest", "");
         if (!Objects.equals(userId, "guest")) {
             answerUser.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
@@ -91,41 +94,30 @@ public class AnswerService {
      * @return the found AnswerGroup
      * @throws ResourceNotFoundException if no response is found for the provided IDs
      */
-    public List<AnswerOutputSimple> getAnswerGroupByPrefabId(String prefabId){
+    public List<AnswerGroup> getAnswerGroupByPrefabId(String prefabId){
         List<AnswerGroup> answerGroup = answerRepository.findByPrefabId(prefabId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("No response found for prefabId '%s'", prefabId)
                 ));
 
+        return answerGroup.stream().peek(group -> {
+            String userId = group.getUserId();
+            AnswerUser answerUser = new AnswerUser();
 
-        List<AnswerOutputSimple> answerList = new ArrayList<>();
+            answerUser.setName("Guest");
+            answerUser.setEmail("");
 
-//        AnswerUser answer_user = new AnswerUser();
-//        String user_id;
-//        User user;
-//        for (AnswerGroup group : answerGroup) {
-//            answer_user.setName("Guest");
-//            answer_user.setEmail("");
-//
-//            user_id = group.getUserId();
-//            user = userService.getUserById(user_id);
-//
-//            if (!Objects.equals(user_id, "guest")) {
-//                answer_user.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-//                answer_user.setEmail(user.getEmail());
-//            }
-//
-//            new AnswerOutputDetailled(
-//                    group.getId(),
-//                    group.getPrefabId(),
-//                    answer_user,
-//                    group.getCreatedAt(),
-//                    group.getAnswers()
-//            );
-//        }
+            if (!Objects.equals(userId, "guest")) {
+                User user = userService.getUserById(userId);
+                if (user != null) {
+                    answerUser.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+                    answerUser.setEmail(user.getEmail());
+                }
+            }
 
+            group.setUser(answerUser);
 
-        return answerList;
+        }).collect(Collectors.toList());
     }
 
     /**
