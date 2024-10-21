@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -69,13 +70,19 @@ public class AnswerController {
     @Operation(summary = "Get the specified answer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Answer details retrieved"),
+            @ApiResponse(responseCode = "403", description = "Forbidden: not authorized"),
             @ApiResponse(responseCode = "404", description = "Answer not found")
     })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AnswerOutput> getSpecificAnswer(
             @PathVariable String prefab_id,
             @PathVariable String answer_id,
             @AuthenticationPrincipal User user) {
         try {
+            if (user == null)
+                return ResponseEntity.status(403).build();
+
             AnswerOutput answer = answerService.getAnswerGroup(prefab_id, answer_id, user);
             return ResponseEntity.ok(answer);
         } catch (NoSuchElementException e) {
@@ -93,12 +100,18 @@ public class AnswerController {
     @Operation(summary = "Get all the answers for the specified prefab")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Answers retrieved"),
+            @ApiResponse(responseCode = "403", description = "Forbidden: not authorized"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AnswerOutput>> getAnswersByPrefabId(
             @PathVariable String prefab_id,
             @AuthenticationPrincipal User user) {
         try {
+            if (user == null)
+                return ResponseEntity.status(403).build();
+
             List<AnswerOutput> answers = answerService.getAnswerGroupByPrefabId(prefab_id, user);
             return ResponseEntity.ok(answers);
         } catch (NoSuchElementException e) {
