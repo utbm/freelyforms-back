@@ -21,6 +21,7 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Service class for processing and validating answers submitted by users.
@@ -31,7 +32,6 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final PrefabService prefabService;
-//    private final UserService userService;
 
     /**
      * Processes a user's answer by validating it and saving it to the repository.
@@ -46,11 +46,6 @@ public class AnswerService {
         validateUniqueUserResponse(prefabId, userId);
         checkFormPrefab(prefabId, answerGroup);
 
-//        AnswerGroup answerGroup = new AnswerGroup();
-//        answerGroup.setPrefabId(prefabId);
-//        answerGroup.setCreatedAt(LocalDate.now());
-//        answerGroup.setUserId(userId);
-//        answerGroup.setAnswers(request.getAnswers());
         answerGroup.setUserId(userId);
         answerGroup.setPrefabId(prefabId);
 
@@ -65,30 +60,28 @@ public class AnswerService {
      * @return the found AnswerGroup
      * @throws ResourceNotFoundException if no response is found for the provided IDs
      */
-    public AnswerOutputDetailled getAnswerGroup(String prefabId, String answerId, User user) {
+    public AnswerGroup getAnswerGroup(String prefabId, String answerId, User user) {
         String userId = user.getId();
 
-        AnswerGroup answerGroup = answerRepository.findByPrefabIdAndIdAndUserId(prefabId, answerId, userId)
+        if(!prefabService.doesUserOwnPrefab(userId, prefabId))
+            throw new RuntimeException(
+                    String.format("The user '%s' doesn't own this prefab '%s'", userId, prefabId)
+            );
+
+        AnswerGroup answerGroup = answerRepository.findByPrefabIdAndId(prefabId, answerId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("No response found for prefabId '%s' and answerId '%s'", prefabId, answerId)
                 ));
 
-        AnswerUser answer_user = new AnswerUser();
-        answer_user.setName("Guest");
-        answer_user.setEmail("");
-
-        if(!Objects.equals(userId, "guest")){
-            answer_user.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
-            answer_user.setEmail(user.getEmail());
+        AnswerUser answerUser = new AnswerUser("Guest", "");
+        if (!Objects.equals(userId, "guest")) {
+            answerUser.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+            answerUser.setEmail(user.getEmail());
         }
 
-        return new AnswerOutputDetailled(
-                answerGroup.getId(),
-                answerGroup.getPrefabId(),
-                answer_user,
-                answerGroup.getCreatedAt(),
-                answerGroup.getAnswers()
-        );
+        answerGroup.setUser(answerUser);
+
+        return answerGroup;
     }
 
     /**

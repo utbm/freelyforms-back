@@ -88,7 +88,7 @@ public class AnswerController {
             if (user == null)
                 return ResponseEntity.status(403).build();
 
-            return ResponseEntity.ok(answerService.getAnswerGroup(prefab_id, answer_id, user));
+            return ResponseEntity.ok(answerService.getAnswerGroup(prefab_id, answer_id, user).toRest());
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
