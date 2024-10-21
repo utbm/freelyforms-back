@@ -78,7 +78,7 @@ public class PrefabControllerTest {
         when(prefabService.getPrefabById(mockPrefab.getId(), false)).thenReturn(mockPrefab);
         when(mockPrefab.toRest()).thenReturn(prefabOutput);
 
-        ResponseEntity<PrefabOutputDetailled> response = prefabController.getPrefabById(mockPrefab.getId(), false);
+        ResponseEntity<PrefabOutputDetailled> response = prefabController.getPrefabById(mockPrefab.getId(), false, null);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is(notNullValue()));
@@ -90,7 +90,7 @@ public class PrefabControllerTest {
         when(prefabService.getPrefabById(anyString(), anyBoolean())).thenThrow(new NoSuchElementException());
 
         assertThrows(ResponseStatusException.class, () -> {
-            prefabController.getPrefabById("invalid_id", false);
+            prefabController.getPrefabById("invalid_id", false,null);
         });
 
         verify(prefabService, times(1)).getPrefabById(anyString(), anyBoolean());

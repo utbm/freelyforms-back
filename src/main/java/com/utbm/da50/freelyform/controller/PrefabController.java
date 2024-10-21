@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -58,19 +59,25 @@ public class PrefabController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get prefab details by its unique id")
+    @Operation(summary = "Get prefab details by its unique id and optionally include hidden fields, also handle isAlreadyAnswered \\ " +
+            "field if the user is authenticated")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Answer submitted successfully"),
+            @ApiResponse(responseCode = "200", description = "Prefab retrieved"),
             @ApiResponse(responseCode = "400", description = "Validation error",
                     content = @Content(schema = @Schema(implementation = ValidationException.class))),
+            @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
     public ResponseEntity<PrefabOutputDetailled> getPrefabById(
             @PathVariable String id,
             @Parameter(description = "Include hidden fields in the response")
-            @RequestParam(value = "withHidden", defaultValue = "false") boolean withHidden)
+            @RequestParam(value = "withHidden", defaultValue = "false") boolean withHidden,
+            @Nullable @AuthenticationPrincipal User user
+    )
     {
         try {
-            // Fetch the prefab and return the response
+            if(user!=null && withHidden){ // Handle isAlreadyAnswered field from the connected user
+                return ResponseEntity.ok(prefabService.getPrefabById(id, user.getId()).toRest());
+            }
             return ResponseEntity.ok(prefabService.getPrefabById(id, withHidden).toRest());
         } catch (NoSuchElementException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
