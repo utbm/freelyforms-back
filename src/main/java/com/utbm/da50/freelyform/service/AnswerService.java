@@ -2,10 +2,9 @@ package com.utbm.da50.freelyform.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.lang.NonNull;
-import com.utbm.da50.freelyform.dto.answer.AnswerOutput;
-import com.utbm.da50.freelyform.dto.answer.AnswerRequest;
-import com.utbm.da50.freelyform.dto.answer.AnswerUser;
+import com.utbm.da50.freelyform.dto.answer.AnswerOutputSimple;
+import com.utbm.da50.freelyform.dto.answer.AnswerOutputDetailled;
+import com.utbm.da50.freelyform.model.AnswerUser;
 import com.utbm.da50.freelyform.enums.TypeField;
 import com.utbm.da50.freelyform.enums.TypeRule;
 import com.utbm.da50.freelyform.exceptions.UniqueResponseException;
@@ -32,26 +31,28 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final PrefabService prefabService;
-    private final UserService userService;
+//    private final UserService userService;
 
     /**
      * Processes a user's answer by validating it and saving it to the repository.
      *
      * @param prefabId the ID of the prefab associated with the answer
      * @param user     the user submitting the answer
-     * @param request  the answer request containing the answers
+     * @param answerGroup  the answer request containing the answers
      * @throws UniqueResponseException if a unique response exists or validation fails
      */
-    public void processAnswer(String prefabId, User user, @NonNull AnswerRequest request) {
+    public void processAnswer(String prefabId, User user, AnswerGroup answerGroup) {
         String userId = Optional.ofNullable(user).map(User::getId).orElse("guest");
         validateUniqueUserResponse(prefabId, userId);
-        checkFormPrefab(prefabId, request);
+        checkFormPrefab(prefabId, answerGroup);
 
-        AnswerGroup answerGroup = new AnswerGroup();
-        answerGroup.setPrefabId(prefabId);
-        answerGroup.setCreatedAt(LocalDate.now());
+//        AnswerGroup answerGroup = new AnswerGroup();
+//        answerGroup.setPrefabId(prefabId);
+//        answerGroup.setCreatedAt(LocalDate.now());
+//        answerGroup.setUserId(userId);
+//        answerGroup.setAnswers(request.getAnswers());
         answerGroup.setUserId(userId);
-        answerGroup.setAnswers(request.getAnswers());
+        answerGroup.setPrefabId(prefabId);
 
         answerRepository.save(answerGroup);
     }
@@ -64,51 +65,14 @@ public class AnswerService {
      * @return the found AnswerGroup
      * @throws ResourceNotFoundException if no response is found for the provided IDs
      */
-    public AnswerOutput getAnswerGroup(String prefabId, String answerId, User user) {
-        System.out.println(user);
-        String userId = "guest";
-
-        if(user != null)
-            userId = user.getId();
+    public AnswerOutputDetailled getAnswerGroup(String prefabId, String answerId, User user) {
+        String userId = user.getId();
 
         AnswerGroup answerGroup = answerRepository.findByPrefabIdAndIdAndUserId(prefabId, answerId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("No response found for prefabId '%s' and answerId '%s'", prefabId, answerId)
                 ));
 
-        return convertAnswerGroup(answerGroup, userId, user);
-    }
-
-    /**
-     * Retrieves answer groups by prefab ID
-     *
-     * @param prefabId the ID of the prefab
-     * @return the found AnswerGroup
-     * @throws ResourceNotFoundException if no response is found for the provided IDs
-     */
-    public List<AnswerOutput> getAnswerGroupByPrefabId(String prefabId, User user){
-        List<AnswerGroup> answerGroup;
-        String userId = "guest";
-
-        if(user != null)
-            userId = user.getId();
-
-        answerGroup = answerRepository.findByPrefabIdAndUserId(prefabId, userId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("No response found for prefabId '%s'", prefabId)
-                ));
-
-
-
-        List<AnswerOutput> answerOutputs = new ArrayList<>();
-        for (AnswerGroup group : answerGroup) {
-            answerOutputs.add(convertAnswerGroup(group, userId, user));
-        }
-
-        return answerOutputs;
-    }
-
-    public AnswerOutput convertAnswerGroup(AnswerGroup answerGroup, String userId, User user) {
         AnswerUser answer_user = new AnswerUser();
         answer_user.setName("Guest");
         answer_user.setEmail("");
@@ -118,13 +82,57 @@ public class AnswerService {
             answer_user.setEmail(user.getEmail());
         }
 
-        return new AnswerOutput(
+        return new AnswerOutputDetailled(
                 answerGroup.getId(),
                 answerGroup.getPrefabId(),
                 answer_user,
                 answerGroup.getCreatedAt(),
                 answerGroup.getAnswers()
         );
+    }
+
+    /**
+     * Retrieves answer groups by prefab ID
+     *
+     * @param prefabId the ID of the prefab
+     * @return the found AnswerGroup
+     * @throws ResourceNotFoundException if no response is found for the provided IDs
+     */
+    public List<AnswerOutputSimple> getAnswerGroupByPrefabId(String prefabId){
+        List<AnswerGroup> answerGroup = answerRepository.findByPrefabId(prefabId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("No response found for prefabId '%s'", prefabId)
+                ));
+
+
+        List<AnswerOutputSimple> answerList = new ArrayList<>();
+
+//        AnswerUser answer_user = new AnswerUser();
+//        String user_id;
+//        User user;
+//        for (AnswerGroup group : answerGroup) {
+//            answer_user.setName("Guest");
+//            answer_user.setEmail("");
+//
+//            user_id = group.getUserId();
+//            user = userService.getUserById(user_id);
+//
+//            if (!Objects.equals(user_id, "guest")) {
+//                answer_user.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+//                answer_user.setEmail(user.getEmail());
+//            }
+//
+//            new AnswerOutputDetailled(
+//                    group.getId(),
+//                    group.getPrefabId(),
+//                    answer_user,
+//                    group.getCreatedAt(),
+//                    group.getAnswers()
+//            );
+//        }
+
+
+        return answerList;
     }
 
     /**
@@ -146,17 +154,17 @@ public class AnswerService {
      * Checks that the prefab is active and the number of answer groups matches the prefab's groups.
      *
      * @param prefabId the ID of the prefab
-     * @param request  the answer request containing the answers
+     * @param answerGroup  the answer request containing the answers
      * @throws ValidationException if the prefab is inactive or the number of groups does not match
      */
-    public void checkFormPrefab(String prefabId, AnswerRequest request) {
+    public void checkFormPrefab(String prefabId, AnswerGroup answerGroup) {
         Prefab prefab = prefabService.getPrefabById(prefabId, false);
 
         if(!prefab.getIsActive())
             throw new ValidationException("The prefab is inactive.");
 
         List<Group> prefabGroups = prefab.getGroups();
-        List<AnswerSubGroup> answerGroups = request.getAnswers();
+        List<AnswerSubGroup> answerGroups = answerGroup.getAnswers();
 
         if (prefabGroups.size() != answerGroups.size()) {
             throw new ValidationException("Number of groups in the prefab does not match the number of answer groups.");

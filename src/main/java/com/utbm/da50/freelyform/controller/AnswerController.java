@@ -1,13 +1,16 @@
 package com.utbm.da50.freelyform.controller;
 
-import com.utbm.da50.freelyform.dto.answer.AnswerOutput;
-import com.utbm.da50.freelyform.dto.answer.AnswerRequest;
+import com.utbm.da50.freelyform.dto.answer.AnswerInput;
+import com.utbm.da50.freelyform.dto.answer.AnswerOutputSimple;
+import com.utbm.da50.freelyform.dto.answer.AnswerOutputDetailled;
+import com.utbm.da50.freelyform.model.AnswerGroup;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.util.NoSuchElementException;
 /**
  * Controller for handling answer-related requests.
  */
+@Tag(name = "Answer API", description = "Endpoints for managing answers")
 @RestController
 @RequestMapping("v1/answers")
 @RequiredArgsConstructor
@@ -48,9 +52,10 @@ public class AnswerController {
     public ResponseEntity<Void> submitAnswer(
             @AuthenticationPrincipal User user,
             @PathVariable String prefab_id,
-            @RequestBody AnswerRequest request) {
+            @RequestBody AnswerInput request) {
         try {
-            answerService.processAnswer(prefab_id, user, request);
+            AnswerGroup answerGroup = request.toAnswer();
+            answerService.processAnswer(prefab_id, user, answerGroup);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -75,7 +80,7 @@ public class AnswerController {
     })
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AnswerOutput> getSpecificAnswer(
+    public ResponseEntity<AnswerOutputDetailled> getSpecificAnswer(
             @PathVariable String prefab_id,
             @PathVariable String answer_id,
             @AuthenticationPrincipal User user) {
@@ -83,8 +88,7 @@ public class AnswerController {
             if (user == null)
                 return ResponseEntity.status(403).build();
 
-            AnswerOutput answer = answerService.getAnswerGroup(prefab_id, answer_id, user);
-            return ResponseEntity.ok(answer);
+            return ResponseEntity.ok(answerService.getAnswerGroup(prefab_id, answer_id, user));
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -94,7 +98,7 @@ public class AnswerController {
      * Retrieves all answers for a given prefab.
      *
      * @param prefab_id the ID of the prefab
-     * @return ResponseEntity with the answer groups associated with the specified prefab
+     * @return ResponseEntity with the answer output simple associated with the specified prefab
      */
     @GetMapping("/{prefab_id}")
     @Operation(summary = "Get all the answers for the specified prefab")
@@ -105,14 +109,14 @@ public class AnswerController {
     })
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<AnswerOutput>> getAnswersByPrefabId(
+    public ResponseEntity<List<AnswerOutputSimple>> getAnswersByPrefabId(
             @PathVariable String prefab_id,
             @AuthenticationPrincipal User user) {
         try {
             if (user == null)
                 return ResponseEntity.status(403).build();
 
-            List<AnswerOutput> answers = answerService.getAnswerGroupByPrefabId(prefab_id, user);
+            List<AnswerOutputSimple> answers = answerService.getAnswerGroupByPrefabId(prefab_id);
             return ResponseEntity.ok(answers);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

@@ -11,5 +11,5 @@ public interface AnswerRepository extends MongoRepository<AnswerGroup, String> {
 
     Optional<AnswerGroup> findByPrefabIdAndIdAndUserId(String prefabId, String answerId, String userId);
 
-    Optional<List<AnswerGroup>> findByPrefabIdAndUserId(String prefabId, String userId);
+    Optional<List<AnswerGroup>> findByPrefabId(String prefabId);
 }
