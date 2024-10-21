@@ -1,6 +1,7 @@
 package com.utbm.da50.freelyform.controller;
 
 
+import com.utbm.da50.freelyform.dto.user.UserRoleRequest;
 import com.utbm.da50.freelyform.dto.user.UserSimpleResponse;
 import com.utbm.da50.freelyform.enums.UserRole;
 import com.utbm.da50.freelyform.model.User;
@@ -17,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "User API", description = "Endpoints for managing users")
 @RequestMapping("/v1/users")
@@ -55,6 +55,34 @@ public class UserController {
         }
     }
 
+
+    // Update user role
+    @PatchMapping("/{id}")
+    @Operation(summary = "Updates the roles of an user, only if the authenticated user is an admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully modified roles"),
+            @ApiResponse(responseCode = "403", description = "Forbidden: not authorized")
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<User> updateUserRole(@AuthenticationPrincipal User user, @PathVariable String id, @RequestBody UserRoleRequest request) {
+
+        if (user == null) {
+            return ResponseEntity.status(403).build();
+        }
+        try {
+            // Check if user is admin
+            if(!user.getRole().contains(UserRole.ADMIN)){
+                return ResponseEntity.status(403).build();
+            }
+            userService.updateRoles(id, request);
+
+            return ResponseEntity.status(200).build();
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(503).build();
+        }
+    }
 
     // Delete user
     @DeleteMapping("/{id}")
