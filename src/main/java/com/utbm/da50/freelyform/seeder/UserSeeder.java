@@ -20,7 +20,7 @@ public class UserSeeder implements CommandLineRunner {
 
     // Retry settings
     private static final int MAX_RETRIES = 5;
-    private static final int RETRY_DELAY_MS = 2000; // 3 seconds
+    private static final int RETRY_DELAY_MS = 1000; // 1 seconds
 
     @Override
     public void run(String... args) throws Exception {
