@@ -3,7 +3,9 @@ package com.utbm.da50.freelyform.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.lang.NonNull;
+import com.utbm.da50.freelyform.dto.answer.AnswerOutput;
 import com.utbm.da50.freelyform.dto.answer.AnswerRequest;
+import com.utbm.da50.freelyform.dto.answer.AnswerUser;
 import com.utbm.da50.freelyform.enums.TypeField;
 import com.utbm.da50.freelyform.enums.TypeRule;
 import com.utbm.da50.freelyform.exceptions.UniqueResponseException;
@@ -11,17 +13,13 @@ import com.utbm.da50.freelyform.exceptions.ValidationException;
 import com.utbm.da50.freelyform.exceptions.ResourceNotFoundException;
 import com.utbm.da50.freelyform.model.*;
 import com.utbm.da50.freelyform.repository.AnswerRepository;
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +32,7 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final PrefabService prefabService;
+    private final UserService userService;
 
     /**
      * Processes a user's answer by validating it and saving it to the repository.
@@ -44,7 +43,7 @@ public class AnswerService {
      * @throws UniqueResponseException if a unique response exists or validation fails
      */
     public void processAnswer(String prefabId, User user, @NonNull AnswerRequest request) {
-        String userId = Optional.ofNullable(user).map(User::getId).orElse("");
+        String userId = Optional.ofNullable(user).map(User::getId).orElse("guest");
         validateUniqueUserResponse(prefabId, userId);
         checkFormPrefab(prefabId, request);
 
@@ -65,11 +64,19 @@ public class AnswerService {
      * @return the found AnswerGroup
      * @throws ResourceNotFoundException if no response is found for the provided IDs
      */
-    public AnswerGroup getAnswerGroup(String prefabId, String answerId) {
-        return answerRepository.findByPrefabIdAndId(prefabId, answerId)
+    public AnswerOutput getAnswerGroup(String prefabId, String answerId, User user) {
+        System.out.println(user);
+        String userId = "guest";
+
+        if(user != null)
+            userId = user.getId();
+
+        AnswerGroup answerGroup = answerRepository.findByPrefabIdAndIdAndUserId(prefabId, answerId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("No response found for prefabId '%s' and answerId '%s'.", prefabId, answerId)
+                        String.format("No response found for prefabId '%s' and answerId '%s'", prefabId, answerId)
                 ));
+
+        return convertAnswerGroup(answerGroup, userId, user);
     }
 
     /**
@@ -79,11 +86,45 @@ public class AnswerService {
      * @return the found AnswerGroup
      * @throws ResourceNotFoundException if no response is found for the provided IDs
      */
-    public AnswerGroup getAnswerGroupByPrefabId(String prefabId){
-        return answerRepository.findByPrefabId(prefabId)
+    public List<AnswerOutput> getAnswerGroupByPrefabId(String prefabId, User user){
+        List<AnswerGroup> answerGroup;
+        String userId = "guest";
+
+        if(user != null)
+            userId = user.getId();
+
+        answerGroup = answerRepository.findByPrefabIdAndUserId(prefabId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("No response found for prefabId '%s'", prefabId)
                 ));
+
+
+
+        List<AnswerOutput> answerOutputs = new ArrayList<>();
+        for (AnswerGroup group : answerGroup) {
+            answerOutputs.add(convertAnswerGroup(group, userId, user));
+        }
+
+        return answerOutputs;
+    }
+
+    public AnswerOutput convertAnswerGroup(AnswerGroup answerGroup, String userId, User user) {
+        AnswerUser answer_user = new AnswerUser();
+        answer_user.setName("Guest");
+        answer_user.setEmail("");
+
+        if(!Objects.equals(userId, "guest")){
+            answer_user.setName(String.format("%s %s", user.getFirstName(), user.getLastName()));
+            answer_user.setEmail(user.getEmail());
+        }
+
+        return new AnswerOutput(
+                answerGroup.getId(),
+                answerGroup.getPrefabId(),
+                answer_user,
+                answerGroup.getCreatedAt(),
+                answerGroup.getAnswers()
+        );
     }
 
     /**
@@ -94,7 +135,7 @@ public class AnswerService {
      * @throws UniqueResponseException if a response with the same prefab ID and user ID already exists
      */
     public void validateUniqueUserResponse(String prefabId, String userId) {
-        if (StringUtils.isNotBlank(userId) && answerRepository.existsByPrefabIdAndUserId(prefabId, userId)) {
+        if (!Objects.equals(userId, "guest") && answerRepository.existsByPrefabIdAndUserId(prefabId, userId)) {
             throw new UniqueResponseException(
                     String.format("A response with prefabId '%s' and userId '%s' already exists.", prefabId, userId)
             );

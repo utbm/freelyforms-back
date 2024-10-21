@@ -1,7 +1,7 @@
 package com.utbm.da50.freelyform.controller;
 
+import com.utbm.da50.freelyform.dto.answer.AnswerOutput;
 import com.utbm.da50.freelyform.dto.answer.AnswerRequest;
-import com.utbm.da50.freelyform.model.AnswerGroup;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,11 +11,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -44,7 +44,6 @@ public class AnswerController {
             @ApiResponse(responseCode = "400", description = "Incorrect structure for answer"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> submitAnswer(
             @AuthenticationPrincipal User user,
             @PathVariable String prefab_id,
@@ -72,12 +71,12 @@ public class AnswerController {
             @ApiResponse(responseCode = "200", description = "Answer details retrieved"),
             @ApiResponse(responseCode = "404", description = "Answer not found")
     })
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AnswerGroup> getSpecificAnswer(
+    public ResponseEntity<AnswerOutput> getSpecificAnswer(
             @PathVariable String prefab_id,
-            @PathVariable String answer_id) {
+            @PathVariable String answer_id,
+            @AuthenticationPrincipal User user) {
         try {
-            AnswerGroup answer = answerService.getAnswerGroup(prefab_id, answer_id);
+            AnswerOutput answer = answerService.getAnswerGroup(prefab_id, answer_id, user);
             return ResponseEntity.ok(answer);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -96,10 +95,11 @@ public class AnswerController {
             @ApiResponse(responseCode = "200", description = "Answers retrieved"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AnswerGroup> getAnswersByPrefabId(@PathVariable String prefab_id) {
+    public ResponseEntity<List<AnswerOutput>> getAnswersByPrefabId(
+            @PathVariable String prefab_id,
+            @AuthenticationPrincipal User user) {
         try {
-            AnswerGroup answers = answerService.getAnswerGroupByPrefabId(prefab_id);
+            List<AnswerOutput> answers = answerService.getAnswerGroupByPrefabId(prefab_id, user);
             return ResponseEntity.ok(answers);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
