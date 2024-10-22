@@ -236,29 +236,15 @@ public class AnswerService {
      * @throws ValidationException if the answer does not match the expected type and the type is unsupported
      */
     private void validateAnswerType(Object answer, TypeField type) {
-        switch (type) {
-            case TEXT:
-                if (!(answer instanceof String)) {
-                    throw new ValidationException(String.format("Answer '%s' is not a string", answer));
-                }
-                break;
-            case NUMBER:
+        if(type == TypeField.TEXT && !(answer instanceof String))
+            throw new ValidationException(String.format("Answer '%s' is not a string", answer));
+        if(type == TypeField.NUMBER)
                 validateNumericAnswer(answer);
-                break;
-            case DATE:
+        if(type == TypeField.DATE)
                 validateDateAnswer(answer);
-                break;
-            case GEOLOCATION:
+        if(type == TypeField.GEOLOCATION)
                 validateGeolocationAnswer(answer);
-                break;
-            case MULTIPLE_CHOICE:
-                if (!(answer instanceof List)) {
-                    throw new ValidationException(String.format("Answer '%s' is not a list", answer));
-                }
-                break;
-            default:
-                throw new ValidationException("Unsupported TypeField: " + type);
-        }
+
     }
 
     /**
@@ -283,7 +269,7 @@ public class AnswerService {
      */
     private void validateDateAnswer(Object answer) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate.parse((String) answer, formatter);
         } catch (DateTimeParseException e) {
             throw new ValidationException(String.format("Answer '%s' has not a valid format date", answer));
@@ -345,8 +331,10 @@ public class AnswerService {
                 checkRegex(value, answer, "regex");
                 break;
             case IS_RADIO:
+                checkRadioChoice(answer, options);
+                break;
             case IS_MULTIPLE_CHOICE:
-                checkMultiChoice(answer, type, options);
+                checkMultiChoice(answer, options);
                 break;
             case MAX_LENGTH:
             case MIN_LENGTH:
@@ -384,24 +372,33 @@ public class AnswerService {
      * Validates the answer against multiple-choice options.
      *
      * @param answer the answer to validate
-     * @param type   the type of rule for validation (e.g., IS_RADIO)
      * @param options the options containing valid choices
      * @throws ValidationException if the answer is not a list or does not meet the validation criteria
      */
-    public void checkMultiChoice(Object answer, TypeRule type, Option options) {
+    public void checkMultiChoice(Object answer, Option options) {
         if (!(answer instanceof List)) {
             throw new ValidationException(String.format("Answer '%s' is not a list", answer));
         }
 
-        List<String> answers = (List<String>) answer;
-        if (type == TypeRule.IS_RADIO && answers.size() != 1) {
-            throw new ValidationException(String.format("Must contain one single answer: '%s'", answer));
-        }
-
         List<String> choices = options.getChoices();
-        boolean found = answers.stream().anyMatch(choices::contains);
+        boolean found;
+
+        List<String> answers = (List<String>) answer;
+        found = answers.stream().anyMatch(choices::contains);
 
         if (!found) {
+            throw new ValidationException(String.format("Answer '%s' is not an option of the list '%s'",
+                    answer, choices));
+        }
+    }
+
+    public void checkRadioChoice(Object answer, Option options) {
+        if (!(answer instanceof String)) {
+            throw new ValidationException(String.format("Answer '%s' is not a String", answer));
+        }
+        List<String> choices = options.getChoices();
+
+        if (!choices.contains(answer)) {
             throw new ValidationException(String.format("Answer '%s' is not an option of the list '%s'",
                     answer, choices));
         }
