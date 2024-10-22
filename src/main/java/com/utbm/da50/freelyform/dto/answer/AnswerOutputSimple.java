@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -15,5 +16,5 @@ import java.time.LocalDate;
 public class AnswerOutputSimple {
     private String id;
     private AnswerUser user;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 }

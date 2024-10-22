@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class AnswerGroup {
 
     @CreatedDate
     @Setter
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Setter
     private List<AnswerSubGroup> answers;
