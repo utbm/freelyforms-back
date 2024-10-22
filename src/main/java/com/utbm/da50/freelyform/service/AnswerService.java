@@ -2,8 +2,6 @@ package com.utbm.da50.freelyform.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.utbm.da50.freelyform.dto.answer.AnswerOutputSimple;
-import com.utbm.da50.freelyform.dto.answer.AnswerOutputDetailled;
 import com.utbm.da50.freelyform.model.AnswerUser;
 import com.utbm.da50.freelyform.enums.TypeField;
 import com.utbm.da50.freelyform.enums.TypeRule;
@@ -16,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -271,11 +268,6 @@ public class AnswerService {
      * @throws ValidationException if the answer is not a valid number
      */
     private void validateNumericAnswer(Object answer) {
-//        try {
-//            BigInteger.valueOf(answer);
-//        } catch (NumberFormatException e) {
-//            throw new ValidationException(String.format("Answer '%s' is not a valid number", answer));
-//        }
         try {
             new BigDecimal(answer.toString());
         } catch (NumberFormatException e) {
