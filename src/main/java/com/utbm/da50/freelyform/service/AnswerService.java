@@ -15,6 +15,8 @@ import com.utbm.da50.freelyform.repository.AnswerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -269,8 +271,13 @@ public class AnswerService {
      * @throws ValidationException if the answer is not a valid number
      */
     private void validateNumericAnswer(Object answer) {
+//        try {
+//            BigInteger.valueOf(answer);
+//        } catch (NumberFormatException e) {
+//            throw new ValidationException(String.format("Answer '%s' is not a valid number", answer));
+//        }
         try {
-            Float.parseFloat((String) answer);
+            new BigDecimal(answer.toString());
         } catch (NumberFormatException e) {
             throw new ValidationException(String.format("Answer '%s' is not a valid number", answer));
         }
@@ -284,10 +291,10 @@ public class AnswerService {
      */
     private void validateDateAnswer(Object answer) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
             LocalDate.parse((String) answer, formatter);
         } catch (DateTimeParseException e) {
-            throw new ValidationException(String.format("Answer '%s' is not a valid date", answer));
+            throw new ValidationException(String.format("Answer '%s' has not a valid format date", answer));
         }
     }
 
@@ -420,7 +427,7 @@ public class AnswerService {
             return;
         }
 
-        int limit = Integer.parseInt(value);
+        BigDecimal limit = new BigDecimal(value);
         if (type == TypeRule.MIN_LENGTH || type == TypeRule.MAX_LENGTH) {
             validateStringLength(answer, limit, type);
         } else {
@@ -436,12 +443,15 @@ public class AnswerService {
      * @param type   the type of rule for length validation (e.g., MIN_LENGTH, MAX_LENGTH)
      * @throws ValidationException if the answer is not a string or does not meet the length requirement
      */
-    private void validateStringLength(Object answer, int limit, TypeRule type) {
+    private void validateStringLength(Object answer, BigDecimal limit, TypeRule type) {
         if (!(answer instanceof String answerStr)) {
             throw new ValidationException(String.format("Answer '%s' is not a string", answer));
         }
-        if ((type == TypeRule.MIN_LENGTH && answerStr.length() < limit) ||
-                (type == TypeRule.MAX_LENGTH && answerStr.length() > limit)) {
+
+        BigDecimal answerLength = new BigDecimal(answerStr.length());
+        int result = answerLength.compareTo(limit);
+        if ((type == TypeRule.MIN_LENGTH && result < 0) ||
+                (type == TypeRule.MAX_LENGTH && result > 0)) {
             throw new ValidationException(String.format("Answer '%s' does not meet the length requirement for '%s'",
                     answer, type));
         }
@@ -455,10 +465,11 @@ public class AnswerService {
      * @param type   the type of rule for numeric validation (e.g., MIN_VALUE, MAX_VALUE)
      * @throws ValidationException if the answer does not meet the value requirement
      */
-    private void validateNumericValue(Object answer, int limit, TypeRule type) {
-        float answerValue = Float.parseFloat((String) answer);
-        if ((type == TypeRule.MIN_VALUE && answerValue < limit) ||
-                (type == TypeRule.MAX_VALUE && answerValue > limit)) {
+    private void validateNumericValue(Object answer, BigDecimal limit, TypeRule type) {
+        BigDecimal answerValue = new BigDecimal(String.valueOf(answer));
+        int result = answerValue.compareTo(limit);
+        if ((type == TypeRule.MIN_VALUE && result < 0) ||
+                (type == TypeRule.MAX_VALUE && result > 0)) {
             throw new ValidationException(String.format("Answer '%s' does not meet the value requirement for '%s'",
                     answer, type));
         }
