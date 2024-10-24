@@ -1,18 +1,16 @@
 package com.utbm.da50.freelyform.service;
 
 
-import com.utbm.da50.freelyform.dto.user.UpdateUserRequest;
+import com.utbm.da50.freelyform.dto.user.UserRoleRequest;
+import com.utbm.da50.freelyform.dto.user.UserSimpleResponse;
+import com.utbm.da50.freelyform.enums.UserRole;
 import com.utbm.da50.freelyform.model.User;
 import com.utbm.da50.freelyform.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,44 +26,45 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> findAll(Optional<Integer> limit, Optional<Integer> offset) {
-        return userRepository.findAll();
+
+    // Returns all the users
+    public List<UserSimpleResponse> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(User::toUserSimpleResponse)
+                .toList();
     }
 
-    public User getUserById(@NonNull Integer userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));
-    }
-
-    public User updateUser(@NonNull Integer userId, UpdateUserRequest user) {
-        User userToUpdate = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with ID '" + userId + "' doesn't exist."));
-
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-
-        return userRepository.save(userToUpdate);
-    }
-
-    public void deleteUser(@NonNull Integer userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User with ID '" + userId + "' doesn't exist");
+    // Get user by id
+    public UserSimpleResponse findById(String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
         }
-
-        userRepository.deleteById(userId);
+        return user.get().toUserSimpleResponse();
     }
 
-    public int count() {
-        return (int) userRepository.count();
-    }
 
-    public List<User> getUsersByIds(List<Integer> ids) {
-        List<User> users = new ArrayList<>();
-        for (Integer id : ids) {
-            users.add(userRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("User with ID '" + id + "' doesn't exist")));
+    // Update the roles of the user
+    public void updateRoles(String id, @NonNull UserRoleRequest userRoleRequest) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
         }
-        return users;
+        User userToUpdate = user.get();
+        userToUpdate.setRole(userRoleRequest.getRoles());
+        userToUpdate.getRole().add(UserRole.USER); // Default role
+
+        userRepository.save(userToUpdate);
     }
+
+
+    // Delete user by id
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
+    }
+
+
+
 
 }
