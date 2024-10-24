@@ -48,6 +48,8 @@ public class UserController {
                 return ResponseEntity.status(403).build();
             }
             List<UserSimpleResponse> users = userService.findAll();
+            // Remove auth user from list :
+            users = users.stream().filter(u -> !u.getId().equals(user.getId())).toList();
             return ResponseEntity.ok(users);
         }
         catch (Exception e) {
