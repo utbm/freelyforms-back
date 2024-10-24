@@ -47,8 +47,12 @@ public class UserControllerTest {
 
     @Test
     public void testGetAllUsers_Success() {
-        UserSimpleResponse mockUserResponse = new UserSimpleResponse();
-        when(userService.findAll()).thenReturn(List.of(mockUserResponse));
+        User mockUser = new User();
+        mockUser.setId("user12345");
+        mockUser.setEmail("test@test.fr");
+        mockUser.setRole(new HashSet<>(List.of(UserRole.USER)));
+
+        when(userService.findAll()).thenReturn(List.of(mockUser.toUserSimpleResponse()));
 
         ResponseEntity<List<UserSimpleResponse>> response = userController.getAllUsers(adminUser);
 
