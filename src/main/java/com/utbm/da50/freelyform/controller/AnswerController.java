@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * Controller for handling answer-related requests.
@@ -50,18 +50,20 @@ public class AnswerController {
             @ApiResponse(responseCode = "400", description = "Incorrect structure for answer"),
             @ApiResponse(responseCode = "404", description = "Prefab not found")
     })
-    public ResponseEntity<Void> submitAnswer(
+    public ResponseEntity<?> submitAnswer (
             @AuthenticationPrincipal User user,
             @PathVariable String prefab_id,
-            @RequestBody AnswerInput request) {
+            @RequestBody AnswerInput request) throws ResponseStatusException {
         try {
             AnswerGroup answerGroup = request.toAnswer();
             answerService.processAnswer(prefab_id, user, answerGroup);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "error", e.getMessage()
+            ));
         }
     }
 

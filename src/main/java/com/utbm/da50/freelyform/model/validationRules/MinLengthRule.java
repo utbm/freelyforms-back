@@ -12,7 +12,7 @@ public class MinLengthRule implements ValidationRule {
     public void validate(Object userInput, Field field, Rule rule) {
         int minLength = Integer.parseInt(rule.getValue());
         if (((String)userInput).length() < minLength) {
-            throw new IllegalArgumentException("Text is shorter than minimum length of " + minLength);
+            throw new IllegalArgumentException("The field " + field.getLabel() + " must have at least " + minLength + " characters.");
         }
     }
 

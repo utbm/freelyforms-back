@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.utbm.da50.freelyform.exceptions.*;
 import com.utbm.da50.freelyform.model.AnswerUser;
 import com.utbm.da50.freelyform.enums.TypeField;
-import com.utbm.da50.freelyform.enums.TypeRule;
 import com.utbm.da50.freelyform.model.*;
 import com.utbm.da50.freelyform.repository.AnswerRepository;
 import lombok.RequiredArgsConstructor;
@@ -308,65 +307,6 @@ public class AnswerService {
 
         } catch (Exception e) {
             throw new ValidationException(String.format("Answer '%s' is not a valid geolocation", answer));
-        }
-    }
-
-    /**
-     * Checks the interval values for the given answer based on the type rule.
-     *
-     * @param value the string value to check
-     * @param type  the type of rule (e.g., MIN_LENGTH, MAX_LENGTH)
-     * @param answer the answer to validate
-     */
-    public void checkIntervalValues(String value, TypeRule type, Object answer) {
-        if (value.isEmpty()) {
-            return;
-        }
-        BigDecimal limit = new BigDecimal(value);
-        if (type == TypeRule.MIN_LENGTH || type == TypeRule.MAX_LENGTH) {
-            validateStringLength(answer, limit, type);
-        } else {
-            validateNumericValue(answer, limit, type);
-        }
-    }
-
-    /**
-     * Validates the length of the given answer against specified limits.
-     *
-     * @param answer the answer to validate
-     * @param limit  the length limit for validation
-     * @param type   the type of rule for length validation (e.g., MIN_LENGTH, MAX_LENGTH)
-     * @throws ValidationException if the answer is not a string or does not meet the length requirement
-     */
-    private void validateStringLength(Object answer, BigDecimal limit, TypeRule type) {
-        if (!(answer instanceof String answerStr)) {
-            throw new ValidationException(String.format("Answer '%s' is not a string", answer));
-        }
-
-        BigDecimal answerLength = new BigDecimal(answerStr.length());
-        int result = answerLength.compareTo(limit);
-        if ((type == TypeRule.MIN_LENGTH && result < 0) ||
-                (type == TypeRule.MAX_LENGTH && result > 0)) {
-            throw new ValidationException(String.format("Answer '%s' does not meet the length requirement for '%s'",
-                    answer, type));
-        }
-    }
-
-    /**
-     * Validates the numeric value of the answer against a specified limit.
-     *
-     * @param answer the answer to validate
-     * @param limit  the numeric limit for validation
-     * @param type   the type of rule for numeric validation (e.g., MIN_VALUE, MAX_VALUE)
-     * @throws ValidationException if the answer does not meet the value requirement
-     */
-    private void validateNumericValue(Object answer, BigDecimal limit, TypeRule type) {
-        BigDecimal answerValue = new BigDecimal(String.valueOf(answer));
-        int result = answerValue.compareTo(limit);
-        if ((type == TypeRule.MIN_VALUE && result < 0) ||
-                (type == TypeRule.MAX_VALUE && result > 0)) {
-            throw new ValidationException(String.format("Answer '%s' does not meet the value requirement for '%s'",
-                    answer, type));
         }
     }
 }

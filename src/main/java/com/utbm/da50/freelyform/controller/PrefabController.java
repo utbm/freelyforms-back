@@ -14,12 +14,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -73,7 +71,7 @@ public class PrefabController {
             // Fetch the prefab and return the response
             return ResponseEntity.ok(prefabService.getPrefabById(id, withHidden).toRest());
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+            return ResponseEntity.status(404).build();
         }
     }
 
