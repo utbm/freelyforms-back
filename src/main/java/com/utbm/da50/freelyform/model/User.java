@@ -2,6 +2,7 @@ package com.utbm.da50.freelyform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mongodb.lang.NonNull;
+import com.utbm.da50.freelyform.dto.GroupInput;
 import com.utbm.da50.freelyform.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Document
 @NoArgsConstructor
