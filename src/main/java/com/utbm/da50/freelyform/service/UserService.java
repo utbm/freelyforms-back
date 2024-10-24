@@ -5,6 +5,7 @@ import com.utbm.da50.freelyform.dto.user.UserRoleRequest;
 import com.utbm.da50.freelyform.dto.user.UserSimpleResponse;
 import com.utbm.da50.freelyform.enums.UserRole;
 import com.utbm.da50.freelyform.model.User;
+import com.utbm.da50.freelyform.repository.PrefabRepository;
 import com.utbm.da50.freelyform.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,13 @@ public class UserService {
 
     // Business logic in service
     private final UserRepository userRepository;
+    private final PrefabRepository prefabRepository;
 
     // Dependency injection with auto-wiring
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PrefabRepository prefabRepository) {
         this.userRepository = userRepository;
+        this.prefabRepository = prefabRepository;
     }
 
 
@@ -59,8 +62,13 @@ public class UserService {
     }
 
 
-    // Delete user by id
+    // Delete user by id and all related forms and answers
     public void deleteById(String id) {
+        // TODO : uncomment after answers are done (delete all answers by user id)
+        //answerRepository.deleteByUserId(id);
+        // Delete related forms
+        prefabRepository.deleteByUserId(id);
+        // Delete the user
         userRepository.deleteById(id);
     }
 
