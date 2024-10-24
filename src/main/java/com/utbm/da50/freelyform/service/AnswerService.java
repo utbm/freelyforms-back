@@ -2,6 +2,7 @@ package com.utbm.da50.freelyform.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.utbm.da50.freelyform.enums.TypeRule;
 import com.utbm.da50.freelyform.exceptions.*;
 import com.utbm.da50.freelyform.model.AnswerUser;
 import com.utbm.da50.freelyform.enums.TypeField;
@@ -78,6 +79,8 @@ public class AnswerService {
         }
 
         answerGroup.setUser(answerUser);
+
+        answerGroup = updateAnswerForm(answerGroup, prefabId);
 
         return answerGroup;
     }
@@ -308,5 +311,41 @@ public class AnswerService {
         } catch (Exception e) {
             throw new ValidationException(String.format("Answer '%s' is not a valid geolocation", answer));
         }
+    }
+
+    public AnswerGroup updateAnswerForm(AnswerGroup answerGroup, String prefabId){
+        Prefab prefab = prefabService.getPrefabById(prefabId, false);
+        Field field;
+        TypeField type;
+        int a = 0;
+        int b;
+
+        List<AnswerSubGroup> answerSubGroups = answerGroup.getAnswers();
+
+        for(AnswerSubGroup answerSubGroup: answerSubGroups){
+            b = 0;
+            List<AnswerQuestion> answerQuestions = answerSubGroup.getQuestions();
+
+            for(AnswerQuestion answerQuestion: answerQuestions){
+                field = prefab.getGroups().get(a).getFields().get(b);
+                type = field.getType();
+                answerQuestion.setType(type);
+
+                if(type == TypeField.MULTIPLE_CHOICE){
+
+                    answerQuestion.setChoices(field.getOptions().getChoices().toArray(new String[0]));
+                    if(field.getValidationRules().contains(TypeRule.IS_RADIO))
+                        answerQuestion.setAnswer(new String[]{(String) answerQuestion.getAnswer()});
+                }
+
+                b++;
+            }
+
+            answerSubGroup.setQuestions(answerQuestions);
+            a++;
+        }
+        answerGroup.setAnswers(answerSubGroups);
+
+        return answerGroup;
     }
 }
